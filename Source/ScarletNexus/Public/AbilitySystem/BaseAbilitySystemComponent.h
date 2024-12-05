@@ -14,4 +14,6 @@ class SCARLETNEXUS_API UBaseAbilitySystemComponent : public UAbilitySystemCompon
 {
 	GENERATED_BODY()
 	
+public:
+	void OnAbilityInputTriggered(const FGameplayTag& InputTag);
 };

@@ -5,12 +5,10 @@ namespace BaseGameplayTags
 {
 #pragma region InputTags
 
+	UE_DEFINE_GAMEPLAY_TAG(InputTag_Look, "InputTag.Look");
+
 	//Movement
-	UE_DEFINE_GAMEPLAY_TAG(InputTag_Move_Forward, "InputTag.Move.Forward");
-	UE_DEFINE_GAMEPLAY_TAG(InputTag_Move_Backward, "InputTag.Move.Backward");
-	UE_DEFINE_GAMEPLAY_TAG(InputTag_Move_Left, "InputTag.Move.Left");
-	UE_DEFINE_GAMEPLAY_TAG(InputTag_Move_Right, "InputTag.Move.Right");
-	
+	UE_DEFINE_GAMEPLAY_TAG(InputTag_Move, "InputTag.Move");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_Dodge, "InputTag.Dodge");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_Jump, "InputTag.Jump");
 
@@ -52,10 +50,10 @@ namespace BaseGameplayTags
 
 
 	// History
-	UE_DEFINE_GAMEPLAY_TAG(InputTag_History_Move_Forward, "InputTag.History.Move.Forward");
-	UE_DEFINE_GAMEPLAY_TAG(InputTag_History_Move_Backward, "InputTag.History.Move.Backward");
-	UE_DEFINE_GAMEPLAY_TAG(InputTag_History_Move_Left, "InputTag.History.Move.Left");
-	UE_DEFINE_GAMEPLAY_TAG(InputTag_History_Move_Right, "InputTag.History.Move.Right");
+	UE_DEFINE_GAMEPLAY_TAG(InputTag_History_Move_Vertical_Forward, "InputTag.History.Move.Vertical.Forward");
+	UE_DEFINE_GAMEPLAY_TAG(InputTag_History_Move_Vertical_Backward, "InputTag.History.Move.Vertical.Backward");
+	UE_DEFINE_GAMEPLAY_TAG(InputTag_History_Move_Horizontal_Left, "InputTag.History.Move.Horizontal.Left");
+	UE_DEFINE_GAMEPLAY_TAG(InputTag_History_Move_Horizontal_Right, "InputTag.History.Move.Horizontal.Right");
 
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_History_Jump, "InputTag.History.Jump");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_History_Targeting, "InputTag.History.Targeting");
