@@ -98,6 +98,13 @@ namespace BaseGameplayTags
 
 #pragma endregion
 
+#pragma region Unlock
+
+	UE_DEFINE_GAMEPLAY_TAG(Unlock_DoubleJump, "Unlock.DoubleJump");
+	UE_DEFINE_GAMEPLAY_TAG(Unlock_Aerial_Dash, "Unlock.Aerial.Dash");
+	UE_DEFINE_GAMEPLAY_TAG(Unlock_Aerial_DoubleDash, "Unlock.Aerial.DoubleDash");
+
+#pragma endregion
 
 
 #pragma region Shared

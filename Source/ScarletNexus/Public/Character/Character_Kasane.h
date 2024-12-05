@@ -25,7 +25,7 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	UDataAsset_InputConfig* InputConfig;
-
+	virtual void PossessedBy(AController* NewController) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	void OnInputMoveTriggered(const FInputActionValue& Value);

@@ -5,6 +5,7 @@
 #include "AbilitySystemComponent.h"
 #include "AbilitySystem/BaseAbilitySystemComponent.h"
 #include "DataAsset/DataAsset_StartupBase.h"
+#include "BaseDebugHelper.h"
 
 // Sets default values
 ABaseCharacter::ABaseCharacter()
@@ -34,12 +35,5 @@ void ABaseCharacter::PossessedBy(AController* NewController)
 	if (BaseAbilitySystemComponent)
 	{
 		BaseAbilitySystemComponent->InitAbilityActorInfo(this, this);
-		if (StartupData.IsNull() == false)
-		{
-			if (UDataAsset_StartupBase* LoadedData = StartupData.LoadSynchronous())
-			{
-				LoadedData->GiveStartupAbilities(BaseAbilitySystemComponent);
-			}
-		}
 	}
 }

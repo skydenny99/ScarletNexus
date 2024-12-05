@@ -10,7 +10,7 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
-
+#include "DataAsset/DataAsset_StartupBase.h"
 #include "BaseDebugHelper.h"
 
 ACharacter_Kasane::ACharacter_Kasane()
@@ -62,7 +62,18 @@ ACharacter_Kasane::ACharacter_Kasane()
 
 
 	OverrideInputComponentClass = UBaseInputComponent::StaticClass();
-	AutoPossessPlayer = EAutoReceiveInput::Player0;
+	BaseAbilitySystemComponent = CreateDefaultSubobject<UBaseAbilitySystemComponent>(TEXT("AbilitySystemComponent"));
+}
+
+void ACharacter_Kasane::PossessedBy(AController* NewController)
+{
+	if (StartupData.IsNull() == false)
+	{
+		if (UDataAsset_StartupBase* LoadedData = StartupData.LoadSynchronous())
+		{
+			LoadedData->GiveStartupAbilities(BaseAbilitySystemComponent);
+		}
+	}
 }
 
 void ACharacter_Kasane::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)

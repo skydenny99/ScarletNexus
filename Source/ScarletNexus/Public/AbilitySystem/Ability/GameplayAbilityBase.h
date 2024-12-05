@@ -17,6 +17,9 @@ class SCARLETNEXUS_API UGameplayAbilityBase : public UGameplayAbility
 	GENERATED_BODY()
 	
 public:
+	virtual void OnGiveAbility(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec) override;
+	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)override;
 	UFUNCTION(BlueprintPure, Category = "Ability")
 	UBaseAbilitySystemComponent* GetBaseAbilitySystemComponent() const;
+
 };

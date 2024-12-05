@@ -21,6 +21,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Startup")
 	TArray<TSubclassOf<UGameplayAbilityBase>> StartupAbilities;
 
+
 public:
-	void GiveStartupAbilities(UAbilitySystemComponent* ASC, int32 Level = 1);
+	virtual void GiveStartupAbilities(UAbilitySystemComponent* ASC, int32 Level = 1);
 };
