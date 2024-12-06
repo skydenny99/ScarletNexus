@@ -99,15 +99,15 @@ void ACharacter_Kasane::OnInputMoveTriggered(const FInputActionValue& Value)
 {
 	const FVector2D MovementVector = Value.Get<FVector2D>();
 	const FRotator MovementRotation(0.f, Controller->GetControlRotation().Yaw, 0.f);
-	if (MovementVector.Y != 0.f)
-	{
-		const FVector ForwardDirection = MovementRotation.RotateVector(FVector::ForwardVector);
-		AddMovementInput(ForwardDirection, MovementVector.Y);
-	}
 	if (MovementVector.X != 0.f)
 	{
+		const FVector ForwardDirection = MovementRotation.RotateVector(FVector::ForwardVector);
+		AddMovementInput(ForwardDirection, MovementVector.X);
+	}
+	if (MovementVector.Y != 0.f)
+	{
 		const FVector RightDirection = MovementRotation.RotateVector(FVector::RightVector);
-		AddMovementInput(RightDirection, MovementVector.X);
+		AddMovementInput(RightDirection, MovementVector.Y);
 	}
 }
 

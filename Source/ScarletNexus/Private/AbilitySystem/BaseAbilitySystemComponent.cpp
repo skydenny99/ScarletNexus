@@ -14,9 +14,7 @@ void UBaseAbilitySystemComponent::OnAbilityInputTriggered(const FGameplayTag& In
 	if (InputTag.IsValid() == false) return;
 	for (const FGameplayAbilitySpec& Spec : GetActivatableAbilities())
 	{
-		Debug::Print("Input Triggered");
 		if(Spec.Ability.Get()->AbilityTags.HasTag(InputTag) == false) continue;
-		Debug::Print("Input Triggered");
 		TryActivateAbility(Spec.Handle);
 	}
 }
