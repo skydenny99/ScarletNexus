@@ -9,6 +9,7 @@
 
 class UAIPerceptionComponent;
 class UAISenseConfig_Sight;
+class UBehaviorTree;
 
 /**
  * 
@@ -21,6 +22,7 @@ class SCARLETNEXUS_API ABaseAIController : public AAIController
 public:
 	ABaseAIController(const FObjectInitializer& ObjectInitializer);
 
+	
 
 	virtual ETeamAttitude::Type GetTeamAttitudeTowards(const AActor& Other) const override;
 
@@ -30,6 +32,36 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	UAISenseConfig_Sight* AISenseConfig_Sight;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Behavior Tree")
+	UBehaviorTree* BTAsset;
+
+
+	UFUNCTION()
+	virtual void OnEnemyPeceptionUpdated(AActor* Actor, FAIStimulus Stimulus);
+
+	virtual void BeginPlay() override;
+
+	virtual void OnPossess(APawn* InPawn) override;
+
+
+
+
+	UFUNCTION(BlueprintCallable, Category = "AITeamAgent")
+	void SetTeamId(int32 TeamId);
+
+
+private:
+
+	UPROPERTY(EditDefaultsOnly, Category = "AI")
+	bool bDetourCrowdAvoidence = true;
+
+	UPROPERTY(EditDefaultsOnly, Category = "AI", meta = (EditCondition = "bDetourCrowdAvoidence", UIMin = "1", UIMax = "4"))
+	int32 DetourCrowdAvoidenceQuality = 4;
+
+	UPROPERTY(EditDefaultsOnly, Category = "AI", meta = (EditCondition = "bDetourCrowdAvoidence"))
+	float CollsionQueryRange = 600.0f;
+
 
 
 	

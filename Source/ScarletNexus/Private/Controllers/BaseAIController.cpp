@@ -6,6 +6,7 @@
 #include "Perception/AIPerceptionComponent.h"
 #include "Perception/AISenseConfig_Sight.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "BehaviorTree/BehaviorTree.h"
 
 
 
@@ -40,17 +41,84 @@ ABaseAIController::ABaseAIController(const FObjectInitializer& ObjectInitializer
     //센서 설정
     AIPerceptionComponent->ConfigureSense(*AISenseConfig_Sight);
     AIPerceptionComponent->SetDominantSense(UAISenseConfig_Sight::StaticClass());
-    // AIPerceptionComponent->OnTargetPerceptionUpdated.AddUniqueDynamic(this, &ABaseAIController::OnEnemyPeceptionUpdated);
+    AIPerceptionComponent->OnTargetPerceptionUpdated.AddUniqueDynamic(this, &ABaseAIController::OnEnemyPeceptionUpdated);
 
-    //팀아이디 부여 -> 하위 에서 다시 정의
-    // SetGenericTeamId(FGenericTeamId(0));
+    
 
-
+    //팀아이디 부여 -> 하위 에서 다시 정의 기본값 0
+    SetGenericTeamId(FGenericTeamId(0));
 
 
 }
 
 ETeamAttitude::Type ABaseAIController::GetTeamAttitudeTowards(const AActor& Other) const
 {
-	return ETeamAttitude::Type();
+    const APawn* PawnCheck = Cast<const APawn>(&Other);
+    const IGenericTeamAgentInterface* OtherTeamAgent = Cast<IGenericTeamAgentInterface>(PawnCheck->GetController());
+
+    // 팀 아이디 크기 비교 아군이 0 적은 그보다 큼
+    if (OtherTeamAgent && OtherTeamAgent->GetGenericTeamId() < GetGenericTeamId())
+    {
+        // 적 판단
+        return ETeamAttitude::Hostile;
+    }
+
+	return ETeamAttitude::Friendly;
 }
+
+void ABaseAIController::OnEnemyPeceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
+{
+
+    if (UBlackboardComponent* BlackboardComponent = GetBlackboardComponent())
+    {
+        if (BlackboardComponent->GetValueAsObject(FName("TargetActor")) == nullptr)
+        {
+            if (Stimulus.WasSuccessfullySensed()&& Actor)
+            {
+                BlackboardComponent->SetValueAsObject(FName(TEXT("TargetActor")), Actor);
+            }
+        }
+    }
+}
+
+void ABaseAIController::BeginPlay()
+{
+
+    Super::BeginPlay();
+
+    if (UCrowdFollowingComponent* CrowdFollowingComponent = Cast<UCrowdFollowingComponent>(GetPathFollowingComponent()))
+    {
+        CrowdFollowingComponent->SetCrowdSimulationState(bDetourCrowdAvoidence ? ECrowdSimulationState::Enabled : ECrowdSimulationState::Disabled);
+
+        switch (DetourCrowdAvoidenceQuality)
+        {
+        case 1: CrowdFollowingComponent->SetCrowdAvoidanceQuality(ECrowdAvoidanceQuality::Low);    break;
+        case 2: CrowdFollowingComponent->SetCrowdAvoidanceQuality(ECrowdAvoidanceQuality::Medium); break;
+        case 3: CrowdFollowingComponent->SetCrowdAvoidanceQuality(ECrowdAvoidanceQuality::Good);   break;
+        case 4: CrowdFollowingComponent->SetCrowdAvoidanceQuality(ECrowdAvoidanceQuality::High);   break;
+        default: break;
+        }
+
+        CrowdFollowingComponent->SetAvoidanceGroup(1);
+        CrowdFollowingComponent->SetGroupsToAvoid(1);
+        CrowdFollowingComponent->SetCrowdCollisionQueryRange(CollsionQueryRange);
+    }
+
+}
+
+// 비헤이비어 트리 작동
+void ABaseAIController::OnPossess(APawn* InPawn)
+{
+    if (BTAsset != nullptr)
+    {
+        RunBehaviorTree(BTAsset);
+    }
+
+}
+
+void ABaseAIController::SetTeamId(int32 TeamId)
+{
+    //팀아이디 부여 -> 하위 에서 다시 정의
+    SetGenericTeamId(FGenericTeamId(TeamId));
+}
+
