@@ -3,3 +3,11 @@
 
 #include "Character/FellowCharacter.h"
 
+void AFellowCharacter::SetWeaponVisibility(bool Visibility)
+{
+	if (Weapon)
+	{
+		Weapon->SetVisibility(Visibility, true);
+	}
+
+}
