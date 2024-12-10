@@ -23,9 +23,14 @@ public:
 	ABaseAIController(const FObjectInitializer& ObjectInitializer);
 
 	
-
+	
 	virtual ETeamAttitude::Type GetTeamAttitudeTowards(const AActor& Other) const override;
 
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Behavior Tree")
+	UBehaviorTree* BTAsset;
+
+	
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	UAIPerceptionComponent* AIPerceptionComponent;
@@ -33,12 +38,11 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	UAISenseConfig_Sight* AISenseConfig_Sight;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Behavior Tree")
-	UBehaviorTree* BTAsset;
+	
 
 
 	UFUNCTION()
-	virtual void OnEnemyPeceptionUpdated(AActor* Actor, FAIStimulus Stimulus);
+	virtual void OnEnemyPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus);
 
 	virtual void BeginPlay() override;
 

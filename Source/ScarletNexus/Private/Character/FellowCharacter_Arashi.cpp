@@ -15,7 +15,7 @@
 AFellowCharacter_Arashi::AFellowCharacter_Arashi()
 {
 
-	// ¸ÞÀÎ ¹Ùµð ½ºÄÌ·¹Å» ¸Þ½Ã
+	
 	MainBody = GetMesh();
 	MainBody->SetRelativeLocationAndRotation(FVector(0.f, 0.f, -90.f), FRotator(0.f, -90.f, 0.f));
 
@@ -25,7 +25,7 @@ AFellowCharacter_Arashi::AFellowCharacter_Arashi()
 		MainBody->SetSkeletalMesh(MainBodyMesh.Object);
 	}
 
-	// ¾Æ¿ô¶óÀÎ ½ºÄÌ·¹Å» ¸Þ½Ã
+	
 	OutLineBody = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("OutLine"));
 
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh> OutlineMesh(TEXT("/Game/Resources/Characters/CH1000/CH1000_Outline.CH1000_Outline"));
@@ -36,7 +36,7 @@ AFellowCharacter_Arashi::AFellowCharacter_Arashi()
 		OutLineBody->SetLeaderPoseComponent(MainBody);
 	}
 
-	// ¹«±â ¸ÞÀÎ
+	
 	Weapon = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Weapon"));
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh> WeaponMesh(TEXT("/Game/Resources/Weapons/WP1000/WP1000_Base.WP1000_Base"));
 	if (WeaponMesh.Succeeded())
@@ -46,7 +46,7 @@ AFellowCharacter_Arashi::AFellowCharacter_Arashi()
 		// Weapon->SetRelativeRotation(FRotator(-90.f, 0.f, 0.f));
 	}
 
-	// ¹«±â ¾Æ¿ô¶óÀÎ
+	
 	OutLineWeapon = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("OutLineWeapon"));
 
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh> OutlineWeaponMesh(TEXT("/Game/Resources/Weapons/WP1000/WP1000_Outline.WP1000_Outline"));
@@ -59,13 +59,13 @@ AFellowCharacter_Arashi::AFellowCharacter_Arashi()
 
 
 
-	// ¸ÞÀÎ Ä¸½¶ ÄÄÆ÷³ÍÆ®
+	
 	MainCapsule = GetCapsuleComponent();
 	const float CapsuleRadius = 42.f;
 	const float CapsuleHalfHeight = 96.f;
 	MainCapsule->InitCapsuleSize(CapsuleRadius, CapsuleHalfHeight);
 
-	// È÷Æ®¹Ú½º Ä¸½¶ ÄÄÆ÷³ÍÆ®
+	
 	HitboxCapsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("HitboxCapsule"));
 	HitboxCapsule->InitCapsuleSize(CapsuleRadius, CapsuleHalfHeight);
 	HitboxCapsule->SetupAttachment(MainBody, FName("Hips"));
@@ -76,12 +76,12 @@ AFellowCharacter_Arashi::AFellowCharacter_Arashi()
 	bUseControllerRotationRoll = false;
 	bUseControllerRotationYaw = false;
 
-	// Ä³¸¯ÅÍ ¹«ºê¸ÕÆ® ÄÄÆ÷³ÍÆ®
+	
 	Movement = GetCharacterMovement();
 	Movement->bOrientRotationToMovement = true;
 
 
-	// ¾îºô¸®Æ¼
+	
 	BaseAbilitySystemComponent = CreateDefaultSubobject<UBaseAbilitySystemComponent>(TEXT("AbilitySystemComponent"));
 
 

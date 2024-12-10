@@ -33,5 +33,5 @@ void UCharacterAnimInstance::NativeThreadSafeUpdateAnimation(float DeltaSeconds)
 	FVector MovementDir = OwningMovementComponent->GetLastInputVector();
 
 	FVector Velocity = OwningCharacter->GetVelocity();
-	Debug::Print(FString::Printf(TEXT("Locomotion Direction: %f"), LocomotionDirection));
+	// Debug::Print(FString::Printf(TEXT("Locomotion Direction: %f"), LocomotionDirection));
 }

@@ -12,7 +12,7 @@ class UBaseAbilitySystemComponent;
  * 
  */
 UCLASS()
-class SCARLETNEXUS_API UGameplayAbilityBase : public UGameplayAbility
+class SCARLETNEXUS_API UGameplayAbilityBase : public UGameplayAbility 
 {
 	GENERATED_BODY()
 	

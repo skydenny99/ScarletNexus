@@ -7,48 +7,57 @@
 #include "Perception/AISenseConfig_Sight.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "BehaviorTree/BehaviorTree.h"
+#include "GameFramework/Character.h"
 
+#include "Kismet/GameplayStatics.h"
 
 
 #include "BaseDebugHelper.h"
 
 
+
 ABaseAIController::ABaseAIController(const FObjectInitializer& ObjectInitializer):
 	Super(ObjectInitializer.SetDefaultSubobjectClass<UCrowdFollowingComponent>("PathFollowingComponent"))
 {
-	//SetDefaultSubobjectClass·Î CrowdFollowingComponent »ç¿ë
-	if (UCrowdFollowingComponent* CrowdFollowingComponent = Cast<UCrowdFollowingComponent>(GetPathFollowingComponent()))
-	{
-		Debug::Print(TEXT("CrowdFollowComponent Vaild"), FColor::Green);
-	}
+	//SetDefaultSubObjectClass CrowdFollowingComponent
+    if (UCrowdFollowingComponent* CrowdFollowingComponent = Cast<UCrowdFollowingComponent>(GetPathFollowingComponent()))
+    {
+        CrowdFollowingComponent->SetCrowdSimulationState(ECrowdSimulationState::Enabled);
+        // Debug::Print(TEXT("CrowdFollowComponent Valid"), FColor::Green);
+    }
+    else
+    {
+        Debug::Print(TEXT("CrowdFollowingComponent ì´ˆê¸°í™” ì‹¤íŒ¨."));
+    }
+    
+    
+        
 
 	AISenseConfig_Sight = CreateDefaultSubobject<UAISenseConfig_Sight>(TEXT("AISenseConfig_Sight"));
-
-    //Àû °¨Áö
+   
     AISenseConfig_Sight->DetectionByAffiliation.bDetectEnemies = true;
-    //¾Æ±º °¨Áö
+    
     AISenseConfig_Sight->DetectionByAffiliation.bDetectFriendlies = false;
-    //Áß¸³ °¨Áö
+    
     AISenseConfig_Sight->DetectionByAffiliation.bDetectNeutrals = false;
-    //½Ã¾Æ ¹Ý°æ¼³Á¤
-    AISenseConfig_Sight->SightRadius = 2000.0f;
-    //´ë»óÀ» ÀÒ´Â ½Ã¾Æ ¹üÀ§ ¼³Á¤
+    
+    AISenseConfig_Sight->SightRadius = 1500.0f;
+    
     AISenseConfig_Sight->LoseSightRadius = 0.f;
-    //ÁÖº¯ ½Ã¾Æ°¢
-    AISenseConfig_Sight->PeripheralVisionAngleDegrees = 180.0f;
+   
+    AISenseConfig_Sight->PeripheralVisionAngleDegrees = 80.0f;
 
     AIPerceptionComponent = CreateDefaultSubobject<UAIPerceptionComponent>("AIPerceptionComponent");
-    //¼¾¼­ ¼³Á¤
+    
     AIPerceptionComponent->ConfigureSense(*AISenseConfig_Sight);
     AIPerceptionComponent->SetDominantSense(UAISenseConfig_Sight::StaticClass());
-    AIPerceptionComponent->OnTargetPerceptionUpdated.AddUniqueDynamic(this, &ABaseAIController::OnEnemyPeceptionUpdated);
+    AIPerceptionComponent->OnTargetPerceptionUpdated.AddUniqueDynamic(this, &ABaseAIController::OnEnemyPerceptionUpdated);
+
+  
+    // SetGenericTeamId(FGenericTeamId(1));
+
 
     
-
-    //ÆÀ¾ÆÀÌµð ºÎ¿© -> ÇÏÀ§ ¿¡¼­ ´Ù½Ã Á¤ÀÇ ±âº»°ª 0
-    SetGenericTeamId(FGenericTeamId(0));
-
-
 }
 
 ETeamAttitude::Type ABaseAIController::GetTeamAttitudeTowards(const AActor& Other) const
@@ -56,17 +65,17 @@ ETeamAttitude::Type ABaseAIController::GetTeamAttitudeTowards(const AActor& Othe
     const APawn* PawnCheck = Cast<const APawn>(&Other);
     const IGenericTeamAgentInterface* OtherTeamAgent = Cast<IGenericTeamAgentInterface>(PawnCheck->GetController());
 
-    // ÆÀ ¾ÆÀÌµð Å©±â ºñ±³ ¾Æ±ºÀÌ 0 ÀûÀº ±×º¸´Ù Å­
+    
     if (OtherTeamAgent && OtherTeamAgent->GetGenericTeamId() < GetGenericTeamId())
     {
-        // Àû ÆÇ´Ü
+        
         return ETeamAttitude::Hostile;
     }
 
 	return ETeamAttitude::Friendly;
 }
 
-void ABaseAIController::OnEnemyPeceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
+void ABaseAIController::OnEnemyPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
 {
 
     if (UBlackboardComponent* BlackboardComponent = GetBlackboardComponent())
@@ -75,6 +84,7 @@ void ABaseAIController::OnEnemyPeceptionUpdated(AActor* Actor, FAIStimulus Stimu
         {
             if (Stimulus.WasSuccessfullySensed()&& Actor)
             {
+                Debug::Print((TEXT("OnEnemyPerceptionUpdated Call : %s"), Actor->GetName()),FColor::Red);
                 BlackboardComponent->SetValueAsObject(FName(TEXT("TargetActor")), Actor);
             }
         }
@@ -103,22 +113,60 @@ void ABaseAIController::BeginPlay()
         CrowdFollowingComponent->SetGroupsToAvoid(1);
         CrowdFollowingComponent->SetCrowdCollisionQueryRange(CollsionQueryRange);
     }
+    
+    Debug::Print(TEXT("BeginPlay Call"),FColor::Red);
+
+
+    // ë¸”ëž™ë³´ë“œê°€ ìœ íš¨í•˜ì§€ ì•Šìœ¼ë©´ ì´ˆê¸°í™”
+
+    ABaseAIController::SetTeamId(1);
+    
 
 }
 
-// ºñÇìÀÌºñ¾î Æ®¸® ÀÛµ¿
+
 void ABaseAIController::OnPossess(APawn* InPawn)
 {
-    if (BTAsset != nullptr)
-    {
-        RunBehaviorTree(BTAsset);
-    }
+    Super::OnPossess(InPawn);
 
+    
+    // if (BTAsset)
+    // {
+    //     RunBehaviorTree(BTAsset);
+    //     Debug::Print(TEXT("BTAsset Set!"),FColor::Blue);
+    //     // ë¸”ëž™ë³´ë“œ íƒ€ê²Ÿ ê°’ ì„¸íŒ…
+    //     if (UBlackboardComponent* BlackboardComponent = GetBlackboardComponent())
+    //     {
+    //         // í”Œë ˆì´ì–´ ìºë¦­í„° ê°€ì ¸ì˜¤ê¸°
+    //         APlayerController* PlayerPawn = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+    //         if (PlayerPawn)
+    //         {
+    //             // ë¸”ëž™ë³´ë“œì— TargetActorë¡œ ì„¤ì •
+    //             BlackboardComponent->SetValueAsObject(TEXT("TargetActor"), PlayerPawn);
+    //             Debug::Print((TEXT("TargetActor ì„¤ì • ì™„ë£Œ: %s"), *PlayerPawn->GetName()), FColor::Blue);
+    //         }
+    //         else
+    //         {
+    //             Debug::Print(TEXT("í”Œë ˆì´ì–´ í°ì„ ì°¾ì„ ìˆ˜ ì—†ìŠµë‹ˆë‹¤."));
+    //         }
+    //     }
+    //     else
+    //     {
+    //         Debug::Print(TEXT("BlackboardComponentê°€ ìœ íš¨í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤."));
+    //     }
+    //     
+    // }
+    // else
+    // {
+    //     Debug::Print(TEXT("BTAsset Error!!!"),FColor::Red);
+    // }
+    
+    
 }
 
 void ABaseAIController::SetTeamId(int32 TeamId)
 {
-    //ÆÀ¾ÆÀÌµð ºÎ¿© -> ÇÏÀ§ ¿¡¼­ ´Ù½Ã Á¤ÀÇ
+    
     SetGenericTeamId(FGenericTeamId(TeamId));
 }
 

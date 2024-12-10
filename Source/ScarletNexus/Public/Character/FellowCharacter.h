@@ -21,30 +21,32 @@ class SCARLETNEXUS_API AFellowCharacter : public ABaseCharacter
 
 protected:
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SkeletalMeshData")
+	UPROPERTY( BlueprintReadOnly, Category = "SkeletalMeshData")
 	USkeletalMeshComponent* MainBody;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SkeletalMeshData")
+	UPROPERTY( BlueprintReadOnly, Category = "SkeletalMeshData")
 	USkeletalMeshComponent* OutLineBody;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SkeletalMeshData")
+	UPROPERTY( BlueprintReadOnly, Category = "SkeletalMeshData")
 	USkeletalMeshComponent* Weapon;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SkeletalMeshData")
+	UPROPERTY( BlueprintReadOnly, Category = "SkeletalMeshData")
 	USkeletalMeshComponent* OutLineWeapon;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CapsuleComponent")
+	UPROPERTY( BlueprintReadOnly, Category = "CapsuleComponent")
 	UCapsuleComponent* MainCapsule;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CapsuleComponent")
+	UPROPERTY( BlueprintReadOnly, Category = "CapsuleComponent")
 	UCapsuleComponent* HitboxCapsule;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CharacterMovementComponent")
+	UPROPERTY( BlueprintReadOnly, Category = "CharacterMovementComponent")
 	UCharacterMovementComponent* Movement;
 
 	UFUNCTION(BlueprintCallable, Category = "Visibility")
 	void SetWeaponVisibility(bool Visibility);
 
+
+	virtual void PossessedBy(AController* NewController) override;
 
 	
 };
