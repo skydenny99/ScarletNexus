@@ -19,20 +19,23 @@ class SCARLETNEXUS_API UGA_DodgeBase : public UGameplayAbilityBase
 
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Dodge")
-	TArray<UAnimMontage*> DodgeMontages;
-
-	UPROPERTY()
-	UCharacterMovementComponent* DodgeMovementComponent;
+	TMap<EBaseDirectionType, UAnimMontage*> DodgeMontages;
 
 	UPROPERTY()
 	ABaseCharacter* DodgeCharacter;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Dodge")
+	FGameplayTagContainer BlockDodgeTags;
 	
 public:
 	virtual void OnGiveAbility(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec) override;
-	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
+	virtual bool CanActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayTagContainer* SourceTags = nullptr, const FGameplayTagContainer* TargetTags = nullptr, FGameplayTagContainer* OptionalRelevantTags = nullptr) const override;
+
+protected:
 	UFUNCTION(BlueprintCallable, Category = "Dodge")
-	void AlignCharacterWithCameraDirection();
+	virtual void GetCharacterDodgeDirection(EBaseDirectionType& DirectionResult);
 
 	UFUNCTION(BlueprintPure, Category = "Dodge")
-	void GetCurrentCharacterLookDirection(const EBaseDirectionType& DirectionResult);
+	FORCEINLINE ABaseCharacter* GetDodgeCharacter() const { return DodgeCharacter; }
+	
 };

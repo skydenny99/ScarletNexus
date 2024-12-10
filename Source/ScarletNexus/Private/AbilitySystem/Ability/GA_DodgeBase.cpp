@@ -3,33 +3,30 @@
 
 #include "AbilitySystem/Ability/GA_DodgeBase.h"
 #include "Animation/AnimMontage.h"
+#include "BaseType/BaseEnumType.h"
 #include "Character/BaseCharacter.h"
-#include "GameFramework/CharacterMovementComponent.h"
+#include "BaseFunctionLibrary.h"
+#include "BaseGameplayTags.h"
 
 void UGA_DodgeBase::OnGiveAbility(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec)
 {
 	Super::OnGiveAbility(ActorInfo, Spec);
 	DodgeCharacter = GetOwnerWithCasting<ABaseCharacter>();
-	check(DodgeCharacter);
-	DodgeMovementComponent = DodgeCharacter->GetCharacterMovement();
 }
 
-void UGA_DodgeBase::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
-                                    const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
+bool UGA_DodgeBase::CanActivateAbility(const FGameplayAbilitySpecHandle Handle,
+	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayTagContainer* SourceTags,
+	const FGameplayTagContainer* TargetTags, FGameplayTagContainer* OptionalRelevantTags) const
 {
-	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
-	
 
+	if (Super::CanActivateAbility(Handle, ActorInfo, SourceTags, TargetTags, OptionalRelevantTags))
+	{
+		return UBaseFunctionLibrary::NativeActorHasAnyTags(DodgeCharacter, BlockDodgeTags) == false;
+	}
+	return false;
 }
 
-void UGA_DodgeBase::AlignCharacterWithCameraDirection()
+void UGA_DodgeBase::GetCharacterDodgeDirection(EBaseDirectionType& DirectionResult)
 {
-	FVector KeyDirection = FVector(0, 0, 0);
-	
-	
-}
-
-void UGA_DodgeBase::GetCurrentCharacterLookDirection(const EBaseDirectionType& DirectionResult)
-{
-	
+	DirectionResult = EBaseDirectionType::None;
 }
