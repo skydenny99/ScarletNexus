@@ -13,5 +13,14 @@ UCLASS()
 class SCARLETNEXUS_API UKasaneAnimInstance : public UCharacterAnimInstance
 {
 	GENERATED_BODY()
-	
+public:
+	virtual void NativeThreadSafeUpdateAnimation(float DeltaSeconds) override;
+
+protected:
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Locomotion")
+	int32 JumpCount;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Locomotion")
+	float VelocityZ;
+
 };

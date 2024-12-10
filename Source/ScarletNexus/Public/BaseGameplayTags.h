@@ -52,8 +52,10 @@ namespace BaseGameplayTags
 
 
 	// History
+	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_History_Move_Vertical);
 	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_History_Move_Vertical_Forward);
 	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_History_Move_Vertical_Backward);
+	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_History_Move_Horizontal);
 	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_History_Move_Horizontal_Left);
 	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_History_Move_Horizontal_Right);
 

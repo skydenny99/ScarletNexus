@@ -12,11 +12,13 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "DataAsset/DataAsset_StartupBase.h"
 #include "BaseDebugHelper.h"
+#include "BaseFunctionLibrary.h"
+#include "Kismet/KismetMathLibrary.h"
 
 ACharacter_Kasane::ACharacter_Kasane()
 {
 	USkeletalMeshComponent* MainBody = GetMesh();
-	MainBody->SetRelativeLocationAndRotation(FVector(0.f, 0.f, -90.f), FRotator(0.f, -90.f, 0.f));
+	MainBody->SetRelativeLocationAndRotation(FVector(0.f, 0.f, -100.f), FRotator(0.f, -90.f, 0.f));
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh> MainBodyMesh(TEXT("/Game/Resources/Characters/CH0200/CH200_Base.CH200_Base"));
 	if (MainBodyMesh.Succeeded())
 	{
@@ -50,8 +52,10 @@ ACharacter_Kasane::ACharacter_Kasane()
 	USpringArmComponent* CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(MainBody, FName("Waist"));
 	CameraBoom->bUsePawnControlRotation = true;
-	CameraBoom->SocketOffset = FVector(0.f, 55.f, 65.f);
-	CameraBoom->TargetArmLength = 200.f;
+	CameraBoom->SocketOffset = FVector(0.f, 0.f, 100.f);
+	CameraBoom->TargetArmLength = 500.f;
+	CameraBoom->bEnableCameraLag = true;
+	CameraBoom->CameraLagSpeed = 5.f;
 
 	UCameraComponent* MainCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("MainCamera"));
 	MainCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
@@ -59,10 +63,16 @@ ACharacter_Kasane::ACharacter_Kasane()
 
 	UCharacterMovementComponent* Movement = GetCharacterMovement();
 	Movement->bOrientRotationToMovement = true;
+	Movement->MaxWalkSpeed = 800;
+	Movement->RotationRate = FRotator(0.f, 600.f, 0.f);
+	OriginRotationRate = Movement->RotationRate;
+	Movement->MaxAcceleration = 4096;
 
 
 	OverrideInputComponentClass = UBaseInputComponent::StaticClass();
 	BaseAbilitySystemComponent = CreateDefaultSubobject<UBaseAbilitySystemComponent>(TEXT("AbilitySystemComponent"));
+
+	MovementModeChangedDelegate.AddDynamic(this, &ACharacter_Kasane::OnFalling);
 }
 
 void ACharacter_Kasane::PossessedBy(AController* NewController)
@@ -81,11 +91,13 @@ void ACharacter_Kasane::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 	
 	check(InputConfig);
+	check(DirectionInputConfig);
 
 	if(UEnhancedInputLocalPlayerSubsystem* Subsystem 
 		= ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetController<APlayerController>()->GetLocalPlayer()))
 	{
 		Subsystem->AddMappingContext(InputConfig->DefaultInputMappingContext, 0);
+		Subsystem->AddMappingContext(DirectionInputConfig->DefaultInputMappingContext, 1);
 	}
 
 	UBaseInputComponent* InputComp = Cast<UBaseInputComponent>(PlayerInputComponent);
@@ -93,6 +105,7 @@ void ACharacter_Kasane::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	InputComp->BindNativeInputAction(InputConfig, BaseGameplayTags::InputTag_Move, ETriggerEvent::Triggered, this, &ACharacter_Kasane::OnInputMoveTriggered);
 	InputComp->BindNativeInputAction(InputConfig, BaseGameplayTags::InputTag_Look, ETriggerEvent::Triggered, this, &ACharacter_Kasane::OnInputLookTriggered);
 	InputComp->BindAbilityInputAction(InputConfig, this, &ACharacter_Kasane::OnAbilityInputTriggered);
+	InputComp->BindDirectionInput(DirectionInputConfig, this, &ACharacter_Kasane::PushInput);
 }
 
 void ACharacter_Kasane::OnInputMoveTriggered(const FInputActionValue& Value)
@@ -128,4 +141,31 @@ void ACharacter_Kasane::OnInputLookTriggered(const FInputActionValue& Value)
 void ACharacter_Kasane::OnAbilityInputTriggered(FGameplayTag InputTag)
 {
 	BaseAbilitySystemComponent->OnAbilityInputTriggered(InputTag);
+}
+
+
+void ACharacter_Kasane::OnFalling(ACharacter* Character, EMovementMode PrevMovementMode, uint8 PreviousCustomMode)
+{
+	GetCharacterMovement()->RotationRate = GetCharacterMovement()->MovementMode == EMovementMode::MOVE_Falling ?
+		FallingRotationRate : OriginRotationRate;
+}
+
+void ACharacter_Kasane::PushInput(EBaseDirectionType Direction)
+{
+	GetWorldTimerManager().ClearTimer(DodgeThresholdTimer);
+	DirectionHistory &= static_cast<uint8>(Direction);
+	GetWorldTimerManager().SetTimer(DodgeThresholdTimer, this, &ACharacter_Kasane::ClearInputHistory, DodgeAllowThreshold, false);
+
+}
+
+uint8 ACharacter_Kasane::GetDirectionByHistory()
+{
+	uint8 Result = DirectionHistory;
+	ClearInputHistory();
+	return Result;
+}
+
+void ACharacter_Kasane::ClearInputHistory()
+{
+	DirectionHistory = static_cast<uint8>(EBaseDirectionType::Max);
 }

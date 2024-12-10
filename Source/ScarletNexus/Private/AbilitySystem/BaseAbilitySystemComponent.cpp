@@ -6,7 +6,7 @@
 
 void UBaseAbilitySystemComponent::OnGiveAbility(FGameplayAbilitySpec& AbilitySpec)
 {
-
+	Super::OnGiveAbility(AbilitySpec);
 }
 
 void UBaseAbilitySystemComponent::OnAbilityInputTriggered(const FGameplayTag& InputTag)

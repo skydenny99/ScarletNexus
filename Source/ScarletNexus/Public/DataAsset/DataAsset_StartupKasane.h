@@ -17,7 +17,7 @@ struct FInputBindData
 	UPROPERTY(EditDefaultsOnly, meta = (Categories = "InputTag"))
 	FGameplayTag InputTag;
 
-	//ºÎ¿©°¡´ÉÇÑ ´É·Â
+	//ï¿½Î¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½É·ï¿½
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UGameplayAbilityBase> AbilityToGrant;
 	FORCEINLINE bool IsValid() const
@@ -56,9 +56,6 @@ class SCARLETNEXUS_API UDataAsset_StartupKasane : public UDataAsset_StartupBase
 
 	UPROPERTY(EditDefaultsOnly, Category = "Startup", meta = (Categories = "Unlock"))
 	TMap<FGameplayTag, FUnlockData> UnlockDatas;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Startup")
-	TArray<FInputBindData> HeroStartupAbilitySets;
 
 public:
 	virtual void GiveStartupAbilities(UAbilitySystemComponent* ASC, int32 Level = 1) override;

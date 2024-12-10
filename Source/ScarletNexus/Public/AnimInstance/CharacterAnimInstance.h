@@ -9,6 +9,15 @@
 class ABaseCharacter;
 class UCharacterMovementComponent;
 
+UENUM(BlueprintType)
+enum class ECharacterSpeedType : uint8
+{
+	Idle,
+	Walk,
+	Run,
+	Dash
+};
+
 /**
  * 
  */
@@ -35,4 +44,10 @@ protected:
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Locomotion")
 	float LocomotionDirection;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Locomotion")
+	bool bIsGrounded;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Locomotion")
+	ECharacterSpeedType CharacterSpeedType;
 };

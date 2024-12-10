@@ -20,7 +20,7 @@ class SCARLETNEXUS_API UBaseFunctionLibrary : public UBlueprintFunctionLibrary
 	GENERATED_BODY()
 
 public:
-	// UBlueprintFunctionLibrary´Â ³»ºÎ Á¢±ÙÀÌ¹Ç·Î public°ú staticÀ¸·Î Á¢±ÙÇØ¾ßÇÔ. ¾×ÅÍ·Î Á¢±ÙÇØ ¾îºô¸®Æ¼½Ã½ºÅÛ ÄÄÆ÷³ÍÆ® °¡Á®¿À±â.
+	// UBlueprintFunctionLibraryï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ì¹Ç·ï¿½ publicï¿½ï¿½ staticï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ø¾ï¿½ï¿½ï¿½. ï¿½ï¿½ï¿½Í·ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Æ¼ï¿½Ã½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½.
 	static UBaseAbilitySystemComponent* NativeGetAbilitySystemComponentFromActor(AActor* Actor);
 
 	UFUNCTION(BlueprintCallable, Category = "FunctionLibrary")
@@ -30,6 +30,8 @@ public:
 	static void RemovePlayGameTagFromActor(AActor* Actor, FGameplayTag Tag);
 
 	static bool NativeActorHasTag(AActor* Actor, FGameplayTag Tag);
+
+	static bool NativeActorHasAnyTags(AActor* Actor, FGameplayTagContainer Tags);
 
 	UFUNCTION(BlueprintCallable, Category = "FunctionLibrary", meta = (Display = "Does Actor Has Tag", ExpandEnumAsExecs = "OutType"))
 	static void BP_HasTag(AActor* Actor, FGameplayTag Tag, EBaseConfirmType& OutType);

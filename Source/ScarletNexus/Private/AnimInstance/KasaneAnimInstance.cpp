@@ -2,4 +2,16 @@
 
 
 #include "AnimInstance/KasaneAnimInstance.h"
+#include "Character/Character_Kasane.h"
 
+void UKasaneAnimInstance::NativeThreadSafeUpdateAnimation(float DeltaSeconds)
+{
+	Super::NativeThreadSafeUpdateAnimation(DeltaSeconds);
+	if (OwningCharacter == nullptr || OwningMovementComponent == nullptr)
+	{
+		return;
+	}
+
+	JumpCount = OwningCharacter->JumpCurrentCount;
+	VelocityZ = OwningCharacter->GetVelocity().Z;
+}

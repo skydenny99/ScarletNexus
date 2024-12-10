@@ -37,6 +37,13 @@ bool UBaseFunctionLibrary::NativeActorHasTag(AActor* Actor, FGameplayTag Tag)
 	return ASC->HasMatchingGameplayTag(Tag);
 }
 
+bool UBaseFunctionLibrary::NativeActorHasAnyTags(AActor* Actor, FGameplayTagContainer Tags)
+{
+	UBaseAbilitySystemComponent* ASC = NativeGetAbilitySystemComponentFromActor(Actor);
+
+	return ASC->HasAnyMatchingGameplayTags(Tags);
+}
+
 void UBaseFunctionLibrary::BP_HasTag(AActor* Actor, FGameplayTag Tag, EBaseConfirmType& OutType)
 {
 	OutType = NativeActorHasTag(Actor, Tag) ? EBaseConfirmType::Yes : EBaseConfirmType::No;
