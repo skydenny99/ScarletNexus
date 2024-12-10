@@ -102,6 +102,6 @@ void UGA_Dodge_Player::GetCharacterDodgeDirection(EBaseDirectionType& DirectionR
 		}
 	}
 
-	FRotator TargetRot = LookDirection.Rotation();
+	FRotator TargetRot = UKismetMathLibrary::FindLookAtRotation(FVector(0.f), LookDirection);
 	DodgeCharacter->SetActorRotation(TargetRot);
 }

@@ -52,8 +52,10 @@ ACharacter_Kasane::ACharacter_Kasane()
 	USpringArmComponent* CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(MainBody, FName("Waist"));
 	CameraBoom->bUsePawnControlRotation = true;
-	CameraBoom->SocketOffset = FVector(0.f, 0.f, 150.f);
-	CameraBoom->TargetArmLength = 800.f;
+	CameraBoom->SocketOffset = FVector(0.f, 0.f, 100.f);
+	CameraBoom->TargetArmLength = 500.f;
+	CameraBoom->bEnableCameraLag = true;
+	CameraBoom->CameraLagSpeed = 5.f;
 
 	UCameraComponent* MainCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("MainCamera"));
 	MainCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
@@ -62,7 +64,7 @@ ACharacter_Kasane::ACharacter_Kasane()
 	UCharacterMovementComponent* Movement = GetCharacterMovement();
 	Movement->bOrientRotationToMovement = true;
 	Movement->MaxWalkSpeed = 800;
-	Movement->RotationRate = FRotator(0.f, 1000.f, 0.f);
+	Movement->RotationRate = FRotator(0.f, 600.f, 0.f);
 	OriginRotationRate = Movement->RotationRate;
 	Movement->MaxAcceleration = 4096;
 
