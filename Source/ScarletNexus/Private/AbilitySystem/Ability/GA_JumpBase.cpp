@@ -30,6 +30,13 @@ bool UGA_JumpBase::CanActivateAbility(const FGameplayAbilitySpecHandle Handle, c
 void UGA_JumpBase::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
+	if (!CommitAbility(Handle, ActorInfo, ActivationInfo))
+	{			
+		constexpr bool bReplicateEndAbility = true;
+		constexpr bool bWasCancelled = true;
+		EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
+	}
+	
 	if (MovementComponent)
 	{
 		MovementComponent->JumpZVelocity = JumpPower[Kasane->JumpCurrentCount];
