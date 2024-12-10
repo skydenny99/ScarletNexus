@@ -167,8 +167,3 @@ void ACharacter_Kasane::ClearInputHistory()
 {
 	DirectionHistory = static_cast<uint8>(EBaseDirectionType::Max);
 }
-
-uint8 ACharacter_Kasane::GetDirectionInputHistory() const
-{
-	return DirectionHistory;
-}

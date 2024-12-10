@@ -51,9 +51,8 @@ private:
 
 	uint8 DirectionHistory = static_cast<uint8>(EBaseDirectionType::Max);
 	void PushInput(EBaseDirectionType Direction);
-	uint8 GetDirectionByHistory();
 	void ClearInputHistory();
 public:
-	uint8 GetDirectionInputHistory() const;
+	uint8 GetDirectionByHistory();
 
 };
