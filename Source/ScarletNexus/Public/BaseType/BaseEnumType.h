@@ -24,9 +24,10 @@ enum class EBaseSuccessType : uint8
 UENUM()
 enum class EBaseDirectionType : uint8
 {
-	Front,
-	Back,
-	Left,
-	Right,
-	InValid
+	None = 0b0000,
+	Front = 0b1101,
+	Back = 0b1110,
+	Left = 0b0111,
+	Right = 0b1011,
+	Max = 0b1111
 };

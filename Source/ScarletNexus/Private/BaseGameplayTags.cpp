@@ -50,8 +50,10 @@ namespace BaseGameplayTags
 
 
 	// History
+	UE_DEFINE_GAMEPLAY_TAG(InputTag_History_Move_Vertical, "InputTag.History.Move.Vertical");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_History_Move_Vertical_Forward, "InputTag.History.Move.Vertical.Forward");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_History_Move_Vertical_Backward, "InputTag.History.Move.Vertical.Backward");
+	UE_DEFINE_GAMEPLAY_TAG(InputTag_History_Move_Horizontal, "InputTag.History.Move.Horizontal");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_History_Move_Horizontal_Left, "InputTag.History.Move.Horizontal.Left");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_History_Move_Horizontal_Right, "InputTag.History.Move.Horizontal.Right");
 

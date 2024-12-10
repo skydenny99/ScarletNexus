@@ -17,7 +17,9 @@ class SCARLETNEXUS_API UGA_JumpBase : public UGameplayAbilityBase
 	GENERATED_BODY()
 
 protected:
+	UPROPERTY()
 	UCharacterMovementComponent* MovementComponent;
+	UPROPERTY()
 	ACharacter_Kasane* Kasane;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Jumping")
