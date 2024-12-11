@@ -21,7 +21,7 @@ enum class EBaseSuccessType : uint8
 	Failed,
 };
 
-UENUM()
+UENUM(BlueprintType)
 enum class EBaseDirectionType : uint8
 {
 	None = 0b0000,
