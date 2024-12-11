@@ -118,7 +118,10 @@ void UGA_Dodge_Player::PlayDodgeAnimation(EBaseDirectionType Direction)
 
 void UGA_Dodge_Player::OnEndDodge()
 {
-	DodgeCharacter->GetCharacterMovement()->Velocity = FVector::ZeroVector;
+	FVector Velocity = DodgeCharacter->GetCharacterMovement()->Velocity;
+	Velocity /= 3.f;
+	Velocity.Z = 0;
+	DodgeCharacter->GetCharacterMovement()->Velocity = Velocity;
 	DodgeCharacter->GetCharacterMovement()->GravityScale = 3;
 	K2_EndAbility();
 }
