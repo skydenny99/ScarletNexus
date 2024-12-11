@@ -67,6 +67,8 @@ ACharacter_Kasane::ACharacter_Kasane()
 	Movement->RotationRate = FRotator(0.f, 600.f, 0.f);
 	OriginRotationRate = Movement->RotationRate;
 	Movement->MaxAcceleration = 4096;
+	Movement->GravityScale = 3.f;
+	Movement->bApplyGravityWhileJumping = false;
 
 
 	OverrideInputComponentClass = UBaseInputComponent::StaticClass();

@@ -4,9 +4,11 @@
 #include "AbilitySystem/Ability/GA_Dodge_Player.h"
 
 #include "BaseDebugHelper.h"
+#include "AnimInstance/KasaneAnimInstance.h"
 #include "BaseType/BaseEnumType.h"
 #include "Character/BaseCharacter.h"
 #include "Character/Character_Kasane.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 
 
@@ -16,10 +18,12 @@ bool operator==(uint8 Lhs, EBaseDirectionType Type)
 }
 
 
-bool UGA_Dodge_Player::CheckDirection(uint8 Lhs, EBaseDirectionType RHS) const
+void UGA_Dodge_Player::OnGiveAbility(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec)
 {
-	uint8 tmp = !static_cast<uint8>(RHS);
-	return (Lhs & tmp) == 0;
+	Super::OnGiveAbility(ActorInfo, Spec);
+	KasaneAnimInstance = Cast<UKasaneAnimInstance>(DodgeCharacter->GetMesh()->GetAnimInstance());
+	check(KasaneAnimInstance);
+	KasaneAnimInstance->OnDodgeEnd.BindUObject(this, &UGA_Dodge_Player::OnEndDodge);
 }
 
 void UGA_Dodge_Player::GetCharacterDodgeDirection(EBaseDirectionType& DirectionResult)
@@ -104,4 +108,20 @@ void UGA_Dodge_Player::GetCharacterDodgeDirection(EBaseDirectionType& DirectionR
 
 	FRotator TargetRot = UKismetMathLibrary::FindLookAtRotation(FVector(0.f), LookDirection);
 	DodgeCharacter->SetActorRotation(TargetRot);
+}
+
+void UGA_Dodge_Player::PlayDodgeAnimation(EBaseDirectionType Direction)
+{
+	//auto Velocity = DodgeCharacter->GetCharacterMovement()->Velocity;
+	//Velocity.Z = 0.f;
+	DodgeCharacter->GetCharacterMovement()->Velocity = FVector::ZeroVector;
+	DodgeCharacter->GetCharacterMovement()->GravityScale = 0;
+	KasaneAnimInstance->Dodge(Direction);
+}
+
+void UGA_Dodge_Player::OnEndDodge()
+{
+	DodgeCharacter->GetCharacterMovement()->Velocity = FVector::ZeroVector;
+	DodgeCharacter->GetCharacterMovement()->GravityScale = 3;
+	K2_EndAbility();
 }
