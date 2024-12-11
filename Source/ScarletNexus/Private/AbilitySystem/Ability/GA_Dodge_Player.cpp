@@ -58,13 +58,10 @@ void UGA_Dodge_Player::GetCharacterDodgeDirection(EBaseDirectionType& DirectionR
 	{
 		InputDirection += FVector::LeftVector;
 	}
-
-
+	
 	FVector LookDirection = FRotator(0.f, DodgeCharacter->GetControlRotation().Yaw, 0.f).RotateVector(InputDirection);
 	FVector CharacterForward = DodgeCharacter->GetActorForwardVector();
-	CharacterForward -= DodgeCharacter->GetActorLocation();
 	FVector CharacterRight = DodgeCharacter->GetActorRightVector();
-	CharacterRight -= DodgeCharacter->GetActorLocation();
 
 	FVector NearestVector;
 	LookDirection.Normalize();
