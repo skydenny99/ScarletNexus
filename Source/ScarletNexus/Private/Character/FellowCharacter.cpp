@@ -17,5 +17,5 @@ void AFellowCharacter::SetWeaponVisibility(bool Visibility)
 void AFellowCharacter::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
-	Debug::Print(FString::Printf(TEXT("Controller Type: %s"), *NewController->GetActorLabel()),FColor::Red);
+	// Debug::Print(FString::Printf(TEXT("Controller Type: %s"), *NewController->GetActorLabel()),FColor::Red);
 }
