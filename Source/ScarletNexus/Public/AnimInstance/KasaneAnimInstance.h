@@ -4,8 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "AnimInstance/CharacterAnimInstance.h"
+#include "BaseType/BaseEnumType.h"
 #include "KasaneAnimInstance.generated.h"
 
+DECLARE_DELEGATE(FOnDodgeEnd);
 /**
  * 
  */
@@ -23,4 +25,17 @@ protected:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Locomotion")
 	float VelocityZ;
 
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Locomotion")
+	bool bDoingDodge;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Locomotion")
+	EBaseDirectionType DodgeDirection;
+
+public:
+	FOnDodgeEnd OnDodgeEnd;
+	
+	UFUNCTION(BlueprintCallable)
+	void Dodge(EBaseDirectionType Direction);
+
+	UFUNCTION(BlueprintCallable)
+	void DodgeEnd();
 };
