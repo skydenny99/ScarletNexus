@@ -55,4 +55,7 @@ private:
 public:
 	uint8 GetDirectionByHistory();
 
+	UFUNCTION(BlueprintCallable)
+	void ActivateDash(bool bIsDashing);
+
 };

@@ -167,6 +167,11 @@ uint8 ACharacter_Kasane::GetDirectionByHistory()
 	return Result;
 }
 
+void ACharacter_Kasane::ActivateDash(bool bIsDashing)
+{
+	GetCharacterMovement()->MaxWalkSpeed = bIsDashing ? 1200.f : 800.f;
+}
+
 void ACharacter_Kasane::ClearInputHistory()
 {
 	DirectionHistory = static_cast<uint8>(EBaseDirectionType::Max);
