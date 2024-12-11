@@ -54,7 +54,7 @@ ABaseAIController::ABaseAIController(const FObjectInitializer& ObjectInitializer
     AIPerceptionComponent->OnTargetPerceptionUpdated.AddUniqueDynamic(this, &ABaseAIController::OnEnemyPerceptionUpdated);
 
   
-    // SetGenericTeamId(FGenericTeamId(1));
+    SetGenericTeamId(AITeamId);
 
 
     
@@ -73,6 +73,16 @@ ETeamAttitude::Type ABaseAIController::GetTeamAttitudeTowards(const AActor& Othe
     }
 
 	return ETeamAttitude::Friendly;
+}
+
+FGenericTeamId ABaseAIController::GetGenericTeamId() const
+{
+    return AITeamId;
+}
+
+int32 ABaseAIController::GetTeamId()
+{
+    return static_cast<int32>(AITeamId.GetId());
 }
 
 void ABaseAIController::OnEnemyPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)

@@ -4,9 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "AIController.h"
+#include "GenericTeamAgentInterface.h"
 #include "BaseAIController.generated.h"
 
 
+struct FAIStimulus;
 class UAIPerceptionComponent;
 class UAISenseConfig_Sight;
 class UBehaviorTree;
@@ -29,6 +31,17 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Behavior Tree")
 	UBehaviorTree* BTAsset;
+
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Team Agent ID")
+	FGenericTeamId AITeamId = 0;
+
+
+	UFUNCTION(BlueprintCallable, Category = "Team Agent ID")
+	virtual FGenericTeamId GetGenericTeamId() const override;
+
+	UFUNCTION(BlueprintCallable, Category = "Team Agent ID")
+	int32 GetTeamId();
 
 	
 protected:
@@ -65,6 +78,9 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "AI", meta = (EditCondition = "bDetourCrowdAvoidence"))
 	float CollsionQueryRange = 600.0f;
+
+
+	
 
 
 
