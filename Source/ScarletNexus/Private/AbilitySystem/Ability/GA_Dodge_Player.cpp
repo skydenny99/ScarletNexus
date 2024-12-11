@@ -114,6 +114,9 @@ void UGA_Dodge_Player::PlayDodgeAnimation(EBaseDirectionType Direction)
 	DodgeCharacter->GetCharacterMovement()->Velocity = FVector::ZeroVector;
 	DodgeCharacter->GetCharacterMovement()->GravityScale = 0;
 	KasaneAnimInstance->Dodge(Direction);
+	
+	ACharacter_Kasane* Kasane = Cast<ACharacter_Kasane>(DodgeCharacter);
+	Kasane->ActivateDash(true);
 }
 
 void UGA_Dodge_Player::OnEndDodge()
