@@ -124,4 +124,12 @@ namespace BaseGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_Hit_KnockDown, "Shared.Event.Hit.KnockDown");
 
 #pragma endregion
+
+
+#pragma region Fellow 
+	UE_DEFINE_GAMEPLAY_TAG(Fellow_Ability_Attack_Normal, "Fellow.Ability.Attack.Normal");
+
+#pragma endregion Fellow
+
+	
 }

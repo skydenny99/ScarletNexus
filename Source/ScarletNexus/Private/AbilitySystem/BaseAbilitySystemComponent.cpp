@@ -18,3 +18,28 @@ void UBaseAbilitySystemComponent::OnAbilityInputTriggered(const FGameplayTag& In
 		TryActivateAbility(Spec.Handle);
 	}
 }
+
+bool UBaseAbilitySystemComponent::TryActivateAbilityByTag(FGameplayTag Tag)
+{
+	check(Tag.IsValid());
+
+	TArray<FGameplayAbilitySpec*> AbilitySpecs;
+    
+	GetActivatableGameplayAbilitySpecsByAllMatchingTags(Tag.GetSingleTagContainer(), AbilitySpecs);
+
+	if (!AbilitySpecs.IsEmpty())
+	{
+		const int32 RandomAbilityIndex = FMath::RandRange(0, AbilitySpecs.Num() - 1);
+		FGameplayAbilitySpec* AbilitySpec = AbilitySpecs[RandomAbilityIndex];
+
+		check(AbilitySpec);
+
+		if (!AbilitySpec->IsActive())
+		{
+			return TryActivateAbility(AbilitySpec->Handle);
+		}
+	}
+
+
+	return false;
+}

@@ -132,5 +132,13 @@ namespace BaseGameplayTags
 #pragma endregion
 
 
+#pragma region Fellow Character
+	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Fellow_Ability_Attack_Normal);
+
+
+
+#pragma endregion
+	
+
 	
 }

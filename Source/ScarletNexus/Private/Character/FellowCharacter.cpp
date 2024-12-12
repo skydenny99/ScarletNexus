@@ -2,7 +2,8 @@
 
 
 #include "Character/FellowCharacter.h"
-
+#include "AbilitySystem/BaseAbilitySystemComponent.h"
+#include "DataAsset/DataAsset_StartupBase.h"
 #include "BaseDebugHelper.h"
 
 void AFellowCharacter::SetWeaponVisibility(bool Visibility)
@@ -17,5 +18,12 @@ void AFellowCharacter::SetWeaponVisibility(bool Visibility)
 void AFellowCharacter::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
-	// Debug::Print(FString::Printf(TEXT("Controller Type: %s"), *NewController->GetActorLabel()),FColor::Red);
+
+	if (StartupData.IsNull() == false)
+	{
+		if (UDataAsset_StartupBase* LoadedData = StartupData.LoadSynchronous())
+		{
+			LoadedData->GiveStartupAbilities(BaseAbilitySystemComponent);
+		}
+	}
 }
