@@ -10,7 +10,7 @@ class ABaseCharacter;
 class UCharacterMovementComponent;
 
 UENUM(BlueprintType)
-enum class ECharacterSpeedType : uint8
+enum class ECharacterJumpType : uint8
 {
 	Idle,
 	Walk,
@@ -48,6 +48,6 @@ protected:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Locomotion")
 	bool bIsGrounded;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Locomotion")
-	ECharacterSpeedType CharacterSpeedType;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Locomotion")
+	ECharacterJumpType CharacterJumpType;
 };
