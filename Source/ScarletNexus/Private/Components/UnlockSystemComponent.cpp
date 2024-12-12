@@ -4,6 +4,7 @@
 #include "Components/UnlockSystemComponent.h"
 
 #include "AbilitySystemComponent.h"
+#include "BaseFunctionLibrary.h"
 #include "GameplayAbilitySpecHandle.h"
 #include "DataAsset/DataAsset_StartupKasane.h"
 
@@ -29,7 +30,7 @@ void UUnlockSystemComponent::ApplyUnlockData()
 	TArray<FGameplayAbilitySpecHandle> OutAbilityHandles;
 	for (auto Data : UnlockDatas)
 	{
-		AbilitySystemComponent->FindAllAbilitiesWithTags(OutAbilityHandles, Data->OverrideTargetTag.GetSingleTagContainer());
+		AbilitySystemComponent->FindAllAbilitiesWithTags(OutAbilityHandles, Data->OverrideInputTag.GetSingleTagContainer());
 		if (OutAbilityHandles.IsEmpty()) continue;
 		
 		if (OutAbilityHandles[0].IsValid())
@@ -41,8 +42,10 @@ void UUnlockSystemComponent::ApplyUnlockData()
 		Spec.SourceObject = AbilitySystemComponent->GetAvatarActor();
 		Spec.Level = Data->Level;
 		AbilitySystemComponent->GiveAbility(Spec);
+		UBaseFunctionLibrary::AddPlaygameTagToActor(AbilitySystemComponent->GetAvatarActor(), Data->UnlockTag);
 	}
 
+	OnUpdateUnlockData.Broadcast();
 	
 }
 

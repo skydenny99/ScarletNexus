@@ -3,7 +3,6 @@
 
 #include "DataAsset/DataAsset_StartupKasane.h"
 #include "AbilitySystemComponent.h"
-#include "BaseFunctionLibrary.h"
 #include "Components/UnlockSystemComponent.h"
 
 void UDataAsset_StartupKasane::GiveStartupAbilities(UAbilitySystemComponent* ASC, int32 Level)
@@ -21,7 +20,6 @@ void UDataAsset_StartupKasane::GiveUnlockAbilities(UAbilitySystemComponent* ASC,
 	for (const FGameplayTag& UnlockTag : UnlockTags)
 	{
 		TargetUnlockDatas.AddUnique(UnlockDatas.Find(UnlockTag));
-		UBaseFunctionLibrary::AddPlaygameTagToActor(ASC->GetAvatarActor(), UnlockTag);
 	}
 
 	UnlockSystemComponent->InitUnlockData(ASC, TargetUnlockDatas);
