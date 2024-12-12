@@ -6,6 +6,7 @@
 #include "Components/ActorComponent.h"
 #include "UnlockSystemComponent.generated.h"
 
+DECLARE_MULTICAST_DELEGATE(FOnUpdateUnlockData);
 
 class UAbilitySystemComponent;
 struct FUnlockData;
@@ -17,7 +18,8 @@ class SCARLETNEXUS_API UUnlockSystemComponent : public UActorComponent
 	TArray<FUnlockData*> UnlockDatas;
 	UAbilitySystemComponent* AbilitySystemComponent;
 	
-public:	
+public:
+	FOnUpdateUnlockData OnUpdateUnlockData;
 	// Sets default values for this component's properties
 	UUnlockSystemComponent();
 
