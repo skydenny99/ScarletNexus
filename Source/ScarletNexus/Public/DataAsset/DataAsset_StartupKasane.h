@@ -36,6 +36,9 @@ struct FUnlockData
 
 	UPROPERTY(EditDefaultsOnly, Category = "Unlock")
 	TSubclassOf<UGameplayAbilityBase> OverrideAbility;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Unlock")
+	int32 Level = 1;
 
 	FORCEINLINE bool IsValid() const
 	{
