@@ -131,5 +131,10 @@ namespace BaseGameplayTags
 
 #pragma endregion Fellow
 
+#pragma region Enemy
+	UE_DEFINE_GAMEPLAY_TAG(Enemy_Boss_Ability_Attack_WaterBall, "Enemy.Boss.Ability.Attack.WaterBall");
+	
+#pragma endregion
+
 	
 }

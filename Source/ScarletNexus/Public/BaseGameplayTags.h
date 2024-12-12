@@ -138,7 +138,10 @@ namespace BaseGameplayTags
 
 
 #pragma endregion
-	
 
+#pragma region Enemy
+	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Enemy_Boss_Ability_Attack_WaterBall);
+	
+#pragma endregion
 	
 }

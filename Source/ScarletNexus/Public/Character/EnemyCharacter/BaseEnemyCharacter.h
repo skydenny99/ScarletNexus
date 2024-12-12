@@ -34,5 +34,8 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "CharacterMovementComponent")
 	UCharacterMovementComponent* Movement;
 
+
+	virtual void PossessedBy(AController* NewController) override;
+
 	
 };
