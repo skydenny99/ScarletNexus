@@ -13,6 +13,7 @@
 #include "DataAsset/DataAsset_StartupBase.h"
 #include "BaseDebugHelper.h"
 #include "BaseFunctionLibrary.h"
+#include "Components/UnlockSystemComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 
 ACharacter_Kasane::ACharacter_Kasane()
@@ -73,8 +74,22 @@ ACharacter_Kasane::ACharacter_Kasane()
 
 	OverrideInputComponentClass = UBaseInputComponent::StaticClass();
 	BaseAbilitySystemComponent = CreateDefaultSubobject<UBaseAbilitySystemComponent>(TEXT("AbilitySystemComponent"));
+	CreateDefaultSubobject<UUnlockSystemComponent>(TEXT("UnlockSystemComponent"));
 
 	MovementModeChangedDelegate.AddDynamic(this, &ACharacter_Kasane::OnFalling);
+
+
+	static ConstructorHelpers::FObjectFinder<USkeletalMesh> WeaponMesh(TEXT("/Game/Resources/Weapons/WP0200/WP200_Base.WP200_Base"));
+	if (WeaponMesh.Succeeded())
+	{
+		for (int i = 1; i <=6; i++)
+		{
+			USkeletalMeshComponent* WeaponMeshComp = CreateDefaultSubobject<USkeletalMeshComponent>(FName(FString::Printf(TEXT("Weapon0%d"), i)));
+			WeaponMeshComp->SetSkeletalMesh(WeaponMesh.Object);
+			WeaponMeshComp->SetupAttachment(MainBody, FName(FString::Printf(TEXT("Weapon0%d"), i)));
+			WeaponMeshComp->SetRelativeRotation(FRotator(0.f, 0.f, -90.f));
+		}
+	}
 }
 
 void ACharacter_Kasane::PossessedBy(AController* NewController)
@@ -105,6 +120,8 @@ void ACharacter_Kasane::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	UBaseInputComponent* InputComp = Cast<UBaseInputComponent>(PlayerInputComponent);
 	check(InputComp);
 	InputComp->BindNativeInputAction(InputConfig, BaseGameplayTags::InputTag_Move, ETriggerEvent::Triggered, this, &ACharacter_Kasane::OnInputMoveTriggered);
+	InputComp->BindNativeInputAction(InputConfig, BaseGameplayTags::InputTag_Move, ETriggerEvent::Triggered, this, &ACharacter_Kasane::UpdateMovementElapsedTime);
+	InputComp->BindNativeInputAction(InputConfig, BaseGameplayTags::InputTag_Move, ETriggerEvent::Completed, this, &ACharacter_Kasane::ResetMovementElapsedTime);
 	InputComp->BindNativeInputAction(InputConfig, BaseGameplayTags::InputTag_Look, ETriggerEvent::Triggered, this, &ACharacter_Kasane::OnInputLookTriggered);
 	InputComp->BindAbilityInputAction(InputConfig, this, &ACharacter_Kasane::OnAbilityInputTriggered);
 	InputComp->BindDirectionInput(DirectionInputConfig, this, &ACharacter_Kasane::PushInput);
@@ -112,6 +129,7 @@ void ACharacter_Kasane::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 
 void ACharacter_Kasane::OnInputMoveTriggered(const FInputActionValue& Value)
 {
+	if (NeedToMove() == false) return;
 	const FVector2D MovementVector = Value.Get<FVector2D>();
 	const FRotator MovementRotation(0.f, Controller->GetControlRotation().Yaw, 0.f);
 	if (MovementVector.X != 0.f)
@@ -143,6 +161,19 @@ void ACharacter_Kasane::OnInputLookTriggered(const FInputActionValue& Value)
 void ACharacter_Kasane::OnAbilityInputTriggered(FGameplayTag InputTag)
 {
 	BaseAbilitySystemComponent->OnAbilityInputTriggered(InputTag);
+}
+
+void ACharacter_Kasane::UpdateMovementElapsedTime(const FInputActionInstance& Instance)
+{
+	MovementElapsedTime = Instance.GetElapsedTime();
+	MovementTriggeredTime = Instance.GetTriggeredTime();
+	//Debug::Print(FString::Printf(TEXT("ElapsedTime %f: / TriggeredTime %f"), MovementElapsedTime, MovementTriggeredTime));
+}
+
+void ACharacter_Kasane::ResetMovementElapsedTime(const FInputActionValue& Value)
+{
+	MovementElapsedTime = 0.f;
+	MovementTriggeredTime = 0.f;
 }
 
 
