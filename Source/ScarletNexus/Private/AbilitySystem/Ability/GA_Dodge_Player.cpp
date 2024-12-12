@@ -35,7 +35,6 @@ bool UGA_Dodge_Player::CanActivateAbility(const FGameplayAbilitySpecHandle Handl
 {
 	if (Super::CanActivateAbility(Handle, ActorInfo, SourceTags, TargetTags, OptionalRelevantTags))
 	{
-		Debug::Print("Test");
 		return DodgeMovementComponent->IsFalling() == false || DodgeCount < MaxDodgeCount;
 	}
 	return false;
