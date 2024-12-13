@@ -10,6 +10,18 @@
 #include "ComboSystemComponent.generated.h"
 
 
+USTRUCT(BlueprintType)
+struct FComboCounter
+{
+	GENERATED_BODY()
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Combo")
+	int32 CurrentComboCount;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Combo")
+	int32 MaxComboCount;
+
+};
+
 class ACharacter_Kasane;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -23,29 +35,50 @@ public:
 
 private:
 	ACharacter_Kasane* Kasane;
+	UBaseAbilitySystemComponent* BaseAbilitySystemComponent;
+	TMap<FGameplayTag, FGameplayAbilitySpec> AbilitySpecs;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Combo", meta=(AllowPrivateAccess=true))
+	FComboCounter WeaponGroundCombo;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Combo", meta=(AllowPrivateAccess=true))
+	FComboCounter WeaponAerialCombo;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Combo", meta=(AllowPrivateAccess=true))
+	FComboCounter PsychGroundCombo;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Combo", meta=(AllowPrivateAccess=true))
+	FComboCounter PsychAerialCombo;
 	
-	int32 CurrentGroundComboCount;
-	int32 CurrentAerialComboCount;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Combo", meta=(AllowPrivateAccess=true))
 	int32 CurrentBackstepAttackCount;
 
 	float ActionElapsedTime;
+	float ChargeAttackThreshold = 0.3f;
 	FGameplayTag LastActivatedGameplayTag;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Ability", meta=(AllowPrivateAccess=true))
-	TSubclassOf<UGameplayAbilityBase> WeaponAttackAbility;
+	TSubclassOf<UGameplayAbilityBase> WeaponGroundAttackAbility;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Ability", meta=(AllowPrivateAccess=true))
-	TSubclassOf<UGameplayAbilityBase> WeaponSpecialAttackAbility;
+	TSubclassOf<UGameplayAbilityBase> WeaponAerialAttackAbility;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Ability", meta=(AllowPrivateAccess=true))
-	TSubclassOf<UGameplayAbilityBase> PsychAttackAbility;
+	TSubclassOf<UGameplayAbilityBase> WeaponBackstepAbility;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Ability", meta=(AllowPrivateAccess=true))
+	TSubclassOf<UGameplayAbilityBase> WeaponChargeAttackAbility;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Ability", meta=(AllowPrivateAccess=true))
+	TSubclassOf<UGameplayAbilityBase> PsychGroundAttackAbility;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Ability", meta=(AllowPrivateAccess=true))
+	TSubclassOf<UGameplayAbilityBase> PsychAerialAttackAbility;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Ability", meta=(AllowPrivateAccess=true))
 	TSubclassOf<UGameplayAbilityBase> PsychSpecialAttackAbility;
 	
 
 public:
-	void ActivateAbilityByTag(FGameplayTag tag);
+	void GrantAttackAbilites(UAbilitySystemComponent* ASC, int32 Level = 1);
+	void TryActivateAbilityByInputTag(FGameplayTag tag);
 	
 	void UpdateInfoByUnlock();
 	
@@ -59,4 +92,7 @@ public:
 
 	void ProcessInputAction(FGameplayTag ActionTag, ETriggerEvent TriggerEvent, const FInputActionInstance& Instance);
 	bool ShouldBlockInputAction();
+
+	UFUNCTION(BlueprintCallable, Category="Combo")
+	void IncreaseCombo(UPARAM(ref) FComboCounter& ComboCounter);
 };
