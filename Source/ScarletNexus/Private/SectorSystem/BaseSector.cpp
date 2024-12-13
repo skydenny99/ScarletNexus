@@ -35,7 +35,7 @@ ABaseSector::ABaseSector()
 		ComName.AppendInt(i);
 		USceneComponent* LocalPos = CreateDefaultSubobject<USceneComponent>(*ComName);
 		LocalPos->SetupAttachment(Center);
-		LocalPos->SetRelativeLocation(FVector(0));
+		LocalPos->SetRelativeLocation(FVector(0.0f,0.0f,30.0f));
 		
 		SpawnPos.Add(LocalPos);
 	}
@@ -57,7 +57,7 @@ void ABaseSector::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* Ot
 	{
 		Debug::Print("OnOverlap");
 
-		ActivateWall();
+		ToggleWall();
 		SpawnEnemy(StageNum);
 
 		TriggerBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
@@ -67,22 +67,15 @@ void ABaseSector::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* Ot
 void ABaseSector::SpawnWall()
 {
 	const FVector Location = FVector(Radius, 0, 750);
-	float Width = 0.0f;
-	if (Divide < 12)
-	{
-		Width = Radius / (Divide*12);
-	}
-	else
-	{
-		Width = Radius / (Divide*15.5);
-	}
+	const float Radian= (180.0f/Divide) / (180.0f/PI);
+	const float Width = 2*Radius*FMath::Tan(Radian);
 	
 	for (int i = 0; i < Divide; i++)
 	{
-		const int Angle = i * (360 / Divide);
+		const int Angle = i * 360.0f / Divide;
 		const FVector TargetRelativeLoc = UKismetMathLibrary::RotateAngleAxis(Location, static_cast<float>(Angle), FVector::UpVector);
 		const FRotator TargetRelativeRotate = FRotator(0.0f, static_cast<float>(Angle),0.0f);
-		const FVector Scale = FVector(0.01f,Width,15.0f);
+		const FVector Scale = FVector(0.01f,0.01* Width,15.0f);
 
 		UChildActorComponent* ChildActorComp = Cast<UChildActorComponent>(AddComponentByClass(UChildActorComponent::StaticClass(), true, FTransform(), false));
 		ChildActorComp->SetChildActorClass(ABaseSectorWall::StaticClass());
@@ -97,25 +90,30 @@ void ABaseSector::SpawnWall()
 
 		WallArray.Add(ChildActor);
 	}
+	ToggleWall();
 }
 
-void ABaseSector::ActivateWall()
+void ABaseSector::ToggleWall()
 {
-	Debug::Print("ActivateWall");
-	for (int i = 0; i < WallArray.Num(); i++)
+	if (bIsActive == false)
 	{
-		WallArray[i]->GetStaticMesh()->SetHiddenInGame(false);
-		WallArray[i]->GetStaticMesh()->SetCollisionEnabled(ECollisionEnabled::Type::QueryOnly);
+		Debug::Print("ActivateWall");
+		for (int i = 0; i < WallArray.Num(); i++)
+		{
+			WallArray[i]->GetStaticMesh()->SetHiddenInGame(false);
+			WallArray[i]->GetStaticMesh()->SetCollisionEnabled(ECollisionEnabled::Type::QueryOnly);
+		}
+		bIsActive = true;
 	}
-}
-
-void ABaseSector::UnActivateWall()
-{
-	Debug::Print("UnActivateWall");
-	for (int i = 0; i < WallArray.Num(); i++)
+	else
 	{
-		WallArray[i]->GetStaticMesh()->SetHiddenInGame(true);
-		WallArray[i]->GetStaticMesh()->SetCollisionEnabled(ECollisionEnabled::Type::NoCollision);
+		Debug::Print("UnActivateWall");
+		for (int i = 0; i < WallArray.Num(); i++)
+		{
+			WallArray[i]->GetStaticMesh()->SetHiddenInGame(true);
+			WallArray[i]->GetStaticMesh()->SetCollisionEnabled(ECollisionEnabled::Type::NoCollision);
+		}
+		bIsActive = false;
 	}
 }
 
@@ -158,7 +156,7 @@ void ABaseSector::NextStage()
 	if (StageNum == 4)
 	{
 		Debug::Print("EndStage");
-		UnActivateWall();
+		ToggleWall();
 		return;
 	}
 	SpawnEnemy(StageNum);
