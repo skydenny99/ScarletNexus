@@ -1,0 +1,176 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+
+#include "SectorSystem/BaseSector.h"
+#include "Components/SceneComponent.h"
+#include "Components/StaticMeshComponent.h"
+#include "Components/BoxComponent.h"
+#include "Kismet/KismetMathLibrary.h"
+#include "SectorSystem/BaseSectorWall.h"
+#include "Character/Character_Kasane.h"
+
+#include "BaseDebugHelper.h"
+#include "Field/FieldSystemNodes.h"
+
+// Sets default values
+ABaseSector::ABaseSector()
+{
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	PrimaryActorTick.bCanEverTick = false;
+	
+	Center = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
+	RootComponent = Center;
+
+	TriggerBox = CreateDefaultSubobject<UBoxComponent>(TEXT("TriggerBox"));
+	TriggerBox->SetupAttachment(Center);
+	TriggerBox->SetBoxExtent(FVector(1200.0f, 1200.0f, 1200.0f));
+	
+	TriggerBox->SetGenerateOverlapEvents(true);
+	TriggerBox->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	TriggerBox->OnComponentBeginOverlap.AddDynamic(this,&ABaseSector::OnOverlap);
+
+	for (int i = 0; i < 9; i++)
+	{
+		FString ComName = "SpawnPoint";
+		ComName.AppendInt(i);
+		USceneComponent* LocalPos = CreateDefaultSubobject<USceneComponent>(*ComName);
+		LocalPos->SetupAttachment(Center);
+		LocalPos->SetRelativeLocation(FVector(0));
+		
+		SpawnPos.Add(LocalPos);
+	}
+}
+
+// Called when the game starts or when spawned
+void ABaseSector::BeginPlay()
+{
+	Super::BeginPlay();
+	SpawnWall();
+	
+	DrawDebugBox(GetWorld(),TriggerBox->GetComponentLocation(),TriggerBox->GetScaledBoxExtent(),FColor::Green,true);
+}
+
+void ABaseSector::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (Cast<ACharacter_Kasane>(OtherActor) != nullptr)
+	{
+		Debug::Print("OnOverlap");
+
+		ActivateWall();
+		SpawnEnemy(StageNum);
+
+		TriggerBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	}
+}
+
+void ABaseSector::SpawnWall()
+{
+	const FVector Location = FVector(Radius, 0, 750);
+	float Width = 0.0f;
+	if (Divide < 12)
+	{
+		Width = Radius / (Divide*12);
+	}
+	else
+	{
+		Width = Radius / (Divide*15.5);
+	}
+	
+	for (int i = 0; i < Divide; i++)
+	{
+		const int Angle = i * (360 / Divide);
+		const FVector TargetRelativeLoc = UKismetMathLibrary::RotateAngleAxis(Location, static_cast<float>(Angle), FVector::UpVector);
+		const FRotator TargetRelativeRotate = FRotator(0.0f, static_cast<float>(Angle),0.0f);
+		const FVector Scale = FVector(0.01f,Width,15.0f);
+
+		UChildActorComponent* ChildActorComp = Cast<UChildActorComponent>(AddComponentByClass(UChildActorComponent::StaticClass(), true, FTransform(), false));
+		ChildActorComp->SetChildActorClass(ABaseSectorWall::StaticClass());
+		ChildActorComp->CreateChildActor();
+		ChildActorComp->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
+		ABaseSectorWall* ChildActor = Cast<ABaseSectorWall>(ChildActorComp->GetChildActor());
+		ChildActor->GetStaticMesh()->SetRelativeLocation(TargetRelativeLoc);
+		ChildActor->GetStaticMesh()->SetRelativeRotation(TargetRelativeRotate);
+		ChildActor->GetStaticMesh()->SetWorldScale3D(Scale);
+		ChildActor->GetStaticMesh()->SetCollisionResponseToChannel(ECC_Camera,ECR_Ignore);
+		ChildActor->GetStaticMesh()->SetMaterial(0, WallMaterial);
+
+		WallArray.Add(ChildActor);
+	}
+}
+
+void ABaseSector::ActivateWall()
+{
+	Debug::Print("ActivateWall");
+	for (int i = 0; i < WallArray.Num(); i++)
+	{
+		WallArray[i]->GetStaticMesh()->SetHiddenInGame(false);
+		WallArray[i]->GetStaticMesh()->SetCollisionEnabled(ECollisionEnabled::Type::QueryOnly);
+	}
+}
+
+void ABaseSector::UnActivateWall()
+{
+	Debug::Print("UnActivateWall");
+	for (int i = 0; i < WallArray.Num(); i++)
+	{
+		WallArray[i]->GetStaticMesh()->SetHiddenInGame(true);
+		WallArray[i]->GetStaticMesh()->SetCollisionEnabled(ECollisionEnabled::Type::NoCollision);
+	}
+}
+
+void ABaseSector::SpawnEnemy(const int32 Stage)
+{
+	for (int i = 0; i < SpawnPos.Num(); i++)
+	{
+		/*
+		FString temp = "SpawnEnemy";
+		temp.AppendInt(i);
+		Debug::Print(*temp);
+		*/
+		for (int j = 0; j < 3; j++)
+		{
+			if (i == StagePosNum[Stage-1][j])
+			{
+				AActor* L_Enemy = GetWorld()->SpawnActor<AActor>(Enemy,SpawnPos[i]->GetComponentTransform());
+				L_Enemy->OnDestroyed.AddDynamic(this,&ABaseSector::OnRemoveEnemy);
+				Enemies.Add(L_Enemy);
+			}
+		}
+	}
+}
+
+inline void ABaseSector::OnRemoveEnemy(AActor* DestroyedActor)
+{
+	Debug::Print("OnRemoveEnemy");
+	
+	Enemies.Remove(DestroyedActor);
+	if (Enemies.IsEmpty())
+	{
+		NextStage();
+	}
+}
+
+void ABaseSector::NextStage()
+{
+	Debug::Print("NextStage");
+	StageNum++;
+	if (StageNum == 4)
+	{
+		Debug::Print("EndStage");
+		UnActivateWall();
+		return;
+	}
+	SpawnEnemy(StageNum);
+}
+
+
+/*
+// Called every frame
+void ABaseSector::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+}
+*/
+
