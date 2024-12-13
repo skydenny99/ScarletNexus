@@ -8,6 +8,7 @@
 #include "Character/BaseCharacter.h"
 #include "Character_Kasane.generated.h"
 
+class UComboSystemComponent;
 struct FInputActionInstance;
 class UDataAsset_DirectionInputConfig;
 class UDataAsset_InputConfig;
@@ -26,6 +27,7 @@ public:
 	ACharacter_Kasane();
 
 protected:
+	UComboSystemComponent* ComboSystemComponent;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	UDataAsset_InputConfig* InputConfig;
@@ -40,6 +42,9 @@ protected:
 	void OnAbilityInputTriggered(FGameplayTag InputTag);
 	void UpdateMovementElapsedTime(const FInputActionInstance& Instance);
 	void ResetMovementElapsedTime(const FInputActionValue& Value);
+public:
+	void OnAttackInputTriggered(FGameplayTag InputTag, const FInputActionInstance& Instance);
+	void OnAttackInputCompleted(FGameplayTag InputTag, const FInputActionInstance& Instance);
 
 private:
 	float MovementElapsedTime;
