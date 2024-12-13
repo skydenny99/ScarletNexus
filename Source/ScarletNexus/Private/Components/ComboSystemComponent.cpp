@@ -46,6 +46,7 @@ void UComboSystemComponent::GrantAttackAbilites(UAbilitySystemComponent* ASC, in
 		ASC->GiveAbility(Spec);
 		AbilitySpecs.Add(Spec.Ability->AbilityTags.First(), Spec);
 	}
+	UBaseFunctionLibrary::AddPlaygameTagToActor(Kasane, BaseGameplayTags::Shared_Event_Combo);
 }
 
 void UComboSystemComponent::TryActivateAbilityByInputTag(FGameplayTag tag)
