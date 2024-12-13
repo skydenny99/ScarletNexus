@@ -199,7 +199,20 @@ void ACharacter_Kasane::OnFalling(ACharacter* Character, EMovementMode PrevMovem
 void ACharacter_Kasane::PushInput(EBaseDirectionType Direction)
 {
 	GetWorldTimerManager().ClearTimer(DodgeThresholdTimer);
-	DirectionHistory &= static_cast<uint8>(Direction);
+	switch (Direction)
+	{
+		case EBaseDirectionType::Left:
+		case EBaseDirectionType::Right:
+		DirectionHistory |= 0b1100;
+			break;
+		case EBaseDirectionType::Front:
+		case EBaseDirectionType::Back:
+		DirectionHistory |= 0b0011;
+			break;
+		default:
+		break;
+	}
+	DirectionHistory &= static_cast<uint8>(Direction); 
 	GetWorldTimerManager().SetTimer(DodgeThresholdTimer, this, &ACharacter_Kasane::ClearInputHistory, DodgeAllowThreshold, false);
 
 }
