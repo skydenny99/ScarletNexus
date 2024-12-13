@@ -95,6 +95,8 @@ namespace BaseGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_Move_Run, "Player.Status.Move.Run");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_Move_Dash, "Player.Status.Move.Dash");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_Move_Dodge_Instant, "Player.Status.Move.Dodge.Instant");
+	
+	UE_DEFINE_GAMEPLAY_TAG(Player_Status_Charging, "Player.Status.Charging");
 
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_Move_Aerial, "Player.Status.Move.Aerial");
 

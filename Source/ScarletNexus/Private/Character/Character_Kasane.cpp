@@ -13,6 +13,7 @@
 #include "DataAsset/DataAsset_StartupBase.h"
 #include "BaseDebugHelper.h"
 #include "BaseFunctionLibrary.h"
+#include "Components/ComboSystemComponent.h"
 #include "Components/UnlockSystemComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 
@@ -75,6 +76,7 @@ ACharacter_Kasane::ACharacter_Kasane()
 	OverrideInputComponentClass = UBaseInputComponent::StaticClass();
 	BaseAbilitySystemComponent = CreateDefaultSubobject<UBaseAbilitySystemComponent>(TEXT("AbilitySystemComponent"));
 	CreateDefaultSubobject<UUnlockSystemComponent>(TEXT("UnlockSystemComponent"));
+	ComboSystemComponent = CreateDefaultSubobject<UComboSystemComponent>(TEXT("ComboSystemComponent"));
 
 	MovementModeChangedDelegate.AddDynamic(this, &ACharacter_Kasane::OnFalling);
 
@@ -125,6 +127,7 @@ void ACharacter_Kasane::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	InputComp->BindNativeInputAction(InputConfig, BaseGameplayTags::InputTag_Look, ETriggerEvent::Triggered, this, &ACharacter_Kasane::OnInputLookTriggered);
 	InputComp->BindAbilityInputAction(InputConfig, this, &ACharacter_Kasane::OnAbilityInputTriggered);
 	InputComp->BindDirectionInput(DirectionInputConfig, this, &ACharacter_Kasane::PushInput);
+	InputComp->BindActionInstanceWithTag(InputConfig, this);
 }
 
 void ACharacter_Kasane::OnInputMoveTriggered(const FInputActionValue& Value)
@@ -174,6 +177,16 @@ void ACharacter_Kasane::ResetMovementElapsedTime(const FInputActionValue& Value)
 {
 	MovementElapsedTime = 0.f;
 	MovementTriggeredTime = 0.f;
+}
+
+void ACharacter_Kasane::OnAttackInputTriggered(FGameplayTag InputTag, const FInputActionInstance& Instance)
+{
+	ComboSystemComponent->ProcessInputAction(InputTag, ETriggerEvent::Triggered, Instance);
+}
+
+void ACharacter_Kasane::OnAttackInputCompleted(FGameplayTag InputTag, const FInputActionInstance& Instance)
+{
+	ComboSystemComponent->ProcessInputAction(InputTag, ETriggerEvent::Completed, Instance);
 }
 
 

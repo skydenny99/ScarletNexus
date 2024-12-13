@@ -2,7 +2,11 @@
 
 
 #include "Components/ComboSystemComponent.h"
+
+#include "BaseDebugHelper.h"
 #include "Character/Character_Kasane.h"
+#include "BaseFunctionLibrary.h"
+#include "BaseGameplayTags.h"
 
 // Sets default values for this component's properties
 UComboSystemComponent::UComboSystemComponent()
@@ -12,12 +16,17 @@ UComboSystemComponent::UComboSystemComponent()
 	PrimaryComponentTick.bCanEverTick = false;
 
 	// ...
-
-	Kasane->MovementModeChangedDelegate.AddDynamic(this, &UComboSystemComponent::ResetAllCombo);
+	Kasane = Cast<ACharacter_Kasane>(GetOwner());
+	if (Kasane)
+	{
+		Kasane->MovementModeChangedDelegate.AddDynamic(this, &UComboSystemComponent::ResetAllCombo);
+	}
 }
+
 
 void UComboSystemComponent::ActivateAbilityByTag(FGameplayTag tag)
 {
+	//if (tag.MatchesTagExact(BaseGameplayTags::playerability))
 }
 
 void UComboSystemComponent::UpdateInfoByUnlock()
@@ -41,4 +50,31 @@ void UComboSystemComponent::ResetBackstepCount()
 {
 	CurrentBackstepAttackCount = 0;
 }
+
+void UComboSystemComponent::ProcessInputAction(FGameplayTag ActionTag, ETriggerEvent TriggerEvent, const FInputActionInstance& Instance)
+{
+	switch (TriggerEvent)
+	{
+	case ETriggerEvent::Triggered:
+		if (ActionTag == LastActivatedGameplayTag)
+			ActionElapsedTime = Instance.GetElapsedTime();
+		if (ShouldBlockInputAction()) return;
+		ActivateAbilityByTag(ActionTag);
+		break;
+	case ETriggerEvent::Completed:
+		// TODO activate charging ability
+		break;
+	default:
+		break;
+	}
+}
+
+bool UComboSystemComponent::ShouldBlockInputAction()
+{
+	if (UBaseFunctionLibrary::NativeActorHasTag(Kasane, BaseGameplayTags::Player_Status_Charging))
+		return true;
+	
+	return false;
+}
+
 

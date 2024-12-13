@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
+#include "InputAction.h"
+#include "AbilitySystem/Ability/GameplayAbilityBase.h"
 #include "Components/ActorComponent.h"
 #include "ComboSystemComponent.generated.h"
 
@@ -25,6 +27,21 @@ private:
 	int32 CurrentGroundComboCount;
 	int32 CurrentAerialComboCount;
 	int32 CurrentBackstepAttackCount;
+
+	float ActionElapsedTime;
+	FGameplayTag LastActivatedGameplayTag;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Ability", meta=(AllowPrivateAccess=true))
+	TSubclassOf<UGameplayAbilityBase> WeaponAttackAbility;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Ability", meta=(AllowPrivateAccess=true))
+	TSubclassOf<UGameplayAbilityBase> WeaponSpecialAttackAbility;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Ability", meta=(AllowPrivateAccess=true))
+	TSubclassOf<UGameplayAbilityBase> PsychAttackAbility;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Ability", meta=(AllowPrivateAccess=true))
+	TSubclassOf<UGameplayAbilityBase> PsychSpecialAttackAbility;
 	
 
 public:
@@ -39,4 +56,7 @@ public:
 
 	UFUNCTION()
 	void ResetBackstepCount();
+
+	void ProcessInputAction(FGameplayTag ActionTag, ETriggerEvent TriggerEvent, const FInputActionInstance& Instance);
+	bool ShouldBlockInputAction();
 };
