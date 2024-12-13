@@ -4,9 +4,11 @@
 #include "AbilitySystem/Ability/GA_Dodge_Player.h"
 
 #include "BaseDebugHelper.h"
+#include "AnimInstance/KasaneAnimInstance.h"
 #include "BaseType/BaseEnumType.h"
 #include "Character/BaseCharacter.h"
 #include "Character/Character_Kasane.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 
 
@@ -16,10 +18,26 @@ bool operator==(uint8 Lhs, EBaseDirectionType Type)
 }
 
 
-bool UGA_Dodge_Player::CheckDirection(uint8 Lhs, EBaseDirectionType RHS) const
+void UGA_Dodge_Player::OnGiveAbility(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec)
 {
-	uint8 tmp = !static_cast<uint8>(RHS);
-	return (Lhs & tmp) == 0;
+	Super::OnGiveAbility(ActorInfo, Spec);
+	KasaneAnimInstance = Cast<UKasaneAnimInstance>(DodgeCharacter->GetMesh()->GetAnimInstance());
+	check(KasaneAnimInstance);
+	KasaneAnimInstance->OnDodgeEnd.BindUObject(this, &UGA_Dodge_Player::OnEndDodge);
+	DodgeCharacter->MovementModeChangedDelegate.AddDynamic(this, &UGA_Dodge_Player::ResetDodgeCount);
+	DodgeMovementComponent = DodgeCharacter->GetCharacterMovement();
+	check(DodgeMovementComponent);
+}
+
+bool UGA_Dodge_Player::CanActivateAbility(const FGameplayAbilitySpecHandle Handle,
+	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayTagContainer* SourceTags,
+	const FGameplayTagContainer* TargetTags, FGameplayTagContainer* OptionalRelevantTags) const
+{
+	if (Super::CanActivateAbility(Handle, ActorInfo, SourceTags, TargetTags, OptionalRelevantTags))
+	{
+		return DodgeMovementComponent->IsFalling() == false || DodgeCount < MaxDodgeCount;
+	}
+	return false;
 }
 
 void UGA_Dodge_Player::GetCharacterDodgeDirection(EBaseDirectionType& DirectionResult)
@@ -54,15 +72,11 @@ void UGA_Dodge_Player::GetCharacterDodgeDirection(EBaseDirectionType& DirectionR
 	{
 		InputDirection += FVector::LeftVector;
 	}
-
-
+	
 	FVector LookDirection = FRotator(0.f, DodgeCharacter->GetControlRotation().Yaw, 0.f).RotateVector(InputDirection);
 	FVector CharacterForward = DodgeCharacter->GetActorForwardVector();
-	CharacterForward -= DodgeCharacter->GetActorLocation();
 	FVector CharacterRight = DodgeCharacter->GetActorRightVector();
-	CharacterRight -= DodgeCharacter->GetActorLocation();
 
-	FVector NearestVector;
 	LookDirection.Normalize();
 	float VerticalDot = FVector::DotProduct(LookDirection, CharacterForward);
 	float HorizontalDot = FVector::DotProduct(LookDirection, CharacterRight);
@@ -72,13 +86,11 @@ void UGA_Dodge_Player::GetCharacterDodgeDirection(EBaseDirectionType& DirectionR
 	{
 		if (VerticalDot > 0.f) // Forward
 		{
-			NearestVector = CharacterForward;
 			DirectionResult = EBaseDirectionType::Front;
 			Debug::Print("Forward");
 		}
 		else // Backward
 		{
-			NearestVector = -CharacterForward;
 			DirectionResult = EBaseDirectionType::Back;
 			Debug::Print("Back");
 			LookDirection = UKismetMathLibrary::RotateAngleAxis(LookDirection, 180, FVector::UpVector);
@@ -88,14 +100,12 @@ void UGA_Dodge_Player::GetCharacterDodgeDirection(EBaseDirectionType& DirectionR
 	{
 		if (HorizontalDot > 0.f) // Right
 		{
-			NearestVector = CharacterRight;
 			DirectionResult = EBaseDirectionType::Right;
 			Debug::Print("Right");	
 			LookDirection = UKismetMathLibrary::RotateAngleAxis(LookDirection, -90, FVector::UpVector);
 		}
 		else // Left
 		{
-			NearestVector = -CharacterRight;
 			DirectionResult = EBaseDirectionType::Left;
 			Debug::Print("Left");
 			LookDirection = UKismetMathLibrary::RotateAngleAxis(LookDirection, 90, FVector::UpVector);
@@ -104,4 +114,47 @@ void UGA_Dodge_Player::GetCharacterDodgeDirection(EBaseDirectionType& DirectionR
 
 	FRotator TargetRot = UKismetMathLibrary::FindLookAtRotation(FVector(0.f), LookDirection);
 	DodgeCharacter->SetActorRotation(TargetRot);
+}
+
+void UGA_Dodge_Player::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
+	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
+	const FGameplayEventData* TriggerEventData)
+{
+	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
+	EBaseDirectionType DodgeDir = EBaseDirectionType::Max;
+	GetCharacterDodgeDirection(DodgeDir);
+	PlayDodgeAnimation(DodgeDir);
+	if (DodgeMovementComponent->IsFalling())
+		DodgeCount++;
+}
+
+void UGA_Dodge_Player::PlayDodgeAnimation(EBaseDirectionType Direction)
+{
+	DodgeMovementComponent->Velocity = FVector::ZeroVector;
+	DodgeMovementComponent->GravityScale = 0;
+	KasaneAnimInstance->Dodge(Direction);
+	
+	ACharacter_Kasane* Kasane = Cast<ACharacter_Kasane>(DodgeCharacter);
+	Kasane->ActivateDash(true);
+}
+
+void UGA_Dodge_Player::OnEndDodge()
+{
+	FVector Velocity = DodgeMovementComponent->Velocity;
+	Velocity /= 3.f;
+	Velocity.Z = 0;
+	DodgeMovementComponent->Velocity = Velocity;
+	DodgeMovementComponent->GravityScale = 3;
+	K2_EndAbility();
+}
+
+void UGA_Dodge_Player::ResetDodgeCount(ACharacter* Character, EMovementMode PrevMovementMode, uint8 PreviousCustomMode)
+{
+	if (DodgeMovementComponent)
+	{
+		if (DodgeMovementComponent->MovementMode != MOVE_Falling)
+		{
+			DodgeCount = 0;
+		}
+	}
 }

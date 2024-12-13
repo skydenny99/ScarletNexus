@@ -30,16 +30,21 @@ USTRUCT(BlueprintType)
 struct FUnlockData
 {
 	GENERATED_BODY()
+	UPROPERTY(EditDefaultsOnly, Category = "Unlock", meta = (Categories = "InputTag"))
+	FGameplayTag UnlockTag;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Unlock", meta = (Categories = "InputTag"))
-	FGameplayTag OverrideTargetTag;
+	FGameplayTag OverrideInputTag;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Unlock")
 	TSubclassOf<UGameplayAbilityBase> OverrideAbility;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Unlock")
+	int32 Level = 1;
 
 	FORCEINLINE bool IsValid() const
 	{
-		return OverrideTargetTag.IsValid() && OverrideAbility;
+		return UnlockTag.IsValid() && OverrideInputTag.IsValid() && OverrideAbility;
 	}
 };
 

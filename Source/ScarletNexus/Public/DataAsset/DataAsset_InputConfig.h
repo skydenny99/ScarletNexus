@@ -44,5 +44,8 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (Categories = "InputTag"))
 	TArray<FInputActionConfig> AbilityInputActions;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (Categories = "InputTag"))
+	TArray<FInputActionConfig> AttackInputActions;
+
 	UInputAction* GetInputActionByTag(const FGameplayTag& InInputTag) const;
 };

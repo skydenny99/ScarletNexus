@@ -4,8 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "AnimInstance/CharacterAnimInstance.h"
+#include "BaseType/BaseEnumType.h"
 #include "KasaneAnimInstance.generated.h"
 
+class ACharacter_Kasane;
+DECLARE_DELEGATE(FOnDodgeEnd);
 /**
  * 
  */
@@ -14,13 +17,33 @@ class SCARLETNEXUS_API UKasaneAnimInstance : public UCharacterAnimInstance
 {
 	GENERATED_BODY()
 public:
+	virtual void NativeInitializeAnimation() override;
 	virtual void NativeThreadSafeUpdateAnimation(float DeltaSeconds) override;
 
 protected:
+	UPROPERTY()
+	ACharacter_Kasane* OwningKasane;
+	
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Locomotion")
 	int32 JumpCount;
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Locomotion")
 	float VelocityZ;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Locomotion")
+	bool bNeedToStop;
 
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Locomotion")
+	bool bDoingDodge;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Locomotion")
+	EBaseDirectionType DodgeDirection;
+	
+
+public:
+	FOnDodgeEnd OnDodgeEnd;
+	
+	UFUNCTION(BlueprintCallable)
+	void Dodge(EBaseDirectionType Direction);
+
+	UFUNCTION(BlueprintCallable)
+	void DodgeEnd();
 };

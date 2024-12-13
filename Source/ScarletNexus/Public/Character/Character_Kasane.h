@@ -3,10 +3,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "InputActionValue.h"
 #include "BaseType/BaseEnumType.h"
 #include "Character/BaseCharacter.h"
 #include "Character_Kasane.generated.h"
 
+class UComboSystemComponent;
+struct FInputActionInstance;
 class UDataAsset_DirectionInputConfig;
 class UDataAsset_InputConfig;
 struct FInputActionValue;
@@ -24,6 +27,7 @@ public:
 	ACharacter_Kasane();
 
 protected:
+	UComboSystemComponent* ComboSystemComponent;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	UDataAsset_InputConfig* InputConfig;
@@ -36,8 +40,16 @@ protected:
 	void OnInputMoveTriggered(const FInputActionValue& Value);
 	void OnInputLookTriggered(const FInputActionValue& Value);
 	void OnAbilityInputTriggered(FGameplayTag InputTag);
+	void UpdateMovementElapsedTime(const FInputActionInstance& Instance);
+	void ResetMovementElapsedTime(const FInputActionValue& Value);
+public:
+	void OnAttackInputTriggered(FGameplayTag InputTag, const FInputActionInstance& Instance);
+	void OnAttackInputCompleted(FGameplayTag InputTag, const FInputActionInstance& Instance);
 
 private:
+	float MovementElapsedTime;
+	float MovementTriggeredTime;
+	
 	UPROPERTY(EditDefaultsOnly, Category = "Input", meta=(AllowPrivateAccess = "true"))
 	float DodgeAllowThreshold = 0.15f;
 	FTimerHandle DodgeThresholdTimer;
@@ -53,6 +65,10 @@ private:
 	void PushInput(EBaseDirectionType Direction);
 	void ClearInputHistory();
 public:
-	uint8 GetDirectionByHistory();
+	FORCEINLINE uint8 GetDirectionByHistory();
 
+	UFUNCTION(BlueprintCallable)
+	void ActivateDash(bool bIsDashing);
+	FORCEINLINE float GetMovementElapsedTime() const { return MovementElapsedTime; };
+	FORCEINLINE bool NeedToMove() const { return MovementElapsedTime > DodgeAllowThreshold; }
 };

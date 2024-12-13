@@ -13,6 +13,8 @@
 #include "DataAsset/DataAsset_StartupBase.h"
 #include "BaseDebugHelper.h"
 #include "BaseFunctionLibrary.h"
+#include "Components/ComboSystemComponent.h"
+#include "Components/UnlockSystemComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 
 ACharacter_Kasane::ACharacter_Kasane()
@@ -67,12 +69,29 @@ ACharacter_Kasane::ACharacter_Kasane()
 	Movement->RotationRate = FRotator(0.f, 600.f, 0.f);
 	OriginRotationRate = Movement->RotationRate;
 	Movement->MaxAcceleration = 4096;
+	Movement->GravityScale = 3.f;
+	Movement->bApplyGravityWhileJumping = false;
 
 
 	OverrideInputComponentClass = UBaseInputComponent::StaticClass();
 	BaseAbilitySystemComponent = CreateDefaultSubobject<UBaseAbilitySystemComponent>(TEXT("AbilitySystemComponent"));
+	CreateDefaultSubobject<UUnlockSystemComponent>(TEXT("UnlockSystemComponent"));
+	ComboSystemComponent = CreateDefaultSubobject<UComboSystemComponent>(TEXT("ComboSystemComponent"));
 
 	MovementModeChangedDelegate.AddDynamic(this, &ACharacter_Kasane::OnFalling);
+
+
+	static ConstructorHelpers::FObjectFinder<USkeletalMesh> WeaponMesh(TEXT("/Game/Resources/Weapons/WP0200/WP200_Base.WP200_Base"));
+	if (WeaponMesh.Succeeded())
+	{
+		for (int i = 1; i <=6; i++)
+		{
+			USkeletalMeshComponent* WeaponMeshComp = CreateDefaultSubobject<USkeletalMeshComponent>(FName(FString::Printf(TEXT("Weapon0%d"), i)));
+			WeaponMeshComp->SetSkeletalMesh(WeaponMesh.Object);
+			WeaponMeshComp->SetupAttachment(MainBody, FName(FString::Printf(TEXT("Weapon0%d"), i)));
+			WeaponMeshComp->SetRelativeRotation(FRotator(0.f, 0.f, -90.f));
+		}
+	}
 }
 
 void ACharacter_Kasane::PossessedBy(AController* NewController)
@@ -103,13 +122,17 @@ void ACharacter_Kasane::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	UBaseInputComponent* InputComp = Cast<UBaseInputComponent>(PlayerInputComponent);
 	check(InputComp);
 	InputComp->BindNativeInputAction(InputConfig, BaseGameplayTags::InputTag_Move, ETriggerEvent::Triggered, this, &ACharacter_Kasane::OnInputMoveTriggered);
+	InputComp->BindNativeInputAction(InputConfig, BaseGameplayTags::InputTag_Move, ETriggerEvent::Triggered, this, &ACharacter_Kasane::UpdateMovementElapsedTime);
+	InputComp->BindNativeInputAction(InputConfig, BaseGameplayTags::InputTag_Move, ETriggerEvent::Completed, this, &ACharacter_Kasane::ResetMovementElapsedTime);
 	InputComp->BindNativeInputAction(InputConfig, BaseGameplayTags::InputTag_Look, ETriggerEvent::Triggered, this, &ACharacter_Kasane::OnInputLookTriggered);
 	InputComp->BindAbilityInputAction(InputConfig, this, &ACharacter_Kasane::OnAbilityInputTriggered);
 	InputComp->BindDirectionInput(DirectionInputConfig, this, &ACharacter_Kasane::PushInput);
+	InputComp->BindActionInstanceWithTag(InputConfig, this);
 }
 
 void ACharacter_Kasane::OnInputMoveTriggered(const FInputActionValue& Value)
 {
+	if (NeedToMove() == false) return;
 	const FVector2D MovementVector = Value.Get<FVector2D>();
 	const FRotator MovementRotation(0.f, Controller->GetControlRotation().Yaw, 0.f);
 	if (MovementVector.X != 0.f)
@@ -143,6 +166,29 @@ void ACharacter_Kasane::OnAbilityInputTriggered(FGameplayTag InputTag)
 	BaseAbilitySystemComponent->OnAbilityInputTriggered(InputTag);
 }
 
+void ACharacter_Kasane::UpdateMovementElapsedTime(const FInputActionInstance& Instance)
+{
+	MovementElapsedTime = Instance.GetElapsedTime();
+	MovementTriggeredTime = Instance.GetTriggeredTime();
+	//Debug::Print(FString::Printf(TEXT("ElapsedTime %f: / TriggeredTime %f"), MovementElapsedTime, MovementTriggeredTime));
+}
+
+void ACharacter_Kasane::ResetMovementElapsedTime(const FInputActionValue& Value)
+{
+	MovementElapsedTime = 0.f;
+	MovementTriggeredTime = 0.f;
+}
+
+void ACharacter_Kasane::OnAttackInputTriggered(FGameplayTag InputTag, const FInputActionInstance& Instance)
+{
+	ComboSystemComponent->ProcessInputAction(InputTag, ETriggerEvent::Triggered, Instance);
+}
+
+void ACharacter_Kasane::OnAttackInputCompleted(FGameplayTag InputTag, const FInputActionInstance& Instance)
+{
+	ComboSystemComponent->ProcessInputAction(InputTag, ETriggerEvent::Completed, Instance);
+}
+
 
 void ACharacter_Kasane::OnFalling(ACharacter* Character, EMovementMode PrevMovementMode, uint8 PreviousCustomMode)
 {
@@ -163,6 +209,11 @@ uint8 ACharacter_Kasane::GetDirectionByHistory()
 	uint8 Result = DirectionHistory;
 	ClearInputHistory();
 	return Result;
+}
+
+void ACharacter_Kasane::ActivateDash(bool bIsDashing)
+{
+	GetCharacterMovement()->MaxWalkSpeed = bIsDashing ? 1200.f : 800.f;
 }
 
 void ACharacter_Kasane::ClearInputHistory()
