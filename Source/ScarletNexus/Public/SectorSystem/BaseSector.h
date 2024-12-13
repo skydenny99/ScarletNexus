@@ -52,7 +52,8 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 	TArray<AActor*> Enemies;
-	
+
+	bool bIsActive = true;
 	int32 StageNum = 1;
 	int StagePosNum[3][3] = {{0,1,2},{3,4,5},{6,7,8}};
 	
@@ -65,10 +66,7 @@ public:
 	void SpawnWall();
 
 	UFUNCTION()
-	void ActivateWall();
-
-	UFUNCTION()
-	void UnActivateWall();
+	void ToggleWall();
 
 	UFUNCTION()
 	void SpawnEnemy(const int32 Stage);

@@ -3,6 +3,7 @@
 
 #include "SectorSystem/BaseSectorWall.h"
 
+
 #include "BaseDebugHelper.h"
 
 // Sets default values
@@ -17,7 +18,7 @@ ABaseSectorWall::ABaseSectorWall()
 	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>("StaticMesh");
 	StaticMesh->SetupAttachment(Root);
 
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> MeshAsset(TEXT("StaticMesh'/Engine/BasicShapes/Cube.Cube'"));
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> MeshAsset(TEXT("/Engine/BasicShapes/cube"));
 	if (MeshAsset.Succeeded())
 	{
 		StaticMesh->SetStaticMesh(MeshAsset.Object);
