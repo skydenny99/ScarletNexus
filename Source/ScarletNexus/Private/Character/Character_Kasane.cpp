@@ -96,12 +96,18 @@ ACharacter_Kasane::ACharacter_Kasane()
 
 void ACharacter_Kasane::PossessedBy(AController* NewController)
 {
+	Super::PossessedBy(NewController);
 	if (StartupData.IsNull() == false)
 	{
 		if (UDataAsset_StartupBase* LoadedData = StartupData.LoadSynchronous())
 		{
 			LoadedData->GiveStartupAbilities(BaseAbilitySystemComponent);
 		}
+	}
+
+	if (ComboSystemComponent)
+	{
+		ComboSystemComponent->GrantAttackAbilites(BaseAbilitySystemComponent);
 	}
 }
 
