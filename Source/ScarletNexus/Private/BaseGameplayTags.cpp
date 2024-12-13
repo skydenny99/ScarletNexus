@@ -126,14 +126,33 @@ namespace BaseGameplayTags
 #pragma endregion
 
 
-#pragma region Fellow 
+#pragma region Fellow
+	// Ability
 	UE_DEFINE_GAMEPLAY_TAG(Fellow_Ability_Attack_Normal, "Fellow.Ability.Attack.Normal");
+
+
+	
+	UE_DEFINE_GAMEPLAY_TAG(Fellow_Ability_Startup_SpawnWeapon, "Fellow.Ability.Startup.SpawnWeapon");
+
+
+
+	// State
+	UE_DEFINE_GAMEPLAY_TAG(Fellow_State_LockOnTarget, "Fellow.State.LockOnTarget");
+	UE_DEFINE_GAMEPLAY_TAG(Fellow_State_PlayerFellow, "Fellow.State.PlayerFellow");
+	
+	UE_DEFINE_GAMEPLAY_TAG(Fellow_State_EquippingWeapon, "Fellow.State.EquippingWeapon");
+	
+	UE_DEFINE_GAMEPLAY_TAG(Fellow_State_Attacking, "Fellow.State.Attacking");
 
 #pragma endregion Fellow
 
 #pragma region Enemy
 	UE_DEFINE_GAMEPLAY_TAG(Enemy_Boss_Ability_Attack_WaterBall, "Enemy.Boss.Ability.Attack.WaterBall");
 	
+	UE_DEFINE_GAMEPLAY_TAG(Enemy_Boss_Ability_Attack_MeleeAttack, "Enemy.Boss.Ability.Attack.MeleeAttack");
+	
+	UE_DEFINE_GAMEPLAY_TAG(Enemy_Boss_Ability_Move_BackRun, "Enemy.Boss.Ability.Move.BackRun");
+		
 #pragma endregion
 
 	

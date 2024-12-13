@@ -133,7 +133,25 @@ namespace BaseGameplayTags
 
 
 #pragma region Fellow Character
+	// Ability
 	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Fellow_Ability_Attack_Normal);
+
+
+
+
+	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Fellow_Ability_Startup_SpawnWeapon);
+
+
+	// State
+	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Fellow_State_LockOnTarget);
+	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Fellow_State_PlayerFellow);
+	
+	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Fellow_State_EquippingWeapon);
+	
+	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Fellow_State_Attacking);
+	
+
+	
 
 
 
@@ -141,6 +159,11 @@ namespace BaseGameplayTags
 
 #pragma region Enemy
 	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Enemy_Boss_Ability_Attack_WaterBall);
+	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Enemy_Boss_Ability_Attack_MeleeAttack);
+
+
+	
+	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Enemy_Boss_Ability_Move_BackRun);
 	
 #pragma endregion
 	
