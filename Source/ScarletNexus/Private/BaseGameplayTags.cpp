@@ -72,6 +72,7 @@ namespace BaseGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Aerial_Weapon, "Player.Ability.Attack.Aerial.Weapon");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Aerial_Psych, "Player.Ability.Attack.Aerial.Psych");
 
+	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Special_Psych, "Player.Ability.Attack.Special.Psych");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Backstep, "Player.Ability.Attack.Backstep");
 
 	// Ability - Move
@@ -97,6 +98,7 @@ namespace BaseGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_Move_Dodge_Instant, "Player.Status.Move.Dodge.Instant");
 	
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_Charging, "Player.Status.Charging");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Status_ChargeReady, "Player.Status.ChargeReady");
 
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_Move_Aerial, "Player.Status.Move.Aerial");
 
@@ -107,6 +109,8 @@ namespace BaseGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(Unlock_DoubleJump, "Unlock.DoubleJump");
 	UE_DEFINE_GAMEPLAY_TAG(Unlock_Aerial_Dash, "Unlock.Aerial.Dash");
 	UE_DEFINE_GAMEPLAY_TAG(Unlock_Aerial_DoubleDash, "Unlock.Aerial.DoubleDash");
+	UE_DEFINE_GAMEPLAY_TAG(Unlock_GroundCombo_Third, "Unlock.GroundCombo.Third");
+	UE_DEFINE_GAMEPLAY_TAG(Unlock_GroundCombo_Fourth, "Unlock.GroundCombo.Fourth");
 
 #pragma endregion
 
@@ -124,6 +128,7 @@ namespace BaseGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_Hit_Normal, "Shared.Event.Hit.Normal");
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_Hit_Critical, "Shared.Event.Hit.Critical");
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_Hit_KnockDown, "Shared.Event.Hit.KnockDown");
+	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_Combo, "Shared.Event.Combo");
 
 #pragma endregion
 
