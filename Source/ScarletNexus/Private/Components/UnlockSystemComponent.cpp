@@ -7,6 +7,7 @@
 #include "BaseFunctionLibrary.h"
 #include "GameplayAbilitySpecHandle.h"
 #include "DataAsset/DataAsset_StartupKasane.h"
+#include "DataAsset/DataAsset_UnlockAbility.h"
 
 // Sets default values for this component's properties
 UUnlockSystemComponent::UUnlockSystemComponent()
@@ -15,34 +16,43 @@ UUnlockSystemComponent::UUnlockSystemComponent()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = false;
 	AbilitySystemComponent = nullptr;
+	static ConstructorHelpers::FObjectFinder<UDataAsset_UnlockAbility> UnlockAbilityObject(TEXT("/Game/_BP/DataAssets/DA_Kasane_UnlockData.DA_Kasane_UnlockData"));
+	if (UnlockAbilityObject.Succeeded())
+	{
+		DataAsset_UnlockAbility = UnlockAbilityObject.Object;
+	}
 }
 
-void UUnlockSystemComponent::InitUnlockData(UAbilitySystemComponent* ASC, TArray<FUnlockData*> InUnlockDatas)
+void UUnlockSystemComponent::InitUnlockData(UAbilitySystemComponent* ASC, FGameplayTagContainer Tags)
 {
 	AbilitySystemComponent = ASC;
-	UnlockDatas = InUnlockDatas;
+	UnlockedTags = Tags;
 }
 
 void UUnlockSystemComponent::ApplyUnlockData()
 {
-	check(AbilitySystemComponent);
-	if (UnlockDatas.IsEmpty()) return;
+	check(DataAsset_UnlockAbility && AbilitySystemComponent);
+	if (UnlockedTags.IsEmpty()) return;
 	TArray<FGameplayAbilitySpecHandle> OutAbilityHandles;
-	for (auto Data : UnlockDatas)
+	FUnlockData Data;
+	for (auto UnlockedTag : UnlockedTags)
 	{
-		AbilitySystemComponent->FindAllAbilitiesWithTags(OutAbilityHandles, Data->OverrideInputTag.GetSingleTagContainer());
-		if (OutAbilityHandles.IsEmpty()) continue;
-		
-		if (OutAbilityHandles[0].IsValid())
+		if (DataAsset_UnlockAbility->FindUnlockDataByTag(UnlockedTag,Data))
 		{
-			AbilitySystemComponent->ClearAbility(OutAbilityHandles[0]);
-		}
+			AbilitySystemComponent->FindAllAbilitiesWithTags(OutAbilityHandles, Data.OverrideInputTag.GetSingleTagContainer());
+			if (OutAbilityHandles.IsEmpty()) continue;
+		
+			if (OutAbilityHandles[0].IsValid())
+			{
+				AbilitySystemComponent->ClearAbility(OutAbilityHandles[0]);
+			}
 
-		FGameplayAbilitySpec Spec(Data->OverrideAbility);
-		Spec.SourceObject = AbilitySystemComponent->GetAvatarActor();
-		Spec.Level = Data->Level;
-		AbilitySystemComponent->GiveAbility(Spec);
-		UBaseFunctionLibrary::AddPlaygameTagToActor(AbilitySystemComponent->GetAvatarActor(), Data->UnlockTag);
+			FGameplayAbilitySpec Spec(Data.OverrideAbility);
+			Spec.SourceObject = AbilitySystemComponent->GetAvatarActor();
+			Spec.Level = Data.Level;
+			AbilitySystemComponent->GiveAbility(Spec);
+		}
+		UBaseFunctionLibrary::AddPlaygameTagToActor(AbilitySystemComponent->GetAvatarActor(), Data.UnlockTag);
 	}
 
 	OnUpdateUnlockData.Broadcast();

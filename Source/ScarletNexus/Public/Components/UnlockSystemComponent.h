@@ -3,9 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "Components/ActorComponent.h"
 #include "UnlockSystemComponent.generated.h"
 
+class UDataAsset_UnlockAbility;
 DECLARE_MULTICAST_DELEGATE(FOnUpdateUnlockData);
 
 class UAbilitySystemComponent;
@@ -15,7 +17,9 @@ UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class SCARLETNEXUS_API UUnlockSystemComponent : public UActorComponent
 {
 	GENERATED_BODY()
-	TArray<FUnlockData*> UnlockDatas;
+
+	FGameplayTagContainer UnlockedTags;
+	UDataAsset_UnlockAbility* DataAsset_UnlockAbility;
 	UAbilitySystemComponent* AbilitySystemComponent;
 	
 public:
@@ -23,6 +27,6 @@ public:
 	// Sets default values for this component's properties
 	UUnlockSystemComponent();
 
-	void InitUnlockData(UAbilitySystemComponent* ASC, TArray<FUnlockData*> InUnlockDatas);
+	void InitUnlockData(UAbilitySystemComponent* ASC, FGameplayTagContainer Tags);
 	void ApplyUnlockData();
 };
