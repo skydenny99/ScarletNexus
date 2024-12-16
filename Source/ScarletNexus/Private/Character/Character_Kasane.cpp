@@ -141,15 +141,19 @@ void ACharacter_Kasane::OnInputMoveTriggered(const FInputActionValue& Value)
 	if (NeedToMove() == false) return;
 	const FVector2D MovementVector = Value.Get<FVector2D>();
 	const FRotator MovementRotation(0.f, Controller->GetControlRotation().Yaw, 0.f);
+	const FVector ForwardDirection = MovementRotation.RotateVector(FVector::ForwardVector);
+	const FVector RightDirection = MovementRotation.RotateVector(FVector::RightVector);
 	if (MovementVector.X != 0.f)
 	{
-		const FVector ForwardDirection = MovementRotation.RotateVector(FVector::ForwardVector);
 		AddMovementInput(ForwardDirection, MovementVector.X);
 	}
 	if (MovementVector.Y != 0.f)
 	{
-		const FVector RightDirection = MovementRotation.RotateVector(FVector::RightVector);
 		AddMovementInput(RightDirection, MovementVector.Y);
+	}
+	if (ComboSystemComponent->TryCancelAttackAbility())
+	{
+		//GetCharacterMovement()->Velocity = GetCharacterMovement()->MaxWalkSpeed * (ForwardDirection + RightDirection);
 	}
 }
 
@@ -169,6 +173,8 @@ void ACharacter_Kasane::OnInputLookTriggered(const FInputActionValue& Value)
 
 void ACharacter_Kasane::OnAbilityInputTriggered(FGameplayTag InputTag)
 {
+	if (UBaseFunctionLibrary::NativeActorHasTag(this, BaseGameplayTags::Shared_Event_Combo) == false) return;
+	//ComboSystemComponent->TryCancelAttackAbility();
 	BaseAbilitySystemComponent->OnAbilityInputTriggered(InputTag);
 }
 

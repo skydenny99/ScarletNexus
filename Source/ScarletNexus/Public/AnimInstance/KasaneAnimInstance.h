@@ -37,6 +37,8 @@ protected:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Locomotion")
 	EBaseDirectionType DodgeDirection;
 	
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Locomotion")
+	FGameplayTag AttackTag;
 
 public:
 	FOnDodgeEnd OnDodgeEnd;

@@ -15,6 +15,11 @@ void UGA_AttackAbilityBase::OnGiveAbility(const FGameplayAbilityActorInfo* Actor
 	check(Kasane);
 	ComboSystem = Kasane->GetComboSystemComponent();
 	check(ComboSystem);
+	OnGameplayAbilityCancelled.AddLambda([ActorInfo]()
+	{
+		if (ActorInfo->AvatarActor.IsValid() == false) return;
+		UBaseFunctionLibrary::AddPlaygameTagToActor(ActorInfo->AvatarActor.Get(), BaseGameplayTags::Shared_Event_Combo);
+	});
 }
 
 bool UGA_AttackAbilityBase::CanActivateAbility(const FGameplayAbilitySpecHandle Handle,

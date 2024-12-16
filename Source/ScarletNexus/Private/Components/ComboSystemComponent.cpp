@@ -102,6 +102,19 @@ void UComboSystemComponent::TryActivateAbilityByInputTag(FGameplayTag tag)
 	}
 }
 
+bool UComboSystemComponent::TryCancelAttackAbility()
+{
+	if (UBaseFunctionLibrary::NativeActorHasTag(Kasane, BaseGameplayTags::Shared_Event_Combo) == false) return false;
+	if (LastActivatedGameplayTag.IsValid() == false) return false;
+	WeaponGroundCombo.CurrentComboCount = 0;
+	WeaponAerialCombo.CurrentComboCount = 0;
+	CurrentBackstepAttackCount = 0;
+	Debug::Print(LastActivatedGameplayTag.ToString(), FColor::Red);
+	BaseAbilitySystemComponent->CancelAbilityHandle(AbilitySpecs[LastActivatedGameplayTag].Handle);
+	LastActivatedGameplayTag = FGameplayTag();
+	return true;
+}
+
 void UComboSystemComponent::UpdateInfoByUnlock()
 {
 	if (UBaseFunctionLibrary::NativeActorHasTag(Kasane, BaseGameplayTags::Unlock_GroundCombo_Third))
