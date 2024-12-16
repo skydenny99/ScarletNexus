@@ -8,20 +8,13 @@
 void UDataAsset_StartupKasane::GiveStartupAbilities(UAbilitySystemComponent* ASC, int32 Level)
 {
 	Super::GiveStartupAbilities(ASC, Level);
-	GiveUnlockAbilities(ASC, Level);
+	GiveUnlockAbilities(ASC);
 }
 
-void UDataAsset_StartupKasane::GiveUnlockAbilities(UAbilitySystemComponent* ASC, int32 Level)
+void UDataAsset_StartupKasane::GiveUnlockAbilities(UAbilitySystemComponent* ASC)
 {
 	UUnlockSystemComponent* UnlockSystemComponent = Cast<UUnlockSystemComponent>(ASC->GetAvatarActor()->FindComponentByClass(UUnlockSystemComponent::StaticClass()));
 	check(UnlockSystemComponent);
-	
-	TArray<FUnlockData*> TargetUnlockDatas;
-	for (const FGameplayTag& UnlockTag : UnlockTags)
-	{
-		TargetUnlockDatas.AddUnique(UnlockDatas.Find(UnlockTag));
-	}
-
-	UnlockSystemComponent->InitUnlockData(ASC, TargetUnlockDatas);
+	UnlockSystemComponent->InitUnlockData(ASC, UnlockTags);
 	UnlockSystemComponent->ApplyUnlockData();
 }

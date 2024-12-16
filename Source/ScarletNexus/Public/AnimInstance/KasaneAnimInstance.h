@@ -44,6 +44,6 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void Dodge(EBaseDirectionType Direction);
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, meta = (BlueprintThreadSafe))
 	void DodgeEnd();
 };
