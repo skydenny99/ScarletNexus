@@ -16,6 +16,7 @@ class SCARLETNEXUS_API UGA_AttackAbilityBase : public UGameplayAbilityBase
 {
 	GENERATED_BODY()
 protected:
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
 	ACharacter_Kasane* Kasane;
 	
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)

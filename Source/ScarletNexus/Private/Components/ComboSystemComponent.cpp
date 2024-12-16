@@ -161,6 +161,15 @@ void UComboSystemComponent::ProcessInputAction(FGameplayTag ActionTag, ETriggerE
 			if (ActionTag == BaseGameplayTags::InputTag_Attack_Weapon_Special)
 			{
 				// TODO activate or cancel charging ability
+				
+				if (BaseAbilitySystemComponent->TryActivateAbility(AbilitySpecs[BaseGameplayTags::Player_Ability_Attack_Backstep].Handle))
+				{
+					LastActivatedGameplayTag = BaseGameplayTags::Player_Ability_Attack_Backstep;
+				}
+				else
+				{
+					Debug::Print("Ability try failed", FColor::Red);
+				}
 			}
 		break;
 	default:
