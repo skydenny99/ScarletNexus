@@ -158,12 +158,22 @@ namespace BaseGameplayTags
 #pragma endregion
 
 #pragma region Enemy
+	// Boss
 	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Enemy_Boss_Ability_Attack_WaterBall);
 	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Enemy_Boss_Ability_Attack_MeleeAttack);
 
 
 	
 	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Enemy_Boss_Ability_Move_BackRun);
+
+
+
+
+	// CommonEnemy
+	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Enemy_Common_Ability_Attack_Melee);
+	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Enemy_Common_Ability_Attack_Ranged);
+	
+	
 	
 #pragma endregion
 	

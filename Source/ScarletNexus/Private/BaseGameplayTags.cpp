@@ -147,11 +147,21 @@ namespace BaseGameplayTags
 #pragma endregion Fellow
 
 #pragma region Enemy
+	// Boss
 	UE_DEFINE_GAMEPLAY_TAG(Enemy_Boss_Ability_Attack_WaterBall, "Enemy.Boss.Ability.Attack.WaterBall");
 	
 	UE_DEFINE_GAMEPLAY_TAG(Enemy_Boss_Ability_Attack_MeleeAttack, "Enemy.Boss.Ability.Attack.MeleeAttack");
 	
 	UE_DEFINE_GAMEPLAY_TAG(Enemy_Boss_Ability_Move_BackRun, "Enemy.Boss.Ability.Move.BackRun");
+
+
+
+	// CommonEnemy
+	UE_DEFINE_GAMEPLAY_TAG(Enemy_Common_Ability_Attack_Melee, "Enemy.Common.Ability.Attack.Melee");
+	UE_DEFINE_GAMEPLAY_TAG(Enemy_Common_Ability_Attack_Ranged, "Enemy.Common.Ability.Attack.Ranged");
+
+
+	
 		
 #pragma endregion
 
