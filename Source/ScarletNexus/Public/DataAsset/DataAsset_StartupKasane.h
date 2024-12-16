@@ -26,27 +26,6 @@ struct FInputBindData
 	}
 };
 
-USTRUCT(BlueprintType)
-struct FUnlockData
-{
-	GENERATED_BODY()
-	UPROPERTY(EditDefaultsOnly, Category = "Unlock", meta = (Categories = "InputTag"))
-	FGameplayTag UnlockTag;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Unlock", meta = (Categories = "InputTag"))
-	FGameplayTag OverrideInputTag;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Unlock")
-	TSubclassOf<UGameplayAbilityBase> OverrideAbility;
-	
-	UPROPERTY(EditDefaultsOnly, Category = "Unlock")
-	int32 Level = 1;
-
-	FORCEINLINE bool IsValid() const
-	{
-		return UnlockTag.IsValid() && OverrideInputTag.IsValid() && OverrideAbility;
-	}
-};
 
 /**
  * 
@@ -59,13 +38,10 @@ class SCARLETNEXUS_API UDataAsset_StartupKasane : public UDataAsset_StartupBase
 	UPROPERTY(EditDefaultsOnly, Category = "Startup", meta = (Categories = "Unlock"))
 	FGameplayTagContainer UnlockTags;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Startup", meta = (Categories = "Unlock"))
-	TMap<FGameplayTag, FUnlockData> UnlockDatas;
-
 public:
 	virtual void GiveStartupAbilities(UAbilitySystemComponent* ASC, int32 Level = 1) override;
 
 protected:
 
-	void GiveUnlockAbilities(UAbilitySystemComponent* ASC, int32 Level = 1);
+	void GiveUnlockAbilities(UAbilitySystemComponent* ASC);
 };
