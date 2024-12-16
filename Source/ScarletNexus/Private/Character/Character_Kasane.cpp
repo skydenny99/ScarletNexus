@@ -79,7 +79,7 @@ ACharacter_Kasane::ACharacter_Kasane()
 	ComboSystemComponent = CreateDefaultSubobject<UComboSystemComponent>(TEXT("ComboSystemComponent"));
 
 	MovementModeChangedDelegate.AddDynamic(this, &ACharacter_Kasane::OnFalling);
-
+	GetMesh()->SetAllowAnimCurveEvaluation(true);
 
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh> WeaponMesh(TEXT("/Game/Resources/Weapons/WP0200/WP200_Base.WP200_Base"));
 	if (WeaponMesh.Succeeded())
