@@ -54,7 +54,7 @@ protected:
 	
 
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 	virtual void OnEnemyPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus);
 
 	virtual void BeginPlay() override;

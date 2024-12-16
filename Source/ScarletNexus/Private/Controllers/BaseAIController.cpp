@@ -66,7 +66,7 @@ ETeamAttitude::Type ABaseAIController::GetTeamAttitudeTowards(const AActor& Othe
     const IGenericTeamAgentInterface* OtherTeamAgent = Cast<IGenericTeamAgentInterface>(PawnCheck->GetController());
 
     
-    if (OtherTeamAgent && OtherTeamAgent->GetGenericTeamId() < GetGenericTeamId())
+    if (OtherTeamAgent && OtherTeamAgent->GetGenericTeamId() != GetGenericTeamId())
     {
         
         return ETeamAttitude::Hostile;
@@ -87,7 +87,8 @@ int32 ABaseAIController::GetTeamId()
 
 void ABaseAIController::OnEnemyPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
 {
-
+    // Debug::Print(FString::Printf(TEXT("PerceptionUpdated Call : %s"), *Actor->GetName()),FColor::Blue);
+    
     if (UBlackboardComponent* BlackboardComponent = GetBlackboardComponent())
     {
         if (BlackboardComponent->GetValueAsObject(FName("TargetActor")) == nullptr)
