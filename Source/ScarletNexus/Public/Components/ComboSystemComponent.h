@@ -79,6 +79,7 @@ private:
 public:
 	void GrantAttackAbilites(UAbilitySystemComponent* ASC, int32 Level = 1);
 	void TryActivateAbilityByInputTag(FGameplayTag tag);
+	bool TryCancelAttackAbility();
 	
 	void UpdateInfoByUnlock();
 	
@@ -95,4 +96,6 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category="Combo")
 	void IncreaseCombo(UPARAM(ref) FComboCounter& ComboCounter);
+
+	FORCEINLINE FGameplayTag GetAttackType() const {return LastActivatedGameplayTag;}
 };

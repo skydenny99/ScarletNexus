@@ -3,6 +3,7 @@
 
 #include "AnimInstance/KasaneAnimInstance.h"
 #include "Character/Character_Kasane.h"
+#include "Components/ComboSystemComponent.h"
 
 
 void UKasaneAnimInstance::NativeInitializeAnimation()
@@ -23,6 +24,7 @@ void UKasaneAnimInstance::NativeThreadSafeUpdateAnimation(float DeltaSeconds)
 	VelocityZ = OwningCharacter->GetVelocity().Z;
 	bHasAcceleration = OwningKasane->NeedToMove();
 	bNeedToStop |= OwningKasane->GetMovementElapsedTime() > 1.f;
+	AttackTag = OwningKasane->GetComboSystemComponent()->GetAttackType();
 }
 
 void UKasaneAnimInstance::Dodge(EBaseDirectionType Direction)
