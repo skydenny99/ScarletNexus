@@ -9,6 +9,7 @@
 class USkeletalMeshComponent;
 class UCapsuleComponent;
 class UCharacterMovementComponent;
+class UEnemyCombatComponent;
 
 
 /**
@@ -18,6 +19,8 @@ UCLASS()
 class SCARLETNEXUS_API ABaseEnemyCharacter : public ABaseCharacter
 {
 	GENERATED_BODY()
+public:
+	ABaseEnemyCharacter();
 	
 protected:
 	
@@ -37,5 +40,12 @@ protected:
 
 	virtual void PossessedBy(AController* NewController) override;
 
+	UPROPERTY(VisibleAnyWhere, BlueprintReadOnly, category = "Combat", meta = (AllowPrivateAccess = "true"))
+	UEnemyCombatComponent* EnemyCombatComponent;
+
+	public:
+	FORCEINLINE UEnemyCombatComponent* GetEnemyCombatComponent() const { return EnemyCombatComponent; }
+
+	virtual UPawnCombatComponent* GetPawnCombatComponent() const override;
 	
 };

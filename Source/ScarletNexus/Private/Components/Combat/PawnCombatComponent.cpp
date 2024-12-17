@@ -3,16 +3,21 @@
 
 #include "Components/Combat/PawnCombatComponent.h"
 #include "Items/Weapon/WeaponBase.h"
+#include "Components/BoxComponent.h"
 #include "BaseDebugHelper.h"
+
 
 void UPawnCombatComponent::RegisterSpawnedWeapon(FGameplayTag WeaponTag, AWeaponBase* Weapon,
 	bool bRegisterAsEquippedWeapon)
 {
-	checkf(!CharacterCarriedWeaponMap.Contains(WeaponTag), TEXT("%s has already been as carried weapon"), *WeaponTag.ToString()); 
-	// check(Weapon);
-
+	checkf(!CharacterCarriedWeaponMap.Contains(WeaponTag), TEXT("%s has already been carried as a weapon"), *WeaponTag.ToString());
+	check(Weapon);
 	CharacterCarriedWeaponMap.Emplace(WeaponTag, Weapon);
 
+
+	Weapon->OnWeaponHitTarget.BindUObject(this, &ThisClass::OnHitTargetActor);
+	Weapon->OnWeaponPulledFromTarget.BindUObject(this, &ThisClass::OnWeaponPulledFromTargetActor);
+	
 	//장착한 무기로 등록이 되면 현재장착무기를 변경
 	if (bRegisterAsEquippedWeapon)
 	{
@@ -44,4 +49,25 @@ AWeaponBase* UPawnCombatComponent::GetCharacterCurrentEquippedWeapon() const
 		return nullptr;
 	}
 	return GetCharacterCarriedWeaponByTag(CurrentEquippedWeaponTag);
+}
+
+void UPawnCombatComponent::ToggleWeaponCollision(bool bUse)
+{
+	AWeaponBase* Weapon = GetCharacterCurrentEquippedWeapon();
+	// check(Weapon);
+
+	if (bUse)
+	{
+		Weapon->GetWeaponCollisionBox()->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+		Debug::Print(Weapon->GetName() + TEXT(" Collision enabled"), FColor::Green);
+	}
+	else
+	{
+		Weapon->GetWeaponCollisionBox()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		Debug::Print(Weapon->GetName() + TEXT(" Collision disabled"), FColor::Red);
+		OverlappedActors.Empty();
+		
+	}
+
+
 }

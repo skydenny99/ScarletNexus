@@ -34,9 +34,29 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Weapon")
 	AWeaponBase* GetCharacterCurrentEquippedWeapon() const;
 
+	UFUNCTION(BlueprintCallable, Category = "Combat")
+	void ToggleWeaponCollision(bool bUse);
+
+	//HitDetection
+	virtual void OnHitTargetActor(AActor* HitActor);
+	virtual void OnWeaponPulledFromTargetActor(AActor* InterectedActor);
+	
+	
 private:
 	//캐릭터 무기 태그 맵
 	TMap<FGameplayTag, AWeaponBase*> CharacterCarriedWeaponMap;
-
+	
+protected:
+	TArray<AActor*> OverlappedActors;
 	
 };
+
+inline void UPawnCombatComponent::OnHitTargetActor(AActor* HitActor)
+{
+	// 자식 구현	
+}
+
+inline void UPawnCombatComponent::OnWeaponPulledFromTargetActor(AActor* InterectedActor)
+{
+	// 자식 구현	
+}

@@ -178,6 +178,12 @@ namespace BaseGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(Enemy_Common_Ability_Attack_Ranged, "Enemy.Common.Ability.Attack.Ranged");
 
 
+	// Weapon
+	UE_DEFINE_GAMEPLAY_TAG(Enemy_Common_Weapon_em0400, "Enemy.Common.Weapon.em0400");
+	UE_DEFINE_GAMEPLAY_TAG(Enemy_Common_Weapon_em0500, "Enemy.Common.Weapon.em0500");
+	UE_DEFINE_GAMEPLAY_TAG(Enemy_Common_Weapon_em0700, "Enemy.Common.Weapon.em0700");
+
+
 	
 		
 #pragma endregion

@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "WeaponBase.generated.h"
 
+
 class UBoxComponent;
 
 DECLARE_DELEGATE_OneParam(FOnTargetInteractedDelegate, AActor*)
