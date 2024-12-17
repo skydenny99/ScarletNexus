@@ -151,9 +151,10 @@ void ACharacter_Kasane::OnInputMoveTriggered(const FInputActionValue& Value)
 	{
 		AddMovementInput(RightDirection, MovementVector.Y);
 	}
-	if (ComboSystemComponent->TryCancelAttackAbility())
+
+	if (UBaseFunctionLibrary::NativeActorHasTag(this, BaseGameplayTags::Shared_Status_CanMove))
 	{
-		//GetCharacterMovement()->Velocity = GetCharacterMovement()->MaxWalkSpeed * (ForwardDirection + RightDirection);
+		ComboSystemComponent->TryCancelAttackAbility();
 	}
 }
 
@@ -173,7 +174,7 @@ void ACharacter_Kasane::OnInputLookTriggered(const FInputActionValue& Value)
 
 void ACharacter_Kasane::OnAbilityInputTriggered(FGameplayTag InputTag)
 {
-	if (UBaseFunctionLibrary::NativeActorHasTag(this, BaseGameplayTags::Shared_Event_Combo) == false) return;
+	if (UBaseFunctionLibrary::NativeActorHasTag(this, BaseGameplayTags::Shared_Status_CanAttack) == false) return;
 	//ComboSystemComponent->TryCancelAttackAbility();
 	BaseAbilitySystemComponent->OnAbilityInputTriggered(InputTag);
 }

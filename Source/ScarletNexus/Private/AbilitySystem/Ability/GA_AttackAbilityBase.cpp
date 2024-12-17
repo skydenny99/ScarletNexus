@@ -18,7 +18,8 @@ void UGA_AttackAbilityBase::OnGiveAbility(const FGameplayAbilityActorInfo* Actor
 	OnGameplayAbilityCancelled.AddLambda([ActorInfo]()
 	{
 		if (ActorInfo->AvatarActor.IsValid() == false) return;
-		UBaseFunctionLibrary::AddPlaygameTagToActor(ActorInfo->AvatarActor.Get(), BaseGameplayTags::Shared_Event_Combo);
+		UBaseFunctionLibrary::AddPlaygameTagToActor(ActorInfo->AvatarActor.Get(), BaseGameplayTags::Shared_Status_CanAttack);
+		UBaseFunctionLibrary::AddPlaygameTagToActor(ActorInfo->AvatarActor.Get(), BaseGameplayTags::Shared_Status_CanMove);
 	});
 }
 
@@ -28,9 +29,18 @@ bool UGA_AttackAbilityBase::CanActivateAbility(const FGameplayAbilitySpecHandle 
 {
 	if (Super::CanActivateAbility(Handle, ActorInfo, SourceTags, TargetTags, OptionalRelevantTags))
 	{
-		return UBaseFunctionLibrary::NativeActorHasTag(Kasane, BaseGameplayTags::Shared_Event_Combo);
+		return UBaseFunctionLibrary::NativeActorHasTag(Kasane, BaseGameplayTags::Shared_Status_CanAttack);
 	}
 	return false;
+}
+
+void UGA_AttackAbilityBase::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
+	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
+	const FGameplayEventData* TriggerEventData)
+{
+	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
+	UBaseFunctionLibrary::RemovePlayGameTagFromActor(Kasane, BaseGameplayTags::Shared_Status_CanAttack);
+	UBaseFunctionLibrary::RemovePlayGameTagFromActor(Kasane, BaseGameplayTags::Shared_Status_CanMove);
 }
 
 

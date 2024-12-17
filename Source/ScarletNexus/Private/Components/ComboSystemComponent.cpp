@@ -46,7 +46,7 @@ void UComboSystemComponent::GrantAttackAbilites(UAbilitySystemComponent* ASC, in
 		ASC->GiveAbility(Spec);
 		AbilitySpecs.Add(Spec.Ability->AbilityTags.First(), Spec);
 	}
-	UBaseFunctionLibrary::AddPlaygameTagToActor(Kasane, BaseGameplayTags::Shared_Event_Combo);
+	UBaseFunctionLibrary::AddPlaygameTagToActor(Kasane, BaseGameplayTags::Shared_Status_CanAttack);
 }
 
 void UComboSystemComponent::TryActivateAbilityByInputTag(FGameplayTag tag)
@@ -98,18 +98,17 @@ void UComboSystemComponent::TryActivateAbilityByInputTag(FGameplayTag tag)
 	}
 	else
 	{
-		Debug::Print("Ability try failed", FColor::Red);
+		Debug::Print("Ability try failed (Triggered)", FColor::Red);
 	}
 }
 
 bool UComboSystemComponent::TryCancelAttackAbility()
 {
-	if (UBaseFunctionLibrary::NativeActorHasTag(Kasane, BaseGameplayTags::Shared_Event_Combo) == false) return false;
 	if (LastActivatedGameplayTag.IsValid() == false) return false;
 	WeaponGroundCombo.CurrentComboCount = 0;
 	WeaponAerialCombo.CurrentComboCount = 0;
 	CurrentBackstepAttackCount = 0;
-	Debug::Print(LastActivatedGameplayTag.ToString(), FColor::Red);
+	Debug::Print(FString::Printf(TEXT("Cancel Ability : %s"), *LastActivatedGameplayTag.ToString()), FColor::Red);
 	BaseAbilitySystemComponent->CancelAbilityHandle(AbilitySpecs[LastActivatedGameplayTag].Handle);
 	LastActivatedGameplayTag = FGameplayTag();
 	return true;
@@ -165,10 +164,11 @@ void UComboSystemComponent::ProcessInputAction(FGameplayTag ActionTag, ETriggerE
 				if (BaseAbilitySystemComponent->TryActivateAbility(AbilitySpecs[BaseGameplayTags::Player_Ability_Attack_Backstep].Handle))
 				{
 					LastActivatedGameplayTag = BaseGameplayTags::Player_Ability_Attack_Backstep;
+					Debug::Print(FString::Printf(TEXT("Ability %s"), *LastActivatedGameplayTag.ToString()), FColor::Red);
 				}
 				else
 				{
-					Debug::Print("Ability try failed", FColor::Red);
+					Debug::Print("Ability try failed (Completed)", FColor::Red);
 				}
 			}
 		break;
