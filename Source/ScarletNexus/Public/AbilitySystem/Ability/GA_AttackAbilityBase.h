@@ -28,8 +28,6 @@ protected:
 	
 public:
 
-	UFUNCTION(BlueprintPure)
-	FORCEINLINE ACharacter_Kasane* GetKasane() { return Kasane; }
 	
 	UFUNCTION(BlueprintPure)
 	FORCEINLINE UComboSystemComponent* GetComboSystem() const {return ComboSystem;}

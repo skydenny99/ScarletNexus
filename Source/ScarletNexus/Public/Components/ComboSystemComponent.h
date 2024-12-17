@@ -10,6 +10,8 @@
 #include "ComboSystemComponent.generated.h"
 
 
+class UDataAsset_AttackAbility;
+
 USTRUCT(BlueprintType)
 struct FComboCounter
 {
@@ -38,42 +40,27 @@ private:
 	UBaseAbilitySystemComponent* BaseAbilitySystemComponent;
 	TMap<FGameplayTag, FGameplayAbilitySpec> AbilitySpecs;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Combo", meta=(AllowPrivateAccess=true))
+public:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Combo")
 	FComboCounter WeaponGroundCombo;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Combo", meta=(AllowPrivateAccess=true))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Combo")
 	FComboCounter WeaponAerialCombo;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Combo", meta=(AllowPrivateAccess=true))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Combo")
 	FComboCounter PsychGroundCombo;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Combo", meta=(AllowPrivateAccess=true))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Combo")
 	FComboCounter PsychAerialCombo;
-	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Combo", meta=(AllowPrivateAccess=true))
-	int32 CurrentBackstepAttackCount;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Combo")
+	FComboCounter BackstepGroundCombo;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Combo")
+	FComboCounter BackstepAerialCombo;
 
+private:
 	float ActionElapsedTime;
 	float ChargeAttackThreshold = 0.3f;
 	FGameplayTag LastActivatedGameplayTag;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Ability", meta=(AllowPrivateAccess=true))
-	TSubclassOf<UGameplayAbilityBase> WeaponGroundAttackAbility;
-	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Ability", meta=(AllowPrivateAccess=true))
-	TSubclassOf<UGameplayAbilityBase> WeaponAerialAttackAbility;
-	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Ability", meta=(AllowPrivateAccess=true))
-	TSubclassOf<UGameplayAbilityBase> WeaponBackstepAbility;
-	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Ability", meta=(AllowPrivateAccess=true))
-	TSubclassOf<UGameplayAbilityBase> WeaponChargeAttackAbility;
-	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Ability", meta=(AllowPrivateAccess=true))
-	TSubclassOf<UGameplayAbilityBase> PsychGroundAttackAbility;
-	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Ability", meta=(AllowPrivateAccess=true))
-	TSubclassOf<UGameplayAbilityBase> PsychAerialAttackAbility;
-	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Ability", meta=(AllowPrivateAccess=true))
-	TSubclassOf<UGameplayAbilityBase> PsychSpecialAttackAbility;
+	UDataAsset_AttackAbility* AbilityAsset;
 	
 
 public:
@@ -84,12 +71,8 @@ public:
 	void UpdateInfoByUnlock();
 	
 	UFUNCTION()
-	void ResetAllCombo(ACharacter* Character, EMovementMode PrevMovementMode, uint8 PreviousCustomMode);
+	void OnMovementModeChange(ACharacter* Character, EMovementMode PrevMovementMode, uint8 PreviousCustomMode);
 	
-	void ResetAttackCombo();
-
-	UFUNCTION()
-	void ResetBackstepCount();
 
 	void ProcessInputAction(FGameplayTag ActionTag, ETriggerEvent TriggerEvent, const FInputActionInstance& Instance);
 	bool ShouldBlockInputAction();
@@ -98,4 +81,7 @@ public:
 	void IncreaseCombo(UPARAM(ref) FComboCounter& ComboCounter);
 
 	FORCEINLINE FGameplayTag GetAttackType() const {return LastActivatedGameplayTag;}
+
+	void ResetGroundCombo();
+	void ResetAerialCombo();
 };

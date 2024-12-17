@@ -8,6 +8,7 @@
 #include "BaseFunctionLibrary.h"
 #include "BaseGameplayTags.h"
 #include "AbilitySystem/BaseAbilitySystemComponent.h"
+#include "DataAsset/DataAsset_AttackAbility.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 // Sets default values for this component's properties
@@ -21,7 +22,7 @@ UComboSystemComponent::UComboSystemComponent()
 	Kasane = Cast<ACharacter_Kasane>(GetOwner());
 	if (Kasane)
 	{
-		Kasane->MovementModeChangedDelegate.AddDynamic(this, &UComboSystemComponent::ResetAllCombo);
+		Kasane->MovementModeChangedDelegate.AddDynamic(this, &UComboSystemComponent::OnMovementModeChange);
 		BaseAbilitySystemComponent = Kasane->GetBaseAbilitySystemComponent();
 	}
 }
@@ -29,15 +30,8 @@ UComboSystemComponent::UComboSystemComponent()
 
 void UComboSystemComponent::GrantAttackAbilites(UAbilitySystemComponent* ASC, int32 Level)
 {
-	TArray<TSubclassOf<UGameplayAbilityBase>> Abilites;
-	Abilites.Add(WeaponGroundAttackAbility);
-	Abilites.Add(WeaponAerialAttackAbility);
-	Abilites.Add(PsychGroundAttackAbility);
-	Abilites.Add(PsychAerialAttackAbility);
-	Abilites.Add(WeaponBackstepAbility);
-	Abilites.Add(WeaponChargeAttackAbility);
-	Abilites.Add(PsychSpecialAttackAbility);
-	for (auto AbilityClass : Abilites)
+	check(AbilityAsset);
+	for (auto AbilityClass : AbilityAsset->AttackAbilityList)
 	{
 		if (AbilityClass == nullptr) continue;
 		FGameplayAbilitySpec Spec(AbilityClass);
@@ -105,9 +99,6 @@ void UComboSystemComponent::TryActivateAbilityByInputTag(FGameplayTag tag)
 bool UComboSystemComponent::TryCancelAttackAbility()
 {
 	if (LastActivatedGameplayTag.IsValid() == false) return false;
-	WeaponGroundCombo.CurrentComboCount = 0;
-	WeaponAerialCombo.CurrentComboCount = 0;
-	CurrentBackstepAttackCount = 0;
 	Debug::Print(FString::Printf(TEXT("Cancel Ability : %s"), *LastActivatedGameplayTag.ToString()), FColor::Red);
 	BaseAbilitySystemComponent->CancelAbilityHandle(AbilitySpecs[LastActivatedGameplayTag].Handle);
 	LastActivatedGameplayTag = FGameplayTag();
@@ -127,24 +118,13 @@ void UComboSystemComponent::UpdateInfoByUnlock()
 	}
 }
 
-void UComboSystemComponent::ResetAllCombo(ACharacter* Character, EMovementMode PrevMovementMode, uint8 PreviousCustomMode)
+void UComboSystemComponent::OnMovementModeChange(ACharacter* Character, EMovementMode PrevMovementMode, uint8 PreviousCustomMode)
 {
-	ResetAttackCombo();
-	ResetBackstepCount();
+	// Reset All Combo;
+	ResetGroundCombo();
+	ResetAerialCombo();
 }
 
-void UComboSystemComponent::ResetAttackCombo()
-{
-	WeaponGroundCombo.CurrentComboCount = 0;
-	WeaponAerialCombo.CurrentComboCount = 0;
-	PsychGroundCombo.CurrentComboCount = 0;
-	PsychAerialCombo.CurrentComboCount = 0;
-}
-
-void UComboSystemComponent::ResetBackstepCount()
-{
-	CurrentBackstepAttackCount = 0;
-}
 
 void UComboSystemComponent::ProcessInputAction(FGameplayTag ActionTag, ETriggerEvent TriggerEvent, const FInputActionInstance& Instance)
 {
@@ -160,10 +140,12 @@ void UComboSystemComponent::ProcessInputAction(FGameplayTag ActionTag, ETriggerE
 			if (ActionTag == BaseGameplayTags::InputTag_Attack_Weapon_Special)
 			{
 				// TODO activate or cancel charging ability
-				
-				if (BaseAbilitySystemComponent->TryActivateAbility(AbilitySpecs[BaseGameplayTags::Player_Ability_Attack_Backstep].Handle))
+				FGameplayTag AbilityTag =
+					Kasane->GetCharacterMovement()->IsFalling() ?
+						BaseGameplayTags::Player_Ability_Attack_Aerial_Backstep : BaseGameplayTags::Player_Ability_Attack_Ground_Backstep;
+				if (BaseAbilitySystemComponent->TryActivateAbility(AbilitySpecs[AbilityTag].Handle))
 				{
-					LastActivatedGameplayTag = BaseGameplayTags::Player_Ability_Attack_Backstep;
+					LastActivatedGameplayTag = AbilityTag;
 					Debug::Print(FString::Printf(TEXT("Ability %s"), *LastActivatedGameplayTag.ToString()), FColor::Red);
 				}
 				else
@@ -188,5 +170,19 @@ bool UComboSystemComponent::ShouldBlockInputAction()
 void UComboSystemComponent::IncreaseCombo(FComboCounter& ComboCounter)
 {
 	ComboCounter.CurrentComboCount = (ComboCounter.CurrentComboCount + 1) % ComboCounter.MaxComboCount;
+}
+
+void UComboSystemComponent::ResetGroundCombo()
+{
+	WeaponGroundCombo.CurrentComboCount = 0;
+	PsychGroundCombo.CurrentComboCount = 0;
+	BackstepGroundCombo.CurrentComboCount = 0;
+}
+
+void UComboSystemComponent::ResetAerialCombo()
+{
+	WeaponAerialCombo.CurrentComboCount = 0;
+	PsychAerialCombo.CurrentComboCount = 0;
+	BackstepAerialCombo.CurrentComboCount = 0;
 }
 
