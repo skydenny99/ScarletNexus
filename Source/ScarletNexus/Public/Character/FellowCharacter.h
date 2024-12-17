@@ -9,7 +9,7 @@
 class USkeletalMeshComponent;
 class UCapsuleComponent;
 class UCharacterMovementComponent;
-
+class UFellowCombatComponent;
 
 /**
  * 
@@ -18,7 +18,8 @@ UCLASS()
 class SCARLETNEXUS_API AFellowCharacter : public ABaseCharacter
 {
 	GENERATED_BODY()
-
+public:
+	AFellowCharacter();
 protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "SkeletalMeshData")
@@ -26,18 +27,6 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "SkeletalMeshData")
 	USkeletalMeshComponent* OutLineBody;
-
-	// UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "SkeletalMeshData")
-	// USkeletalMeshComponent* Weapon;
-
-	// UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "SkeletalMeshData")
-	// USkeletalMeshComponent* OutLineWeapon;
-
-	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
-	//UChildActorComponent* Weapon;
-
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
-	//TSubclassOf<AActor> WeaponActorClass;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "CapsuleComponent")
 	UCapsuleComponent* MainCapsule;
@@ -48,11 +37,16 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "CharacterMovementComponent")
 	UCharacterMovementComponent* Movement;
 
-	//UFUNCTION(BlueprintCallable, Category = "Visibility")
-	//void SetWeaponVisibility(bool Visibility);
+
 
 
 	virtual void PossessedBy(AController* NewController) override;
 
+private:
+	UPROPERTY(VisibleAnyWhere, BlueprintReadOnly, category = "Combat", meta = (AllowPrivateAccess = "true"))
+	UFellowCombatComponent* FellowCombatComponent;
+
+public:
+	FORCEINLINE UFellowCombatComponent* GetFellowCombatComponent() const { return FellowCombatComponent; }
 	
 };

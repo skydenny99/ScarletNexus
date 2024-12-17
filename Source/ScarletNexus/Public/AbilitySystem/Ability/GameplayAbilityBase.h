@@ -7,6 +7,7 @@
 #include "GameplayAbilityBase.generated.h"
 
 class UBaseAbilitySystemComponent;
+class UPawnCombatComponent;
 
 /**
  * 
@@ -22,6 +23,11 @@ public:
 
 	template<class UserObject>
 	UserObject* GetOwnerWithCasting() const;
+
+	//CombatComponent 확보
+	UFUNCTION(BlueprintPure, Category = "Ability")
+	UPawnCombatComponent* GetPawnCombatComponentFromActorInfo() const;
+	
 };
 
 template<class UserObject>

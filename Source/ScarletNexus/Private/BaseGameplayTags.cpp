@@ -154,6 +154,13 @@ namespace BaseGameplayTags
 	
 	UE_DEFINE_GAMEPLAY_TAG(Fellow_State_Attacking, "Fellow.State.Attacking");
 
+
+	// Weapon
+	UE_DEFINE_GAMEPLAY_TAG(Fellow_Weapon_Arashi, "Fellow.Weapon.Arashi");
+	UE_DEFINE_GAMEPLAY_TAG(Fellow_Weapon_Hanabi, "Fellow.Weapon.Hanabi");
+
+	
+
 #pragma endregion Fellow
 
 #pragma region Enemy

@@ -5,16 +5,16 @@
 #include "AbilitySystem/BaseAbilitySystemComponent.h"
 #include "DataAsset/DataAsset_StartupBase.h"
 #include "BaseDebugHelper.h"
+#include "Components/Combat/FellowCombatComponent.h"
 
-// void AFellowCharacter::SetWeaponVisibility(bool Visibility)
-// {
-// 	if (WeaponActorClass)
-// 	{
-// 		Weapon->SetVisibility(Visibility, true);
-// 		
-// 	}
-//
-// }
+
+AFellowCharacter::AFellowCharacter()
+{
+	
+	FellowCombatComponent = CreateDefaultSubobject<UFellowCombatComponent>(TEXT("FellowCombatComponent"));
+ 
+	
+}
 
 void AFellowCharacter::PossessedBy(AController* NewController)
 {
