@@ -2,6 +2,8 @@
 
 
 #include "AbilitySystem/Ability/GA_AerialAttackAbilityBase.h"
+
+#include "BaseDebugHelper.h"
 #include "Character/Character_Kasane.h"
 #include "Components/ComboSystemComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -12,7 +14,6 @@ void UGA_AerialAttackAbilityBase::OnGiveAbility(const FGameplayAbilityActorInfo*
 	Super::OnGiveAbility(ActorInfo, Spec);
 	MovementComponent = Kasane->GetCharacterMovement();
 	OriginGravityScale = MovementComponent->GravityScale;
-	OnGameplayAbilityEnded.AddUObject(this, &UGA_AerialAttackAbilityBase::OnEndAerialAbility);
 }
 
 void UGA_AerialAttackAbilityBase::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
@@ -25,8 +26,9 @@ void UGA_AerialAttackAbilityBase::ActivateAbility(const FGameplayAbilitySpecHand
 	ComboSystem->ResetGroundCombo();
 }
 
-void UGA_AerialAttackAbilityBase::OnEndAerialAbility(UGameplayAbility* _)
+void UGA_AerialAttackAbilityBase::OnEndAerialAbility()
 {
 	MovementComponent->Velocity = FVector::ZeroVector;
 	MovementComponent->GravityScale = OriginGravityScale;
+	Debug::Print("OnEndAerialAbility");
 }

@@ -22,8 +22,16 @@ UComboSystemComponent::UComboSystemComponent()
 	Kasane = Cast<ACharacter_Kasane>(GetOwner());
 	if (Kasane)
 	{
-		Kasane->MovementModeChangedDelegate.AddDynamic(this, &UComboSystemComponent::OnMovementModeChange);
 		BaseAbilitySystemComponent = Kasane->GetBaseAbilitySystemComponent();
+	}
+}
+
+void UComboSystemComponent::BeginPlay()
+{
+	Super::BeginPlay();
+	if (Kasane)
+	{
+		Kasane->MovementModeChangedDelegate.AddDynamic(this, &UComboSystemComponent::OnMovementModeChange);
 	}
 }
 
@@ -121,6 +129,7 @@ void UComboSystemComponent::UpdateInfoByUnlock()
 void UComboSystemComponent::OnMovementModeChange(ACharacter* Character, EMovementMode PrevMovementMode, uint8 PreviousCustomMode)
 {
 	// Reset All Combo;
+	Debug::Print("Reset Combo Count");
 	ResetGroundCombo();
 	ResetAerialCombo();
 }
@@ -143,6 +152,11 @@ void UComboSystemComponent::ProcessInputAction(FGameplayTag ActionTag, ETriggerE
 				FGameplayTag AbilityTag =
 					Kasane->GetCharacterMovement()->IsFalling() ?
 						BaseGameplayTags::Player_Ability_Attack_Aerial_Backstep : BaseGameplayTags::Player_Ability_Attack_Ground_Backstep;
+				if (AbilityTag.IsValid() == false || AbilitySpecs.Contains(AbilityTag) == false)
+				{
+					Debug::Print("Ability not found", FColor::Red);
+					return;
+				}
 				if (BaseAbilitySystemComponent->TryActivateAbility(AbilitySpecs[AbilityTag].Handle))
 				{
 					LastActivatedGameplayTag = AbilityTag;
@@ -183,6 +197,14 @@ void UComboSystemComponent::ResetAerialCombo()
 {
 	WeaponAerialCombo.CurrentComboCount = 0;
 	PsychAerialCombo.CurrentComboCount = 0;
+	BackstepAerialCombo.CurrentComboCount = 0;
+}
+
+void UComboSystemComponent::ResetWeaponCombo()
+{
+	WeaponGroundCombo.CurrentComboCount = 0;
+	WeaponAerialCombo.CurrentComboCount = 0;
+	BackstepGroundCombo.CurrentComboCount = 0;
 	BackstepAerialCombo.CurrentComboCount = 0;
 }
 
