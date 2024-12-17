@@ -128,6 +128,7 @@ void UGA_Dodge_Player::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 	GetCharacterDodgeDirection(DodgeDir);
 	PlayDodgeAnimation(DodgeDir);
 	UBaseFunctionLibrary::AddPlaygameTagToActor(DodgeCharacter, BaseGameplayTags::Shared_Status_CanMove);
+	UBaseFunctionLibrary::AddPlaygameTagToActor(DodgeCharacter, BaseGameplayTags::Player_Status_Move_Dodge);
 	if (DodgeMovementComponent->IsFalling())
 		DodgeCount++;
 }
@@ -150,6 +151,7 @@ void UGA_Dodge_Player::OnEndDodge()
 	Velocity.Z = 0;
 	DodgeMovementComponent->Velocity = Velocity;
 	DodgeMovementComponent->GravityScale = 3;
+	UBaseFunctionLibrary::RemovePlayGameTagFromActor(DodgeCharacter, BaseGameplayTags::Player_Status_Move_Dodge);
 	K2_EndAbility();
 }
 
