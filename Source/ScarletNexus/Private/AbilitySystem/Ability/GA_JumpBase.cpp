@@ -5,6 +5,7 @@
 #include "Character/Character_Kasane.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "BaseDebugHelper.h"
+#include "BaseFunctionLibrary.h"
 
 void UGA_JumpBase::OnGiveAbility(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec)
 {

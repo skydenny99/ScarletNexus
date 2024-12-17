@@ -128,7 +128,10 @@ namespace BaseGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_Hit_Normal, "Shared.Event.Hit.Normal");
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_Hit_Critical, "Shared.Event.Hit.Critical");
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_Hit_KnockDown, "Shared.Event.Hit.KnockDown");
-	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_Combo, "Shared.Event.Combo");
+
+	// Shared - Status
+	UE_DEFINE_GAMEPLAY_TAG(Shared_Status_CanAttack, "Shared.Status.CanAttack");
+	UE_DEFINE_GAMEPLAY_TAG(Shared_Status_CanMove, "Shared.Status.CanMove");
 
 #pragma endregion
 }

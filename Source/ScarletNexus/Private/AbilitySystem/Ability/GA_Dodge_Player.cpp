@@ -4,6 +4,8 @@
 #include "AbilitySystem/Ability/GA_Dodge_Player.h"
 
 #include "BaseDebugHelper.h"
+#include "BaseFunctionLibrary.h"
+#include "BaseGameplayTags.h"
 #include "AnimInstance/KasaneAnimInstance.h"
 #include "BaseType/BaseEnumType.h"
 #include "Character/BaseCharacter.h"
@@ -124,6 +126,7 @@ void UGA_Dodge_Player::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 	EBaseDirectionType DodgeDir = EBaseDirectionType::Max;
 	GetCharacterDodgeDirection(DodgeDir);
 	PlayDodgeAnimation(DodgeDir);
+	UBaseFunctionLibrary::AddPlaygameTagToActor(DodgeCharacter, BaseGameplayTags::Shared_Status_CanMove);
 	if (DodgeMovementComponent->IsFalling())
 		DodgeCount++;
 }
