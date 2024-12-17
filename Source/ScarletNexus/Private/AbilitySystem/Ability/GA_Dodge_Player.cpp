@@ -10,6 +10,7 @@
 #include "BaseType/BaseEnumType.h"
 #include "Character/BaseCharacter.h"
 #include "Character/Character_Kasane.h"
+#include "Components/ComboSystemComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 
@@ -139,6 +140,7 @@ void UGA_Dodge_Player::PlayDodgeAnimation(EBaseDirectionType Direction)
 	
 	ACharacter_Kasane* Kasane = Cast<ACharacter_Kasane>(DodgeCharacter);
 	Kasane->ActivateDash(true);
+	Kasane->GetComboSystemComponent()->ResetWeaponCombo();
 }
 
 void UGA_Dodge_Player::OnEndDodge()

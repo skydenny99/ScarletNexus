@@ -34,6 +34,8 @@ class SCARLETNEXUS_API UComboSystemComponent : public UActorComponent
 public:	
 	// Sets default values for this component's properties
 	UComboSystemComponent();
+private:
+	virtual void BeginPlay() override;
 
 private:
 	ACharacter_Kasane* Kasane;
@@ -82,6 +84,12 @@ public:
 
 	FORCEINLINE FGameplayTag GetAttackType() const {return LastActivatedGameplayTag;}
 
+	UFUNCTION(BlueprintCallable, Category="Combo")
 	void ResetGroundCombo();
+	
+	UFUNCTION(BlueprintCallable, Category="Combo")
 	void ResetAerialCombo();
+	
+	UFUNCTION(BlueprintCallable, Category="Combo")
+	void ResetWeaponCombo();
 };

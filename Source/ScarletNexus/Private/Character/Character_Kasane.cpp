@@ -155,6 +155,7 @@ void ACharacter_Kasane::OnInputMoveTriggered(const FInputActionValue& Value)
 	if (UBaseFunctionLibrary::NativeActorHasTag(this, BaseGameplayTags::Shared_Status_CanMove))
 	{
 		ComboSystemComponent->TryCancelAttackAbility();
+		ComboSystemComponent->ResetWeaponCombo();
 	}
 }
 
