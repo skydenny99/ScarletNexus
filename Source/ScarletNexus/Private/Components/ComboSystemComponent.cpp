@@ -57,13 +57,16 @@ void UComboSystemComponent::TryActivateAbilityByInputTag(FGameplayTag tag)
 	UCharacterMovementComponent* Movement = Kasane->GetCharacterMovement();
 	if (tag.MatchesTagExact(BaseGameplayTags::InputTag_Attack_Weapon_Normal))
 	{
+		bool bIsDashAttack = UBaseFunctionLibrary::NativeActorHasTag(Kasane, BaseGameplayTags::Player_Status_Move_Dodge);
 		if (Movement->IsFalling() == false) // Ground Weapon Attack
 		{
-			AbilityTag = BaseGameplayTags::Player_Ability_Attack_Ground_Weapon;
+			AbilityTag = bIsDashAttack ? BaseGameplayTags::Player_Ability_Attack_Ground_DashAttack
+			: BaseGameplayTags::Player_Ability_Attack_Ground_Weapon;
 		}
 		else
 		{
-			AbilityTag = BaseGameplayTags::Player_Ability_Attack_Aerial_Weapon;
+			AbilityTag = bIsDashAttack ? BaseGameplayTags::Player_Ability_Attack_Aerial_DashAttack
+			: BaseGameplayTags::Player_Ability_Attack_Aerial_Weapon;
 		}
 	}
 	else if (tag.MatchesTagExact(BaseGameplayTags::InputTag_Attack_Weapon_Special))

@@ -75,6 +75,8 @@ namespace BaseGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Special_Psych, "Player.Ability.Attack.Special.Psych");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Ground_Backstep, "Player.Ability.Attack.Ground.Backstep");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Aerial_Backstep, "Player.Ability.Attack.Aerial.Backstep");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Ground_DashAttack, "Player.Ability.Attack.Ground.DashAttack");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Aerial_DashAttack, "Player.Ability.Attack.Aerial.DashAttack");
 
 	// Ability - Move
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Move_Dash, "Player.Ability.Move.Dash");
@@ -96,6 +98,7 @@ namespace BaseGameplayTags
 
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_Move_Run, "Player.Status.Move.Run");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_Move_Dash, "Player.Status.Move.Dash");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Status_Move_Dodge, "Player.Status.Move.Dodge");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_Move_Dodge_Instant, "Player.Status.Move.Dodge.Instant");
 	
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_Charging, "Player.Status.Charging");
