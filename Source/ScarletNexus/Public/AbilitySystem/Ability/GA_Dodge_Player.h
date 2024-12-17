@@ -37,6 +37,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void OnEndDodge();
 
+	void OnCancelDodge();
+
 	UFUNCTION()
 	void ResetDodgeCount(ACharacter* Character, EMovementMode PrevMovementMode, uint8 PreviousCustomMode);
 };
