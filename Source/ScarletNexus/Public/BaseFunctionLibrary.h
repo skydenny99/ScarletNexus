@@ -42,4 +42,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "FunctionLibrary", meta = (Display = "Get PawnCombatComponent From Actor", ExpandEnumAsExecs = "OutValidType"))
 	static UPawnCombatComponent* BP_GetPawnCombatComponentFromActor(AActor* Actor, EBaseValidType& OutValidType);
 
+	UFUNCTION(BlueprintPure, Category = "FunctionLibrary")
+	static EBaseAIDirectionType ComputeAIDirection(AActor* Target, AActor* SelfActor, float& OutAngleDifference);
+	
+
 };

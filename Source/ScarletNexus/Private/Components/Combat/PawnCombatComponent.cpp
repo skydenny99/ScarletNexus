@@ -59,12 +59,12 @@ void UPawnCombatComponent::ToggleWeaponCollision(bool bUse)
 	if (bUse)
 	{
 		Weapon->GetWeaponCollisionBox()->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-		Debug::Print(Weapon->GetName() + TEXT(" Collision enabled"), FColor::Green);
+		// Debug::Print(Weapon->GetName() + TEXT(" Collision enabled"), FColor::Green);
 	}
 	else
 	{
 		Weapon->GetWeaponCollisionBox()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-		Debug::Print(Weapon->GetName() + TEXT(" Collision disabled"), FColor::Red);
+		// Debug::Print(Weapon->GetName() + TEXT(" Collision disabled"), FColor::Red);
 		OverlappedActors.Empty();
 		
 	}

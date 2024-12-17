@@ -139,10 +139,14 @@ namespace BaseGameplayTags
 #pragma region Fellow
 	// Ability
 	UE_DEFINE_GAMEPLAY_TAG(Fellow_Ability_Attack_Normal, "Fellow.Ability.Attack.Normal");
+	UE_DEFINE_GAMEPLAY_TAG(Fellow_Ability_Attack_Special, "Fellow.Ability.Attack.Special");
 
 
 	
 	UE_DEFINE_GAMEPLAY_TAG(Fellow_Ability_Startup_SpawnWeapon, "Fellow.Ability.Startup.SpawnWeapon");
+
+	
+	UE_DEFINE_GAMEPLAY_TAG(Fellow_Ability_Move_Dodge, "Fellow.Ability.Move.Dodge");
 
 
 

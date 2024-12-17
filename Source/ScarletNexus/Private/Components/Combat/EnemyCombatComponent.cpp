@@ -10,7 +10,7 @@
 
 void UEnemyCombatComponent::OnHitTargetActor(AActor* HitActor)
 {
-	Debug::Print(GetOwningPawn()->GetActorLabel() + " Hit " + HitActor->GetActorLabel(), FColor::Black);
+	//Debug::Print(GetOwningPawn()->GetActorLabel() + " Hit " + HitActor->GetActorLabel(), FColor::Black);
 	if (OverlappedActors.Contains(HitActor))
 	{
 		return;
@@ -27,5 +27,5 @@ void UEnemyCombatComponent::OnHitTargetActor(AActor* HitActor)
 
 void UEnemyCombatComponent::OnWeaponPulledFromTargetActor(AActor* InterectedActor)
 {
-	Debug::Print(GetOwningPawn()->GetActorLabel() + "  weapon pulled from " + InterectedActor->GetActorLabel(), FColor::White);
+	//Debug::Print(GetOwningPawn()->GetActorLabel() + "  weapon pulled from " + InterectedActor->GetActorLabel(), FColor::White);
 }

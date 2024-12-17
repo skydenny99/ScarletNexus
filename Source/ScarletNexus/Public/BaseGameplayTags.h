@@ -145,11 +145,12 @@ namespace BaseGameplayTags
 #pragma region Fellow Character
 	// Ability
 	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Fellow_Ability_Attack_Normal);
-
-
-
-
+	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Fellow_Ability_Attack_Special);
+	
 	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Fellow_Ability_Startup_SpawnWeapon);
+
+	
+	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Fellow_Ability_Move_Dodge);
 
 
 	// State

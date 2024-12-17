@@ -31,3 +31,14 @@ enum class EBaseDirectionType : uint8
 	Right = 0b1011,
 	Max = 0b1111
 };
+
+UENUM(BlueprintType)
+enum class EBaseAIDirectionType : uint8
+{
+	Forward   UMETA(DisplayName = "Forward"),
+   Backward  UMETA(DisplayName = "Backward"),
+   Left      UMETA(DisplayName = "Left"),
+   Right     UMETA(DisplayName = "Right"),
+   None      UMETA(DisplayName = "None")
+	
+};
