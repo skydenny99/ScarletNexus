@@ -4,6 +4,7 @@
 #include "BaseFunctionLibrary.h"
 #include "AbilitySystem/BaseAbilitySystemComponent.h"
 #include "AbilitySystemBlueprintLibrary.h"
+#include "Interfaces/PawnCombatInterface.h"
 
 UBaseAbilitySystemComponent* UBaseFunctionLibrary::NativeGetAbilitySystemComponentFromActor(AActor* Actor)
 {
@@ -47,4 +48,24 @@ bool UBaseFunctionLibrary::NativeActorHasAnyTags(AActor* Actor, FGameplayTagCont
 void UBaseFunctionLibrary::BP_HasTag(AActor* Actor, FGameplayTag Tag, EBaseConfirmType& OutType)
 {
 	OutType = NativeActorHasTag(Actor, Tag) ? EBaseConfirmType::Yes : EBaseConfirmType::No;
+}
+
+UPawnCombatComponent* UBaseFunctionLibrary::NativeGetPawnCombatComponentFromActor(AActor* Actor)
+{
+	check(Actor);
+
+	if (IPawnCombatInterface* PawnCombatInterFace = Cast<IPawnCombatInterface>(Actor))
+	{
+		return PawnCombatInterFace->GetPawnCombatComponent();
+	}
+	return nullptr;
+}
+
+UPawnCombatComponent* UBaseFunctionLibrary::BP_GetPawnCombatComponentFromActor(AActor* Actor,
+	EBaseValidType& OutValidType)
+{
+	UPawnCombatComponent* CombatComponent = NativeGetPawnCombatComponentFromActor(Actor);
+	OutValidType = CombatComponent ? EBaseValidType::Valid : EBaseValidType::InValid;
+
+	return CombatComponent;
 }

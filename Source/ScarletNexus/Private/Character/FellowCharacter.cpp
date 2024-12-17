@@ -28,3 +28,8 @@ void AFellowCharacter::PossessedBy(AController* NewController)
 		}
 	}
 }
+
+UPawnCombatComponent* AFellowCharacter::GetPawnCombatComponent() const
+{
+	return  FellowCombatComponent;
+}

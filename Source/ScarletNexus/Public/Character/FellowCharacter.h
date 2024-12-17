@@ -38,15 +38,16 @@ protected:
 	UCharacterMovementComponent* Movement;
 
 
-
-
 	virtual void PossessedBy(AController* NewController) override;
-
-private:
+	
 	UPROPERTY(VisibleAnyWhere, BlueprintReadOnly, category = "Combat", meta = (AllowPrivateAccess = "true"))
 	UFellowCombatComponent* FellowCombatComponent;
 
+	
+
 public:
 	FORCEINLINE UFellowCombatComponent* GetFellowCombatComponent() const { return FellowCombatComponent; }
+
+	virtual UPawnCombatComponent* GetPawnCombatComponent() const override;
 	
 };

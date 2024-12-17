@@ -37,3 +37,9 @@ void ABaseCharacter::PossessedBy(AController* NewController)
 		BaseAbilitySystemComponent->InitAbilityActorInfo(this, this);
 	}
 }
+
+UPawnCombatComponent* ABaseCharacter::GetPawnCombatComponent() const
+{
+	// 부모클래스 재구현 X
+	return nullptr;
+}
