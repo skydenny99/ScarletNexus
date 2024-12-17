@@ -21,29 +21,35 @@ class SCARLETNEXUS_API AFellowCharacter : public ABaseCharacter
 
 protected:
 
-	UPROPERTY( BlueprintReadOnly, Category = "SkeletalMeshData")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "SkeletalMeshData")
 	USkeletalMeshComponent* MainBody;
 
-	UPROPERTY( BlueprintReadOnly, Category = "SkeletalMeshData")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "SkeletalMeshData")
 	USkeletalMeshComponent* OutLineBody;
 
-	UPROPERTY( BlueprintReadOnly, Category = "SkeletalMeshData")
-	USkeletalMeshComponent* Weapon;
+	// UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "SkeletalMeshData")
+	// USkeletalMeshComponent* Weapon;
 
-	UPROPERTY( BlueprintReadOnly, Category = "SkeletalMeshData")
-	USkeletalMeshComponent* OutLineWeapon;
+	// UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "SkeletalMeshData")
+	// USkeletalMeshComponent* OutLineWeapon;
 
-	UPROPERTY( BlueprintReadOnly, Category = "CapsuleComponent")
+	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
+	//UChildActorComponent* Weapon;
+
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
+	//TSubclassOf<AActor> WeaponActorClass;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "CapsuleComponent")
 	UCapsuleComponent* MainCapsule;
 
-	UPROPERTY( BlueprintReadOnly, Category = "CapsuleComponent")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "CapsuleComponent")
 	UCapsuleComponent* HitboxCapsule;
 
-	UPROPERTY( BlueprintReadOnly, Category = "CharacterMovementComponent")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "CharacterMovementComponent")
 	UCharacterMovementComponent* Movement;
 
-	UFUNCTION(BlueprintCallable, Category = "Visibility")
-	void SetWeaponVisibility(bool Visibility);
+	//UFUNCTION(BlueprintCallable, Category = "Visibility")
+	//void SetWeaponVisibility(bool Visibility);
 
 
 	virtual void PossessedBy(AController* NewController) override;

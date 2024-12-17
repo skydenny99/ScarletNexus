@@ -37,29 +37,7 @@ AFellowCharacter_Arashi::AFellowCharacter_Arashi()
 	}
 
 	
-	Weapon = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Weapon"));
-	static ConstructorHelpers::FObjectFinder<USkeletalMesh> WeaponMesh(TEXT("/Game/Resources/Weapons/WP1000/WP1000_Base.WP1000_Base"));
-	if (WeaponMesh.Succeeded())
-	{
-		Weapon->SetSkeletalMesh(WeaponMesh.Object);
-		Weapon->SetupAttachment(MainBody, FName("LeftWeapon"));
-		// Weapon->SetRelativeRotation(FRotator(-90.f, 0.f, 0.f));
-	}
-
-	
-	OutLineWeapon = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("OutLineWeapon"));
-
-	static ConstructorHelpers::FObjectFinder<USkeletalMesh> OutlineWeaponMesh(TEXT("/Game/Resources/Weapons/WP1000/WP1000_Outline.WP1000_Outline"));
-	if (OutlineWeaponMesh.Succeeded())
-	{
-		OutLineWeapon->SetSkeletalMesh(OutlineWeaponMesh.Object);
-		OutLineWeapon->SetupAttachment(Weapon);
-		OutLineWeapon->SetLeaderPoseComponent(Weapon);
-	}
-
-
-
-	
+		
 	MainCapsule = GetCapsuleComponent();
 	const float CapsuleRadius = 42.f;
 	const float CapsuleHalfHeight = 96.f;

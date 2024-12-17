@@ -6,14 +6,15 @@
 #include "DataAsset/DataAsset_StartupBase.h"
 #include "BaseDebugHelper.h"
 
-void AFellowCharacter::SetWeaponVisibility(bool Visibility)
-{
-	if (Weapon)
-	{
-		Weapon->SetVisibility(Visibility, true);
-	}
-
-}
+// void AFellowCharacter::SetWeaponVisibility(bool Visibility)
+// {
+// 	if (WeaponActorClass)
+// 	{
+// 		Weapon->SetVisibility(Visibility, true);
+// 		
+// 	}
+//
+// }
 
 void AFellowCharacter::PossessedBy(AController* NewController)
 {

@@ -16,7 +16,10 @@
 
 AFellowCharacter_Hanabi::AFellowCharacter_Hanabi()
 {
-	// ¸ÞÀÎ ¹Ùµð ½ºÄÌ·¹Å» ¸Þ½Ã
+	
+
+	
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½Ùµï¿½ ï¿½ï¿½ï¿½Ì·ï¿½Å» ï¿½Þ½ï¿½
 	MainBody = GetMesh();
 	MainBody->SetRelativeLocationAndRotation(FVector(0.f, 0.f, -90.f), FRotator(0.f, -90.f, 0.f));
 	
@@ -26,7 +29,7 @@ AFellowCharacter_Hanabi::AFellowCharacter_Hanabi()
 		MainBody->SetSkeletalMesh(MainBodyMesh.Object);
 	}
 
-	// ¾Æ¿ô¶óÀÎ ½ºÄÌ·¹Å» ¸Þ½Ã
+	// ï¿½Æ¿ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ì·ï¿½Å» ï¿½Þ½ï¿½
 	OutLineBody = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("OutLine"));
 	
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh> OutlineMesh(TEXT("/Game/Resources/Characters/CH0300/CH300_Outline.CH300_Outline"));
@@ -37,36 +40,16 @@ AFellowCharacter_Hanabi::AFellowCharacter_Hanabi()
 		OutLineBody->SetLeaderPoseComponent(MainBody);
 	}
 
-	// ¹«±â ¸ÞÀÎ
-	Weapon = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Weapon"));
-	static ConstructorHelpers::FObjectFinder<USkeletalMesh> WeaponMesh(TEXT("/Game/Resources/Weapons/WP0300/WP300_Base.WP300_Base"));
-	if (WeaponMesh.Succeeded())
-	{
-		Weapon->SetSkeletalMesh(WeaponMesh.Object);
-		Weapon->SetupAttachment(MainBody, FName("RightWeapon"));
-		// Weapon->SetRelativeRotation(FRotator(-90.f, 0.f, 0.f));
-	}
+	
+	
 
-	// ¹«±â ¾Æ¿ô¶óÀÎ
-	OutLineWeapon = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("OutLineWeapon"));
-
-	static ConstructorHelpers::FObjectFinder<USkeletalMesh> OutlineWeaponMesh(TEXT("/Game/Resources/Weapons/WP0300/WP300_Outline.WP300_Outline"));
-	if (OutlineWeaponMesh.Succeeded())
-	{
-		OutLineWeapon->SetSkeletalMesh(OutlineWeaponMesh.Object);
-		OutLineWeapon->SetupAttachment(Weapon);
-		OutLineWeapon->SetLeaderPoseComponent(Weapon);
-	}
-
-
-
-	// ¸ÞÀÎ Ä¸½¶ ÄÄÆ÷³ÍÆ®
+	// ï¿½ï¿½ï¿½ï¿½ Ä¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®
 	MainCapsule = GetCapsuleComponent();
 	const float CapsuleRadius = 42.f;
 	const float CapsuleHalfHeight = 96.f;
 	MainCapsule->InitCapsuleSize(CapsuleRadius, CapsuleHalfHeight);
 
-	// È÷Æ®¹Ú½º Ä¸½¶ ÄÄÆ÷³ÍÆ®
+	// ï¿½ï¿½Æ®ï¿½Ú½ï¿½ Ä¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®
 	HitboxCapsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("HitboxCapsule"));
 	HitboxCapsule->InitCapsuleSize(CapsuleRadius, CapsuleHalfHeight);
 	HitboxCapsule->SetupAttachment(MainBody, FName("Hips"));
@@ -77,12 +60,12 @@ AFellowCharacter_Hanabi::AFellowCharacter_Hanabi()
 	bUseControllerRotationRoll = false;
 	bUseControllerRotationYaw = false;
 
-	// Ä³¸¯ÅÍ ¹«ºê¸ÕÆ® ÄÄÆ÷³ÍÆ®
+	// Ä³ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®
 	Movement = GetCharacterMovement();
 	Movement->bOrientRotationToMovement = true;
 
 
-	// ¾îºô¸®Æ¼
+	// ï¿½ï¿½ï¿½ï¿½ï¿½Æ¼
 	BaseAbilitySystemComponent = CreateDefaultSubobject<UBaseAbilitySystemComponent>(TEXT("AbilitySystemComponent"));
 
 
