@@ -73,7 +73,8 @@ namespace BaseGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Aerial_Psych, "Player.Ability.Attack.Aerial.Psych");
 
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Special_Psych, "Player.Ability.Attack.Special.Psych");
-	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Backstep, "Player.Ability.Attack.Backstep");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Ground_Backstep, "Player.Ability.Attack.Ground.Backstep");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Aerial_Backstep, "Player.Ability.Attack.Aerial.Backstep");
 
 	// Ability - Move
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Move_Dash, "Player.Ability.Move.Dash");

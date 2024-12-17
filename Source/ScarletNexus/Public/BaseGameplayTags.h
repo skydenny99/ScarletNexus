@@ -75,7 +75,8 @@ namespace BaseGameplayTags
 	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Ability_Attack_Aerial_Psych);
 
 	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Ability_Attack_Special_Psych);
-	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Ability_Attack_Backstep);
+	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Ability_Attack_Ground_Backstep);
+	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Ability_Attack_Aerial_Backstep);
 
 	// Ability - Move
 	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Ability_Move_Dash);
