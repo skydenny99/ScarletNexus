@@ -30,6 +30,7 @@ void UGA_Dodge_Player::OnGiveAbility(const FGameplayAbilityActorInfo* ActorInfo,
 	DodgeCharacter->MovementModeChangedDelegate.AddDynamic(this, &UGA_Dodge_Player::ResetDodgeCount);
 	DodgeMovementComponent = DodgeCharacter->GetCharacterMovement();
 	check(DodgeMovementComponent);
+	OnGameplayAbilityCancelled.AddUObject(this, &UGA_Dodge_Player::OnCancelDodge);
 }
 
 bool UGA_Dodge_Player::CanActivateAbility(const FGameplayAbilitySpecHandle Handle,
@@ -153,6 +154,16 @@ void UGA_Dodge_Player::OnEndDodge()
 	DodgeMovementComponent->GravityScale = 3;
 	UBaseFunctionLibrary::RemovePlayGameTagFromActor(DodgeCharacter, BaseGameplayTags::Player_Status_Move_Dodge);
 	K2_EndAbility();
+}
+
+void UGA_Dodge_Player::OnCancelDodge()
+{
+	FVector Velocity = DodgeMovementComponent->Velocity;
+	Velocity /= 3.f;
+	Velocity.Z = 0;
+	DodgeMovementComponent->Velocity = Velocity;
+	DodgeMovementComponent->GravityScale = 3;
+	UBaseFunctionLibrary::RemovePlayGameTagFromActor(DodgeCharacter, BaseGameplayTags::Player_Status_Move_Dodge);
 }
 
 void UGA_Dodge_Player::ResetDodgeCount(ACharacter* Character, EMovementMode PrevMovementMode, uint8 PreviousCustomMode)
