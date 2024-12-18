@@ -8,6 +8,7 @@
 #include "Character/BaseCharacter.h"
 #include "Character_Kasane.generated.h"
 
+class UTargetTrackingSpringArmComponent;
 class UComboSystemComponent;
 struct FInputActionInstance;
 class UDataAsset_DirectionInputConfig;
@@ -27,6 +28,9 @@ public:
 	ACharacter_Kasane();
 
 protected:
+	UPROPERTY(EditAnywhere, Category="Camera")
+	UTargetTrackingSpringArmComponent* CameraBoom;
+	
 	UPROPERTY(EditDefaultsOnly, Category="Battle")
 	UComboSystemComponent* ComboSystemComponent;
 
@@ -43,6 +47,9 @@ protected:
 	void OnAbilityInputTriggered(FGameplayTag InputTag);
 	void UpdateMovementElapsedTime(const FInputActionInstance& Instance);
 	void ResetMovementElapsedTime(const FInputActionValue& Value);
+	void OnTargetingInputTriggered(const FInputActionValue& Value);
+
+	
 public:
 	void OnAttackInputTriggered(FGameplayTag InputTag, const FInputActionInstance& Instance);
 	void OnAttackInputCompleted(FGameplayTag InputTag, const FInputActionInstance& Instance);
