@@ -42,3 +42,10 @@ enum class EBaseAIDirectionType : uint8
    None      UMETA(DisplayName = "None")
 	
 };
+
+UENUM()
+enum class EProjectileDamagePolicy
+{
+	OnHit,
+	OnBeginOverlap	
+};

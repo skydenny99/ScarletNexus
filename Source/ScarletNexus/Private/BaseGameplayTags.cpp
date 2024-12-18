@@ -187,6 +187,9 @@ namespace BaseGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(Enemy_Common_Weapon_em0500, "Enemy.Common.Weapon.em0500");
 	UE_DEFINE_GAMEPLAY_TAG(Enemy_Common_Weapon_em0700, "Enemy.Common.Weapon.em0700");
 
+	//EnemyEvent
+	UE_DEFINE_GAMEPLAY_TAG(Enemy_Event_SpawnProjectile, "Enemy.Event.SpawnProjectile");
+
 
 	
 		

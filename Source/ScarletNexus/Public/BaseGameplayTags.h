@@ -195,7 +195,10 @@ namespace BaseGameplayTags
 	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Enemy_Common_Weapon_em0400);
 	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Enemy_Common_Weapon_em0500);
 	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Enemy_Common_Weapon_em0700);
-	
+
+
+	// Enemy Event
+	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Enemy_Event_SpawnProjectile);
 	
 	
 #pragma endregion
