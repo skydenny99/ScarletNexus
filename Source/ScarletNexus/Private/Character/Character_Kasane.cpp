@@ -14,7 +14,9 @@
 #include "BaseDebugHelper.h"
 #include "BaseFunctionLibrary.h"
 #include "Components/ComboSystemComponent.h"
+#include "Components/TargetTrackingSpringArmComponent.h"
 #include "Components/UnlockSystemComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 
 ACharacter_Kasane::ACharacter_Kasane()
@@ -51,13 +53,16 @@ ACharacter_Kasane::ACharacter_Kasane()
 	bUseControllerRotationRoll = false;
 	bUseControllerRotationYaw = false;
 
-	USpringArmComponent* CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
+	CameraBoom = CreateDefaultSubobject<UTargetTrackingSpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(MainBody, FName("Waist"));
-	CameraBoom->bUsePawnControlRotation = true;
+	CameraBoom->bUsePawnControlRotation = false;
 	CameraBoom->SocketOffset = FVector(0.f, 0.f, 100.f);
 	CameraBoom->TargetArmLength = 500.f;
 	CameraBoom->bEnableCameraLag = true;
 	CameraBoom->CameraLagSpeed = 5.f;
+	CameraBoom->bEnableCameraRotationLag = true;
+	CameraBoom->CameraRotationLagSpeed = 15.f;
+	//CameraBoom->bUseCameraLagSubstepping = true;
 
 	UCameraComponent* MainCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("MainCamera"));
 	MainCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
@@ -131,6 +136,7 @@ void ACharacter_Kasane::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	InputComp->BindNativeInputAction(InputConfig, BaseGameplayTags::InputTag_Move, ETriggerEvent::Triggered, this, &ACharacter_Kasane::UpdateMovementElapsedTime);
 	InputComp->BindNativeInputAction(InputConfig, BaseGameplayTags::InputTag_Move, ETriggerEvent::Completed, this, &ACharacter_Kasane::ResetMovementElapsedTime);
 	InputComp->BindNativeInputAction(InputConfig, BaseGameplayTags::InputTag_Look, ETriggerEvent::Triggered, this, &ACharacter_Kasane::OnInputLookTriggered);
+	InputComp->BindNativeInputAction(InputConfig, BaseGameplayTags::InputTag_Targeting_On, ETriggerEvent::Triggered, this, &ACharacter_Kasane::OnTargetingInputTriggered);
 	InputComp->BindAbilityInputAction(InputConfig, this, &ACharacter_Kasane::OnAbilityInputTriggered);
 	InputComp->BindDirectionInput(DirectionInputConfig, this, &ACharacter_Kasane::PushInput);
 	InputComp->BindActionInstanceWithTag(InputConfig, this);
@@ -171,7 +177,18 @@ void ACharacter_Kasane::OnInputLookTriggered(const FInputActionValue& Value)
 	{
 		AddControllerPitchInput(LookAxisVector.Y);
 	}
+	CameraBoom->StartResetTimer();
 }
+
+void ACharacter_Kasane::OnTargetingInputTriggered(const FInputActionValue& Value)
+{
+	TArray<AActor*> TargetActors;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ACharacter::StaticClass(), TargetActors);
+	TargetActors.Remove(this);
+	CameraBoom->SetFoundTargets(TargetActors);
+	CameraBoom->SetTargetTracking(true);
+}
+
 
 void ACharacter_Kasane::OnAbilityInputTriggered(FGameplayTag InputTag)
 {
