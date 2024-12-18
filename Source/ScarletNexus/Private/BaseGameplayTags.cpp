@@ -138,6 +138,11 @@ namespace BaseGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_HitReact_Normal, "Shared.Event.HitReact.Normal");
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_HitReact_Critical, "Shared.Event.HitReact.Critical");
 
+
+
+	// Shared - State
+	UE_DEFINE_GAMEPLAY_TAG(Shared_State_Down, "Shared.State.Down");
+
 #pragma endregion
 
 
@@ -152,6 +157,7 @@ namespace BaseGameplayTags
 
 	
 	UE_DEFINE_GAMEPLAY_TAG(Fellow_Ability_Move_Dodge, "Fellow.Ability.Move.Dodge");
+	UE_DEFINE_GAMEPLAY_TAG(Fellow_Ability_Move_Wakeup, "Fellow.Ability.Move.Wakeup");
 
 
 

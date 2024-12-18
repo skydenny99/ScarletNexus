@@ -142,6 +142,14 @@ namespace BaseGameplayTags
 
 	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Event_HitReact_Normal);
 	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Event_HitReact_Critical);
+
+
+	// Shared State
+	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_State_Down);
+
+
+
+	
 	
 
 #pragma endregion
@@ -156,6 +164,7 @@ namespace BaseGameplayTags
 
 	
 	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Fellow_Ability_Move_Dodge);
+	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Fellow_Ability_Move_Wakeup);
 
 
 	// State
