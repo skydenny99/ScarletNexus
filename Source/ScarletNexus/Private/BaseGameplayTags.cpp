@@ -133,6 +133,11 @@ namespace BaseGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_Hit_KnockDown, "Shared.Event.Hit.KnockDown");
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_Combo, "Shared.Event.Combo");
 
+
+	
+	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_HitReact_Normal, "Shared.Event.HitReact.Normal");
+	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_HitReact_Critical, "Shared.Event.HitReact.Critical");
+
 #pragma endregion
 
 

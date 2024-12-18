@@ -139,6 +139,11 @@ namespace BaseGameplayTags
 	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Event_Hit_KnockDown);
 	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Event_Combo);
 
+
+	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Event_HitReact_Normal);
+	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Event_HitReact_Critical);
+	
+
 #pragma endregion
 
 
