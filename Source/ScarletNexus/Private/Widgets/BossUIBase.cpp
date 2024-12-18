@@ -4,9 +4,15 @@
 #include "Widgets/BossUIBase.h"
 #include "Kismet/KismetMaterialLibrary.h"
 #include "Components/Image.h"
-#include "PaperSprite.h"
-#include "Math/UnrealMathNeon.h"
 #include "Styling/SlateBrush.h"
+#include "PaperSpriteBlueprintLibrary.h"
+//#include "CoreMinimal.h"
+//#include "SlateGlobals.h"
+//#include "UObject/ObjectMacros.h"
+//#include "Application/SlateApplicationBase.h"
+//#include "PaperSprite.h"
+//#include "Brushes/SlateNoResource.h"
+//#include "Kismet/BlueprintFunctionLibrary.h"
 
 /*
 #include "SlateGlobals.h"
@@ -26,7 +32,25 @@ void UBossUIBase::NativeOnInitialized()
 	StunMaterialDynamicInstance->SetScalarParameterValue("Percent",1.0f);
 	
 	Boss_Debuff_Icon->SetVisibility(ESlateVisibility::Collapsed);
-	
+
+	MaxHp = 1000.0f;
+	CurrentHp = MaxHp;
+
+	for ( int i = 0; i < DebuffMaterial.Num(); i++)
+	{
+		//DebuffImage[i]->SetBrush(UPaperSpriteBlueprintLibrary::MakeBrushFromSprite(DebuffMaterial[i],33,33));
+	}
+}
+
+void UBossUIBase::OnDamaged(float Damage)
+{
+	CurrentHp -= Damage;
+
+	if (CurrentHp <= 0)
+	{
+		RemoveFromParent();
+	}
+	UpdateHp(CurrentHp / MaxHp);
 }
 
 void UBossUIBase::UpdateHp(float Value)
@@ -40,39 +64,37 @@ void UBossUIBase::UpdateStunGauge(float Value)
 }
 
 //Input Enum Value
-void UBossUIBase::UpdateDebuff(int Enum)
+/*
+void UBossUIBase::UpdateDebuff(EDebuffState Debuff = EDebuffState::NONE)
 {
-	
-	/*
-	switch (Enum)
+	if (Debuff == EDebuffState::NONE)
 	{
-	case 0:
-		
-		A.SetResourceObject(DebuffMaterial[0]);
-		Boss_Debuff_Icon->SetBrush(A);
-		break;
-	case 1:
-		//FSlateBrush B();
-		A.SetResourceObject(DebuffMaterial[1]);
-		Boss_Debuff_Icon->SetBrush(A);
-		break;
-	case 2:
-		//FSlateBrush C();
-		A.SetResourceObject(DebuffMaterial[2]);
-		Boss_Debuff_Icon->SetBrush(A);
-		break;
-	case 3:
-		//FSlateBrush D();
-		A.SetResourceObject(DebuffMaterial[3]);
-		Boss_Debuff_Icon->SetBrush(A);
-		break;
-	case 4:
-		//FSlateBrush E();
-		A.SetResourceObject(DebuffMaterial[4]);
-		Boss_Debuff_Icon->SetBrush(A);
-		break;
-	default:
-		break;
-	}*/
+		Boss_Debuff_Icon->SetVisibility(ESlateVisibility::Collapsed);
+		return;
+	}
+	
+	switch (Debuff)
+	{
+		case EDebuffState::BURN:
+			Boss_Debuff_Icon = DebuffImage[0];
+			break;
+		case EDebuffState::OIL:
+			Boss_Debuff_Icon = DebuffImage[1];
+			break;
+		case EDebuffState::SHOCK:
+			Boss_Debuff_Icon = DebuffImage[2];
+			break;
+		case EDebuffState::WET:
+			Boss_Debuff_Icon = DebuffImage[3];
+			break;
+		case EDebuffState::CONFUSE:
+			Boss_Debuff_Icon = DebuffImage[4];
+			break;
+		default:
+			break;
+	}
+	
+	Boss_Debuff_Icon->SetVisibility(ESlateVisibility::Visible);
 }
+*/
 

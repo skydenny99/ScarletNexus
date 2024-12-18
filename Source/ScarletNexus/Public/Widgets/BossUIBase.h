@@ -11,7 +11,18 @@ class UMaterialInstance;
 class UImage;
 class UTexture2D;
 class UPaperSprite;
-struct FSlateBrush;
+
+UENUM(BlueprintType)
+enum class EDebuffState : uint8
+{
+	BURN,
+	OIL,
+	SHOCK,
+	WET,
+	CONFUSE,
+	NONE,
+};
+
 
 /**
  * 
@@ -20,14 +31,10 @@ UCLASS()
 class SCARLETNEXUS_API UBossUIBase : public UWidgetBase
 {
 	GENERATED_BODY()
-
-public:
-	//UBossUIBase();
 	
 private:
 	float CurrentHp;
 	float MaxHp;
-	//FSlateBrush A;
 	
 protected:
 	UPROPERTY(EditDefaultsOnly)
@@ -38,6 +45,9 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly)
 	TArray<UPaperSprite*> DebuffMaterial;
+
+	UPROPERTY()
+	TArray<UImage*> DebuffImage;  
 	
 	UPROPERTY()
 	UMaterialInstanceDynamic* HpMaterialDynamicInstance;
@@ -45,9 +55,6 @@ protected:
 	UPROPERTY()
 	UMaterialInstanceDynamic* StunMaterialDynamicInstance;
 
-	/*UPROPERTY()
-	TArray<UPaperSprite*> DebuffMaterialDynamicInstance;*/
-	
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UImage* Boss_HealthGauge;
 
@@ -60,9 +67,15 @@ protected:
 public:
 	virtual void NativeOnInitialized() override;
 
+	UFUNCTION(BlueprintCallable, Category = "CaculateFunction")
+	void OnDamaged(float Damage);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void SetBrush();
+	
 	void UpdateHp(float Value);
 	void UpdateStunGauge(float Value);
-	void UpdateDebuff(int Enum);
+	void UpdateDebuff(EDebuffState Debuff);
 	
 	void TakeDamage(float DamageAmount) { CurrentHp = (CurrentHp-DamageAmount)/MaxHp; }
 };
