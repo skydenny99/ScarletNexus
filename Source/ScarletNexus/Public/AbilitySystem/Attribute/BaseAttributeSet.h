@@ -20,6 +20,8 @@ class SCARLETNEXUS_API UBaseAttributeSet : public UAttributeSet
 	public:
 	UBaseAttributeSet();
 
+	virtual void PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data) override;
+
 	
 	
 };

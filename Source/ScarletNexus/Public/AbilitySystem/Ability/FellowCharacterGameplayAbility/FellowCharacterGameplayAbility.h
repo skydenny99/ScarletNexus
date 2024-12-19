@@ -18,6 +18,9 @@ class SCARLETNEXUS_API UFellowCharacterGameplayAbility : public UGameplayAbility
 public:
 	UFUNCTION(BlueprintPure, Category = "Ability")
 	AFellowCharacter* GetFellowCharacterFromActorInfo();
+	
+	UFUNCTION(BlueprintPure, Category = "Ability")
+	FGameplayEffectSpecHandle MakeFellowDamageEffectSpecHandle(TSubclassOf<UGameplayEffect> Effect, const FScalableFloat& DamageFloat);
 
 private:
 	TWeakObjectPtr<AFellowCharacter> CachedFellowCharacter;

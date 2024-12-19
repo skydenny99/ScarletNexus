@@ -43,6 +43,8 @@ protected:
 	UPROPERTY(VisibleAnyWhere, BlueprintReadOnly, category = "Combat", meta = (AllowPrivateAccess = "true"))
 	UFellowCombatComponent* FellowCombatComponent;
 
+
+	
 	
 
 public:

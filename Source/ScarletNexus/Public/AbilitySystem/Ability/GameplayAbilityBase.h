@@ -6,6 +6,7 @@
 #include "Abilities/GameplayAbility.h"
 #include "GameplayAbilityBase.generated.h"
 
+enum class EBaseSuccessType : uint8;
 class UBaseAbilitySystemComponent;
 class UPawnCombatComponent;
 
@@ -27,6 +28,11 @@ public:
 	//CombatComponent 확보
 	UFUNCTION(BlueprintPure, Category = "Ability")
 	UPawnCombatComponent* GetPawnCombatComponentFromActorInfo() const;
+
+	FActiveGameplayEffectHandle NativeApplyEffectSpecHandleToTarget(AActor* TargetActor, const FGameplayEffectSpecHandle& SpecHandle);
+
+	UFUNCTION(BlueprintCallable, Category = "Ability", meta=(Display="Apply Gameplay Effect Spec Handle To Target Actor", ExpandEnumAsExecs = "OutSuccessType"))
+	FActiveGameplayEffectHandle BP_ApplyEffectSpecHandleToTarget(AActor* TargetActor, const FGameplayEffectSpecHandle& SpecHandle, EBaseSuccessType& OutSuccessType);
 	
 };
 

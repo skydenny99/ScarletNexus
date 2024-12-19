@@ -2,10 +2,12 @@
 
 
 #include "AbilitySystem/Ability/GameplayAbilityBase.h"
+
+#include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystem/BaseAbilitySystemComponent.h"
 #include "Components/Combat/PawnCombatComponent.h"
 #include "BaseDebugHelper.h"
-
+#include "BaseType/BaseEnumType.h"
 
 
 UBaseAbilitySystemComponent* UGameplayAbilityBase::GetBaseAbilitySystemComponent() const
@@ -16,4 +18,22 @@ UBaseAbilitySystemComponent* UGameplayAbilityBase::GetBaseAbilitySystemComponent
 UPawnCombatComponent* UGameplayAbilityBase::GetPawnCombatComponentFromActorInfo() const
 {
     return GetAvatarActorFromActorInfo()->FindComponentByClass<UPawnCombatComponent>();
+}
+
+FActiveGameplayEffectHandle UGameplayAbilityBase::NativeApplyEffectSpecHandleToTarget(AActor* TargetActor,const FGameplayEffectSpecHandle& SpecHandle)
+{
+    UAbilitySystemComponent* ASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor);
+    check(ASC && SpecHandle.IsValid());
+    
+    return GetBaseAbilitySystemComponent()->ApplyGameplayEffectSpecToTarget(*SpecHandle.Data, ASC);    
+}
+
+FActiveGameplayEffectHandle UGameplayAbilityBase::BP_ApplyEffectSpecHandleToTarget(AActor* TargetActor,
+    const FGameplayEffectSpecHandle& SpecHandle, EBaseSuccessType& OutSuccessType)
+{
+    FActiveGameplayEffectHandle ActiveGameplayEffectHandle = NativeApplyEffectSpecHandleToTarget(TargetActor, SpecHandle);
+
+    OutSuccessType = ActiveGameplayEffectHandle.WasSuccessfullyApplied() ? EBaseSuccessType::Success : EBaseSuccessType::Failed;
+
+    return ActiveGameplayEffectHandle;
 }

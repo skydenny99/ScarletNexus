@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "AbilitySystem/Attribute/BaseAttributeSet.h"
-#include "EnemyAttributeSet.generated.h"
+#include "PlayerAttributeSet.generated.h"
 
 #define ATTRIBUTE_ACCESSORS(ClassName, PropertyName) \
 GAMEPLAYATTRIBUTE_PROPERTY_GETTER(ClassName, PropertyName) \
@@ -17,47 +17,39 @@ GAMEPLAYATTRIBUTE_VALUE_INITTER(PropertyName)
  * 
  */
 UCLASS()
-class SCARLETNEXUS_API UEnemyAttributeSet : public UBaseAttributeSet
+class SCARLETNEXUS_API UPlayerAttributeSet : public UBaseAttributeSet
 {
 	GENERATED_BODY()
-
 	public:
-	UEnemyAttributeSet();
+	UPlayerAttributeSet();
 
 	virtual void PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data) override;
 
 	UPROPERTY(BlueprintReadOnly, Category="Status")
 	FGameplayAttributeData CurrentHp;
-	ATTRIBUTE_ACCESSORS(UEnemyAttributeSet, CurrentHp)
+	ATTRIBUTE_ACCESSORS(UPlayerAttributeSet, CurrentHp)
 
 	UPROPERTY(BlueprintReadOnly, Category = "Status")
 	FGameplayAttributeData MaxHp;
-	ATTRIBUTE_ACCESSORS(UEnemyAttributeSet, MaxHp)
-
-	UPROPERTY(BlueprintReadOnly, Category="Status")
-	FGameplayAttributeData CurrentDownGauge;
-	ATTRIBUTE_ACCESSORS(UEnemyAttributeSet, CurrentDownGauge)
+	ATTRIBUTE_ACCESSORS(UPlayerAttributeSet, MaxHp)
 
 	UPROPERTY(BlueprintReadOnly, Category = "Status")
-	FGameplayAttributeData MaxDownGauge;
-	ATTRIBUTE_ACCESSORS(UEnemyAttributeSet, MaxDownGauge)
-
-	UPROPERTY(BlueprintReadOnly, Category="Status")
-	FGameplayAttributeData CurrentBrainCrushGauge;
-	ATTRIBUTE_ACCESSORS(UEnemyAttributeSet, CurrentBrainCrushGauge)
+	FGameplayAttributeData Power;
+	ATTRIBUTE_ACCESSORS(UPlayerAttributeSet, Power)
 
 	UPROPERTY(BlueprintReadOnly, Category = "Status")
-	FGameplayAttributeData MaxBrainCrushGauge;
-	ATTRIBUTE_ACCESSORS(UEnemyAttributeSet, MaxBrainCrushGauge)
-	
-	UPROPERTY(BlueprintReadOnly, Category = "Damage")
-	FGameplayAttributeData EnemyAttack;
-	ATTRIBUTE_ACCESSORS(UEnemyAttributeSet, EnemyAttack)
+	FGameplayAttributeData Attack;
+	ATTRIBUTE_ACCESSORS(UPlayerAttributeSet, Attack)
+
+	UPROPERTY(BlueprintReadOnly, Category = "Status")
+	FGameplayAttributeData Defence;
+	ATTRIBUTE_ACCESSORS(UPlayerAttributeSet, Defence)
 
 	UPROPERTY(BlueprintReadOnly, Category = "Damage")
 	FGameplayAttributeData DamageTaken;
-	ATTRIBUTE_ACCESSORS(UEnemyAttributeSet, DamageTaken)
+	ATTRIBUTE_ACCESSORS(UPlayerAttributeSet, DamageTaken)
 
-
+	// 카사네꺼 확장 가능
+	
 	
 };

@@ -143,6 +143,11 @@ namespace BaseGameplayTags
 	// Shared - State
 	UE_DEFINE_GAMEPLAY_TAG(Shared_State_Down, "Shared.State.Down");
 
+
+	// Set By Caller
+	UE_DEFINE_GAMEPLAY_TAG(Shared_SetByCaller_BaseDamage, "Shared.SetByCaller.BaseDamage");
+	UE_DEFINE_GAMEPLAY_TAG(Shared_SetByCaller_BasePower, "Shared.SetByCaller.BasePower");
+
 #pragma endregion
 
 
