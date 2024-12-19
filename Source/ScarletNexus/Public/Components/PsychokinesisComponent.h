@@ -43,11 +43,12 @@ protected:
 	UFUNCTION()
 	void OnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
-	UFUNCTION()
-	void DebugTest(AActor* Target);
 	
 public:
 	void InitBoundary(USphereComponent* InDetectionBoundary);
 	FOnPsychTargetUpdated OnPsychTargetUpdated;
+
+	UFUNCTION(BlueprintPure)
+	FORCEINLINE AActor* GetPsychTarget() const {return PsychTarget;}
 		
 };

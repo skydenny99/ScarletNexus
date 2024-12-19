@@ -3,6 +3,7 @@
 
 #include "Components/ComboSystemComponent.h"
 
+#include "AbilitySystemBlueprintLibrary.h"
 #include "BaseDebugHelper.h"
 #include "Character/Character_Kasane.h"
 #include "BaseFunctionLibrary.h"
@@ -107,9 +108,17 @@ void UComboSystemComponent::TryActivateAbilityByInputTag(FGameplayTag tag)
 	}
 }
 
+void UComboSystemComponent::TryActivateChargeAbility()
+{
+	FGameplayEventData EventData;
+	EventData.Instigator = Kasane;
+	EventData.EventTag = ActionElapsedTime >= ChargeCompletionTime ? BaseGameplayTags::Shared_Event_Charge_Confirm : BaseGameplayTags::Shared_Event_Charge_Cancel;
+	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(Kasane, BaseGameplayTags::Shared_Event_Charge, EventData);
+}
+
 bool UComboSystemComponent::TryCancelAttackAbility()
 {
-	if (LastActivatedGameplayTag.IsValid() == false) return false;
+	if (LastActivatedGameplayTag.IsValid() == false || bIsCharging) return false;
 	Debug::Print(FString::Printf(TEXT("Cancel Ability : %s"), *LastActivatedGameplayTag.ToString()), FColor::Red);
 	BaseAbilitySystemComponent->CancelAbilityHandle(AbilitySpecs[LastActivatedGameplayTag].Handle);
 	LastActivatedGameplayTag = FGameplayTag();
@@ -143,10 +152,19 @@ void UComboSystemComponent::ProcessInputAction(FGameplayTag ActionTag, ETriggerE
 	switch (TriggerEvent)
 	{
 	case ETriggerEvent::Triggered:
-		if (ActionTag == LastActivatedGameplayTag)
-			ActionElapsedTime = Instance.GetElapsedTime();
 		if (ShouldBlockInputAction()) return;
-		TryActivateAbilityByInputTag(ActionTag);
+		if (bIsCharging)
+		{
+			ActionElapsedTime = Instance.GetElapsedTime();
+			if (bIsAutoCompletion)
+			{
+				TryActivateChargeAbility();
+			}
+		}
+		else
+		{
+			TryActivateAbilityByInputTag(ActionTag);
+		}
 		break;
 	case ETriggerEvent::Completed:
 			if (ActionTag == BaseGameplayTags::InputTag_Attack_Weapon_Special)

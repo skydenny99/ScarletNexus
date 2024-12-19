@@ -3,31 +3,26 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AbilitySystem/Ability/GameplayAbilityBase.h"
-#include "GA_AttackAbilityBase.generated.h"
+#include "AbilitySystem/Ability/GA_GroundAttackAbilityBase.h"
+#include "GA_GroundPsych.generated.h"
 
-class ACharacter_Kasane;
-class UComboSystemComponent;
+class UPsychokinesisComponent;
 /**
  * 
  */
 UCLASS()
-class SCARLETNEXUS_API UGA_AttackAbilityBase : public UGameplayAbilityBase
+class SCARLETNEXUS_API UGA_GroundPsych : public UGA_GroundAttackAbilityBase
 {
 	GENERATED_BODY()
-protected:
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
-	ACharacter_Kasane* Kasane;
-	
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
-	UComboSystemComponent* ComboSystem;
 
+protected:
+	UPROPERTY()
+	UPsychokinesisComponent* PsychokinesisComponent;
+	
 	virtual void OnGiveAbility(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec) override;
 	virtual bool CanActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayTagContainer* SourceTags = nullptr, const FGameplayTagContainer* TargetTags = nullptr, FGameplayTagContainer* OptionalRelevantTags = nullptr) const override;
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
-	void OnEndAbility(UGameplayAbility* Ability);
-public:
-	
-	UFUNCTION(BlueprintPure)
-	FORCEINLINE UComboSystemComponent* GetComboSystem() const {return ComboSystem;}
+
+	UFUNCTION(BlueprintPure, Category = "Psych")
+	FORCEINLINE UPsychokinesisComponent* GetPsychokinesisComponent() const { return PsychokinesisComponent; }
 };

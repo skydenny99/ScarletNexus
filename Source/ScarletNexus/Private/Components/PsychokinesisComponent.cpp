@@ -51,7 +51,6 @@ void UPsychokinesisComponent::UpdateNearestPsychTarget()
 		{
 			float DistanceSquared = FMath::Abs(1 - FVector::DotProduct((Candidate->GetActorLocation() - CameraLocation).GetSafeNormal(), CameraForward))
 									* CharacterTargetDistance.SquaredLength();
-			Debug::Print(FString::Printf(TEXT("%s : %f"), *Candidate->GetActorLabel(), DistanceSquared));
 			if (CharacterDotProduct <= 0 || MinDistanceSquared > DistanceSquared)
 			{
 				CharacterDotProduct = TempCharacterDot;
@@ -71,7 +70,6 @@ void UPsychokinesisComponent::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
-	OnPsychTargetUpdated.AddUObject(this, &UPsychokinesisComponent::DebugTest);
 	GetWorld()->GetTimerManager().SetTimer(UpdateTimer, this, &UPsychokinesisComponent::UpdateNearestPsychTarget, 0.1f, true);
 }
 
@@ -88,21 +86,11 @@ void UPsychokinesisComponent::OnOverlapBegin(UPrimitiveComponent* OverlappedComp
                                              UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if (OtherActor == GetOwner()) return;
-	Debug::Print(OtherActor->GetActorLabel());
 	PsychTargetCandidates.AddUnique(OtherActor);
 }
 
 void UPsychokinesisComponent::OnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-		Debug::Print(OtherActor->GetActorLabel());
 	PsychTargetCandidates.Remove(OtherActor);
-}
-
-void UPsychokinesisComponent::DebugTest(AActor* Target)
-{
-	if (Target)
-	{
-		Debug::Print(Target->GetActorLabel());
-	}
 }

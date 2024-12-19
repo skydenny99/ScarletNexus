@@ -37,10 +37,12 @@ public:
 private:
 	virtual void BeginPlay() override;
 
-private:
 	ACharacter_Kasane* Kasane;
 	UBaseAbilitySystemComponent* BaseAbilitySystemComponent;
 	TMap<FGameplayTag, FGameplayAbilitySpec> AbilitySpecs;
+
+	bool bIsComboAttacking = false;
+	
 
 public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Combo")
@@ -57,8 +59,13 @@ public:
 	FComboCounter BackstepAerialCombo;
 
 private:
+	UPROPERTY(BlueprintReadWrite, Category="Charge", meta=(AllowPrivateAccess=true))
+	bool bIsCharging = false;
+	bool bIsAutoCompletion = false;
+	
 	float ActionElapsedTime;
 	float ChargeAttackThreshold = 0.3f;
+	float ChargeCompletionTime = 0.1f;
 	FGameplayTag LastActivatedGameplayTag;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Ability", meta=(AllowPrivateAccess=true))
@@ -67,10 +74,11 @@ private:
 
 public:
 	void GrantAttackAbilites(UAbilitySystemComponent* ASC, int32 Level = 1);
-	void TryActivateAbilityByInputTag(FGameplayTag tag);
-	bool TryCancelAttackAbility();
-	
 	void UpdateInfoByUnlock();
+	
+	void TryActivateAbilityByInputTag(FGameplayTag tag);
+	void TryActivateChargeAbility();
+	bool TryCancelAttackAbility();
 	
 	UFUNCTION()
 	void OnMovementModeChange(ACharacter* Character, EMovementMode PrevMovementMode, uint8 PreviousCustomMode);
@@ -83,6 +91,8 @@ public:
 	void IncreaseCombo(UPARAM(ref) FComboCounter& ComboCounter);
 
 	FORCEINLINE FGameplayTag GetAttackType() const {return LastActivatedGameplayTag;}
+	UFUNCTION()
+	FORCEINLINE void ResetActivateAbilityTag() {LastActivatedGameplayTag = FGameplayTag();}
 
 	UFUNCTION(BlueprintCallable, Category="Combo")
 	void ResetGroundCombo();
@@ -92,4 +102,13 @@ public:
 	
 	UFUNCTION(BlueprintCallable, Category="Combo")
 	void ResetWeaponCombo();
+
+	void SetupChargeProperty(float CompletionTime, bool AutoCompletion = true)
+	{
+		ActionElapsedTime = CompletionTime;
+		bIsAutoCompletion = AutoCompletion;
+	}
+	
+	UFUNCTION(BlueprintCallable, Category="Combo", meta=(ExpandBoolAsExecs = "InCombo"))
+	void IsComboAttacking(bool& InCombo) { InCombo = bIsComboAttacking; }
 };

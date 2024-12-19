@@ -88,4 +88,5 @@ public:
 	FORCEINLINE float GetMovementElapsedTime() const { return MovementElapsedTime; };
 	FORCEINLINE bool NeedToMove() const { return MovementElapsedTime > DodgeAllowThreshold; }
 	FORCEINLINE UComboSystemComponent* GetComboSystemComponent() const { return ComboSystemComponent; };
+	FORCEINLINE UPsychokinesisComponent* GetPsychokinesisComponent() const { return PsychokinesisComponent; };
 };

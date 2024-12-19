@@ -132,6 +132,11 @@ namespace BaseGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_Hit_Normal, "Shared.Event.Hit.Normal");
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_Hit_Critical, "Shared.Event.Hit.Critical");
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_Hit_KnockDown, "Shared.Event.Hit.KnockDown");
+	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_Charge, "Shared.Event.Charge");
+	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_Charge_Cancel, "Shared.Event.Charge.Cancel");
+	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_Charge_Confirm, "Shared.Event.Charge.Confirm");
+
+	
 
 	// Shared - Status
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Status_CanAttack, "Shared.Status.CanAttack");
