@@ -10,6 +10,7 @@
 
 class UBaseAbilitySystemComponent;
 class UDataAsset_StartupBase;
+ class UBaseAttributeSet;
 
 UCLASS()
 class SCARLETNEXUS_API ABaseCharacter : public ACharacter, public IAbilitySystemInterface, public IPawnCombatInterface
@@ -29,6 +30,10 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AbilitySystem")
 	UBaseAbilitySystemComponent* BaseAbilitySystemComponent;
+
+	 UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AbilitySystem")
+	 UBaseAttributeSet* BaseAttributeSet;
+	
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	virtual void PossessedBy(AController* NewController) override;
 
@@ -38,6 +43,6 @@ protected:
 	
 public:
 	FORCEINLINE UBaseAbilitySystemComponent* GetBaseAbilitySystemComponent() const { return BaseAbilitySystemComponent; }
-
+	FORCEINLINE UBaseAttributeSet* GetBaseAttributeSet() const { return BaseAttributeSet; }
 
 };

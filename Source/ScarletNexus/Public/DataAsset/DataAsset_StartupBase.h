@@ -8,6 +8,7 @@
 #include "DataAsset_StartupBase.generated.h"
 
 class UAbilitySystemComponent;
+class UGameplayEffect;
 
 /**
  * 
@@ -20,6 +21,10 @@ class SCARLETNEXUS_API UDataAsset_StartupBase : public UDataAsset
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Startup")
 	TArray<TSubclassOf<UGameplayAbilityBase>> StartupAbilities;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Startup")
+	TArray<TSubclassOf<UGameplayEffect>> StartupGameplayEffects;
+	
 
 
 public:

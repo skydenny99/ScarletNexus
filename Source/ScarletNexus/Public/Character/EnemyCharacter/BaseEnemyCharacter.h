@@ -10,7 +10,7 @@ class USkeletalMeshComponent;
 class UCapsuleComponent;
 class UCharacterMovementComponent;
 class UEnemyCombatComponent;
-
+class UEnemyAttributeSet;
 
 /**
  * 
@@ -37,7 +37,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "CharacterMovementComponent")
 	UCharacterMovementComponent* Movement;
 
-
+	// UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AbilitySystem")
+	// UEnemyAttributeSet* EnemyAttributeSet;
+	
 	virtual void PossessedBy(AController* NewController) override;
 
 	UPROPERTY(VisibleAnyWhere, BlueprintReadOnly, category = "Combat", meta = (AllowPrivateAccess = "true"))
