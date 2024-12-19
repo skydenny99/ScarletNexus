@@ -6,6 +6,8 @@
 #include "Widgets/WidgetBase.h"
 #include "SASUIBase.generated.h"
 
+class UMaterialInstanceDynamic;
+class UMaterial;
 class UImage;
 
 /**
@@ -29,45 +31,50 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "SASMat")
 	UMaterial* SAS_B;
 
+	UPROPERTY(EditDefaultsOnly, Category = "SASMat")
+	UMaterial* SAS_Gauge;
+	
+	UPROPERTY()
+	UMaterialInstanceDynamic* SAS_L_Dynamic;
+
+	UPROPERTY()
+	UMaterialInstanceDynamic* SAS_R_Dynamic;
+
+	UPROPERTY()
+	UMaterialInstanceDynamic* SAS_T_Dynamic;
+
+	UPROPERTY()
+	UMaterialInstanceDynamic* SAS_B_Dynamic;
+
+	UPROPERTY()
+	UMaterialInstanceDynamic* SAS_Gauge_Dynamic;
 	
 	UPROPERTY(meta = (BindWidget))
-	UImage* IMG_SAS_Left;
+	UImage* L_Simbol;
 
 	UPROPERTY(meta = (BindWidget))
-	UImage* L_OutCircle;
-
-	UPROPERTY(meta = (BindWidget))
-	UImage* L_InCircle;
-
-	
-	UPROPERTY(meta = (BindWidget))
-	UImage* IMG_SAS_Right;
-
-	UPROPERTY(meta = (BindWidget))
-	UImage* R_OutCircle;
-
-	UPROPERTY(meta = (BindWidget))
-	UImage* R_InCircle;
-
-	
-	UPROPERTY(meta = (BindWidget))
-	UImage* IMG_SAS_Top;
-
-	UPROPERTY(meta = (BindWidget))
-	UImage* T_OutCircle;
-
-	UPROPERTY(meta = (BindWidget))
-	UImage* T_InCircle;
+	UImage* L_Gauge;
 
 	
 	UPROPERTY(meta = (BindWidget))
-	UImage* IMG_SAS_Bottom;
+	UImage* R_Simbol;
 
 	UPROPERTY(meta = (BindWidget))
-	UImage* B_OutCircle;
+	UImage* R_Gauge;
+
+	
+	UPROPERTY(meta = (BindWidget))
+	UImage* T_Simbol;
 
 	UPROPERTY(meta = (BindWidget))
-	UImage* B_InCircle;
+	UImage* T_Gauge;
+
+	
+	UPROPERTY(meta = (BindWidget))
+	UImage* B_Simbol;
+
+	UPROPERTY(meta = (BindWidget))
+	UImage* B_Gauge;
 
 public:
 	virtual void NativeOnInitialized() override;

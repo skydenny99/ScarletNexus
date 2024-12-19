@@ -6,5 +6,6 @@
 void USASUIBase::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
+
 	
 }
