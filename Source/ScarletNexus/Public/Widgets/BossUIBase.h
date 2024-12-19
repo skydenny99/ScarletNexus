@@ -4,25 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "Widgets/WidgetBase.h"
+#include "BaseType/BaseEnumType.h"
 #include "BossUIBase.generated.h"
 
 class UMaterialInstanceDynamic;
 class UMaterial;
 class UImage;
-class UTexture2D;
 class UPaperSprite;
-
-UENUM(BlueprintType)
-enum class EDebuffState : uint8
-{
-	BURN,
-	OIL,
-	SHOCK,
-	WET,
-	CONFUSE,
-	NONE,
-};
-
 
 /**
  * 
@@ -43,11 +31,8 @@ protected:
 	UPROPERTY(EditDefaultsOnly)
 	UMaterial* StunMaterial;
 	
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	TArray<UPaperSprite*> DebuffMaterial;
-
-	UPROPERTY()
-	TArray<UImage*> DebuffImage;  
 	
 	UPROPERTY()
 	UMaterialInstanceDynamic* HpMaterialDynamicInstance;
@@ -68,14 +53,13 @@ public:
 	virtual void NativeOnInitialized() override;
 
 	UFUNCTION(BlueprintCallable, Category = "CaculateFunction")
-	void OnDamaged(float Damage);
+	void OnDamaged(const float Damage);
 
 	UFUNCTION(BlueprintImplementableEvent)
-	void SetBrush();
+	void UpdateDebuff(EBaseDebuffType DebuffType);
 	
-	void UpdateHp(float Value);
-	void UpdateStunGauge(float Value);
-	void UpdateDebuff(EDebuffState Debuff);
-	
-	void TakeDamage(float DamageAmount) { CurrentHp = (CurrentHp-DamageAmount)/MaxHp; }
+	void UpdateHp(const float Value);
+
+	UFUNCTION(BlueprintCallable)
+	void UpdateStunGauge(const float Value);
 };
