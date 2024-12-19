@@ -7,7 +7,7 @@
 #include "BossUIBase.generated.h"
 
 class UMaterialInstanceDynamic;
-class UMaterialInstance;
+class UMaterial;
 class UImage;
 class UTexture2D;
 class UPaperSprite;
@@ -38,10 +38,10 @@ private:
 	
 protected:
 	UPROPERTY(EditDefaultsOnly)
-	UMaterialInstance* HpMaterial;
+	UMaterial* HpMaterial;
 
 	UPROPERTY(EditDefaultsOnly)
-	UMaterialInstance* StunMaterial;
+	UMaterial* StunMaterial;
 	
 	UPROPERTY(EditDefaultsOnly)
 	TArray<UPaperSprite*> DebuffMaterial;
