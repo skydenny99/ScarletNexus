@@ -4,11 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "Widgets/WidgetBase.h"
+#include "BaseType/BaseStructType.h"
 #include "SASUIBase.generated.h"
 
+class UPaperSprite;
 class UMaterialInstanceDynamic;
 class UMaterial;
 class UImage;
+struct FSASData;
 
 /**
  * 
@@ -17,10 +20,10 @@ UCLASS()
 class SCARLETNEXUS_API USASUIBase : public UWidgetBase
 {
 	GENERATED_BODY()
-
+	
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "SASMat")
-	UMaterial* SAS_L;
+	UPaperSprite* SAS_L;
 
 	UPROPERTY(EditDefaultsOnly, Category = "SASMat")
 	UMaterial* SAS_R;
@@ -48,34 +51,44 @@ protected:
 
 	UPROPERTY()
 	UMaterialInstanceDynamic* SAS_Gauge_Dynamic;
-	
-	UPROPERTY(meta = (BindWidget))
-	UImage* L_Simbol;
 
-	UPROPERTY(meta = (BindWidget))
+	UPROPERTY(VisibleAnywhere,meta = (BindWidget))
 	UImage* L_Gauge;
-
 	
-	UPROPERTY(meta = (BindWidget))
-	UImage* R_Simbol;
-
 	UPROPERTY(meta = (BindWidget))
 	UImage* R_Gauge;
-
 	
-	UPROPERTY(meta = (BindWidget))
-	UImage* T_Simbol;
-
 	UPROPERTY(meta = (BindWidget))
 	UImage* T_Gauge;
-
-	
-	UPROPERTY(meta = (BindWidget))
-	UImage* B_Simbol;
 
 	UPROPERTY(meta = (BindWidget))
 	UImage* B_Gauge;
 
 public:
-	virtual void NativeOnInitialized() override;
+	UFUNCTION(BlueprintImplementableEvent)
+	void InitSprite(const TArray<FSASData>& Data);
+
+	UFUNCTION(BlueprintCallable)
+	void InitTopGauge(const FColor Color,const float Percent);
+
+	UFUNCTION(BlueprintCallable)
+	void InitLeftGauge(const FColor Color,const float Percent);
+
+	UFUNCTION(BlueprintCallable)
+	void InitRightGauge(const FColor Color,const float Percent);
+
+	UFUNCTION(BlueprintCallable)
+	void InitBottomGauge(const FColor Color,const float Percent);
+	
+	UFUNCTION(BlueprintCallable)
+	void UpdateTopGauge(const float Percent);
+
+	UFUNCTION(BlueprintCallable)
+	void UpdateLeftGauge(const float Percent);
+
+	UFUNCTION(BlueprintCallable)
+	void UpdateRightGauge(const float Percent);
+
+	UFUNCTION(BlueprintCallable)
+	void UpdateBottomGauge(const float Percent);
 };

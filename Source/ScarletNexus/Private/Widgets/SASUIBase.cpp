@@ -2,10 +2,59 @@
 
 
 #include "Widgets/SASUIBase.h"
+#include "Kismet/KismetMaterialLibrary.h"
+#include "Widgets/BossUIBase.h"
 
-void USASUIBase::NativeOnInitialized()
+void USASUIBase::InitTopGauge(const FColor Color, const float Percent)
 {
-	Super::NativeOnInitialized();
-
-	
+	UE_LOG(LogTemp, Display, TEXT("USASUIBase::InitTopGauge"));
+	SAS_T_Dynamic = UKismetMaterialLibrary::CreateDynamicMaterialInstance(GetWorld(), SAS_Gauge);
+	SAS_T_Dynamic->SetScalarParameterValue("Percent",Percent);
+	SAS_T_Dynamic->SetVectorParameterValue("Color",Color);
 }
+
+void USASUIBase::InitLeftGauge(const FColor Color, const float Percent)
+{
+	UE_LOG(LogTemp, Display, TEXT("USASUIBase::InitLeftGauge"));
+	SAS_L_Dynamic = UKismetMaterialLibrary::CreateDynamicMaterialInstance(GetWorld(), SAS_Gauge);
+	SAS_L_Dynamic->SetScalarParameterValue("Percent",Percent);
+	SAS_L_Dynamic->SetVectorParameterValue("Color",Color);
+}
+
+void USASUIBase::InitRightGauge(const FColor Color, const float Percent)
+{
+	UE_LOG(LogTemp, Display, TEXT("USASUIBase::InitRightGauge"));
+	SAS_R_Dynamic = UKismetMaterialLibrary::CreateDynamicMaterialInstance(GetWorld(), SAS_Gauge);
+	SAS_R_Dynamic->SetScalarParameterValue("Percent",Percent);
+	SAS_R_Dynamic->SetVectorParameterValue("Color",Color);
+}
+
+void USASUIBase::InitBottomGauge(const FColor Color, const float Percent)
+{
+	UE_LOG(LogTemp, Display, TEXT("USASUIBase::InitBottomGauge"));
+	SAS_B_Dynamic = UKismetMaterialLibrary::CreateDynamicMaterialInstance(GetWorld(), SAS_Gauge);
+	SAS_B_Dynamic->SetScalarParameterValue("Percent",Percent);
+	SAS_B_Dynamic->SetVectorParameterValue("Color",Color);
+}
+
+void USASUIBase::UpdateTopGauge(const float Percent)
+{
+	SAS_T_Dynamic->SetScalarParameterValue("Percent",Percent);
+}
+
+void USASUIBase::UpdateLeftGauge(const float Percent)
+{
+	SAS_L_Dynamic->SetScalarParameterValue("Percent",Percent);
+}
+
+void USASUIBase::UpdateRightGauge(const float Percent)
+{
+	SAS_R_Dynamic->SetScalarParameterValue("Percent",Percent);
+}
+
+void USASUIBase::UpdateBottomGauge(const float Percent)
+{
+	SAS_B_Dynamic->SetScalarParameterValue("Percent",Percent);
+}
+
+
