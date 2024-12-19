@@ -31,3 +31,14 @@ enum class EBaseDirectionType : uint8
 	Right = 0b1011,
 	Max = 0b1111
 };
+
+UENUM(BlueprintType)
+enum class EBaseDebuffType : uint8
+{
+	BURN,
+	OIL,
+	SHOCK,
+	WET,
+	CONFUSE,
+	NONE,
+};

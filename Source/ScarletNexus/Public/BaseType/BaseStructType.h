@@ -3,13 +3,22 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "BaseStructType.generated.h"
 
-/**
- * 
- */
-class SCARLETNEXUS_API BaseStructType
+class UPaperSprite;
+struct FColor;
+
+USTRUCT(BlueprintType)
+struct FSASData
 {
-public:
-	BaseStructType();
-	~BaseStructType();
+	GENERATED_BODY()
+
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
+	UPaperSprite* Sprite;
+
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
+	FColor Color;
+
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
+	float Percent;
 };

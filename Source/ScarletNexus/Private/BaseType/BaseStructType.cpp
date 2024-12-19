@@ -2,11 +2,3 @@
 
 
 #include "BaseType/BaseStructType.h"
-
-BaseStructType::BaseStructType()
-{
-}
-
-BaseStructType::~BaseStructType()
-{
-}
