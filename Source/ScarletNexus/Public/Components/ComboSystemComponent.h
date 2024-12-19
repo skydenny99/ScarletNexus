@@ -59,13 +59,15 @@ public:
 	FComboCounter BackstepAerialCombo;
 
 private:
-	UPROPERTY(BlueprintReadWrite, Category="Charge", meta=(AllowPrivateAccess=true))
 	bool bIsCharging = false;
 	bool bIsAutoCompletion = false;
+	bool bChargeAbilityAlreadyTriggered = false;
 	
 	float ActionElapsedTime;
 	float ChargeAttackThreshold = 0.3f;
 	float ChargeCompletionTime = 0.1f;
+
+	FGameplayTag LastChargeAbilityInputTag;
 	FGameplayTag LastActivatedGameplayTag;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Ability", meta=(AllowPrivateAccess=true))
@@ -75,8 +77,8 @@ private:
 public:
 	void GrantAttackAbilites(UAbilitySystemComponent* ASC, int32 Level = 1);
 	void UpdateInfoByUnlock();
-	
-	void TryActivateAbilityByInputTag(FGameplayTag tag);
+
+	bool TryActivateAbilityByInputTag(FGameplayTag tag);
 	void TryActivateChargeAbility();
 	bool TryCancelAttackAbility();
 	
@@ -84,7 +86,7 @@ public:
 	void OnMovementModeChange(ACharacter* Character, EMovementMode PrevMovementMode, uint8 PreviousCustomMode);
 	
 
-	void ProcessInputAction(FGameplayTag ActionTag, ETriggerEvent TriggerEvent, const FInputActionInstance& Instance);
+	void ProcessInputAction(FGameplayTag InputTag, ETriggerEvent TriggerEvent, const FInputActionInstance& Instance);
 	bool ShouldBlockInputAction();
 
 	UFUNCTION(BlueprintCallable, Category="Combo")
@@ -103,6 +105,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Combo")
 	void ResetWeaponCombo();
 
+	void StartCharging()
+	{
+		bIsCharging = true;
+		bChargeAbilityAlreadyTriggered = false;
+	};
 	void SetupChargeProperty(float CompletionTime, bool AutoCompletion = true)
 	{
 		ActionElapsedTime = CompletionTime;

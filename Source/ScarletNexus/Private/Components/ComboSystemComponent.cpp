@@ -52,7 +52,7 @@ void UComboSystemComponent::GrantAttackAbilites(UAbilitySystemComponent* ASC, in
 	UBaseFunctionLibrary::AddPlaygameTagToActor(Kasane, BaseGameplayTags::Shared_Status_CanAttack);
 }
 
-void UComboSystemComponent::TryActivateAbilityByInputTag(FGameplayTag tag)
+bool UComboSystemComponent::TryActivateAbilityByInputTag(FGameplayTag tag)
 {
 	FGameplayTag AbilityTag = FGameplayTag();
 	UCharacterMovementComponent* Movement = Kasane->GetCharacterMovement();
@@ -96,24 +96,28 @@ void UComboSystemComponent::TryActivateAbilityByInputTag(FGameplayTag tag)
 	if (AbilityTag.IsValid() == false || AbilitySpecs.Contains(AbilityTag) == false)
 	{
 		Debug::Print("Ability not found", FColor::Red);
-		return;
+		return false;
 	}
 	if (BaseAbilitySystemComponent->TryActivateAbility(AbilitySpecs[AbilityTag].Handle))
 	{
 		LastActivatedGameplayTag = AbilityTag;
+		return true;
 	}
-	else
-	{
-		Debug::Print("Ability try failed (Triggered)", FColor::Red);
-	}
+	
+	Debug::Print("Ability try failed (Triggered)", FColor::Red);
+	return false;
 }
 
 void UComboSystemComponent::TryActivateChargeAbility()
 {
 	FGameplayEventData EventData;
 	EventData.Instigator = Kasane;
-	EventData.EventTag = ActionElapsedTime >= ChargeCompletionTime ? BaseGameplayTags::Shared_Event_Charge_Confirm : BaseGameplayTags::Shared_Event_Charge_Cancel;
+	EventData.InstigatorTags.AddTag(ActionElapsedTime >= ChargeCompletionTime ? BaseGameplayTags::Shared_Event_Charge_Confirm : BaseGameplayTags::Shared_Event_Charge_Cancel);
 	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(Kasane, BaseGameplayTags::Shared_Event_Charge, EventData);
+
+	bIsCharging = false;
+	bChargeAbilityAlreadyTriggered = true;
+	ActionElapsedTime = 0.f;
 }
 
 bool UComboSystemComponent::TryCancelAttackAbility()
@@ -147,27 +151,41 @@ void UComboSystemComponent::OnMovementModeChange(ACharacter* Character, EMovemen
 }
 
 
-void UComboSystemComponent::ProcessInputAction(FGameplayTag ActionTag, ETriggerEvent TriggerEvent, const FInputActionInstance& Instance)
+void UComboSystemComponent::ProcessInputAction(FGameplayTag InputTag, ETriggerEvent TriggerEvent, const FInputActionInstance& Instance)
 {
 	switch (TriggerEvent)
 	{
 	case ETriggerEvent::Triggered:
 		if (ShouldBlockInputAction()) return;
+		Debug::Print(bIsCharging ? TEXT("On") : TEXT("Off"), FColor::Red);
 		if (bIsCharging)
 		{
 			ActionElapsedTime = Instance.GetElapsedTime();
-			if (bIsAutoCompletion)
+			if (bIsAutoCompletion && ActionElapsedTime > ChargeCompletionTime)
 			{
 				TryActivateChargeAbility();
+				LastChargeAbilityInputTag = InputTag;
 			}
 		}
 		else
 		{
-			TryActivateAbilityByInputTag(ActionTag);
+			if (LastChargeAbilityInputTag.MatchesTagExact(InputTag)) return;
+			if (TryActivateAbilityByInputTag(InputTag))
+			{
+				LastChargeAbilityInputTag = InputTag;
+			}
 		}
 		break;
 	case ETriggerEvent::Completed:
-			if (ActionTag == BaseGameplayTags::InputTag_Attack_Weapon_Special)
+		if (LastChargeAbilityInputTag.MatchesTagExact(InputTag))
+		{
+			LastChargeAbilityInputTag = FGameplayTag();
+		}
+		if (bIsCharging)
+		{
+				TryActivateChargeAbility();
+		}
+			if (InputTag == BaseGameplayTags::InputTag_Attack_Weapon_Special)
 			{
 				// TODO activate or cancel charging ability
 				FGameplayTag AbilityTag =

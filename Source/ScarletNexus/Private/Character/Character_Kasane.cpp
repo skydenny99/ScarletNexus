@@ -31,6 +31,13 @@ ACharacter_Kasane::ACharacter_Kasane()
 		MainBody->SetSkeletalMesh(MainBodyMesh.Object);
 	}
 
+	static ConstructorHelpers::FClassFinder<UAnimInstance> MainBodyAnim(TEXT("/Game/_BP/Character/Kasane/Animation/ABP_KasaneAnimInstance.ABP_KasaneAnimInstance_C"));
+	if (MainBodyAnim.Succeeded())
+	{
+		MainBody->SetAnimInstanceClass(MainBodyAnim.Class);
+	}
+	
+
 	USkeletalMeshComponent* OutlineBody = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Outline"));
 
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh> OutlineBodyMesh(TEXT("/Game/Resources/Characters/CH0200/CH200_Outline.CH200_Outline"));
