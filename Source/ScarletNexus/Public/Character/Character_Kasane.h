@@ -8,6 +8,8 @@
 #include "Character/BaseCharacter.h"
 #include "Character_Kasane.generated.h"
 
+class UPsychokinesisComponent;
+class USphereComponent;
 class UTargetTrackingSpringArmComponent;
 class UComboSystemComponent;
 struct FInputActionInstance;
@@ -33,6 +35,12 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly, Category="Battle")
 	UComboSystemComponent* ComboSystemComponent;
+
+	UPROPERTY(EditDefaultsOnly, Category="Psych")
+	USphereComponent* PsychBoundary;
+
+	UPROPERTY(EditDefaultsOnly, Category="Psych")
+	UPsychokinesisComponent* PsychokinesisComponent;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	UDataAsset_InputConfig* InputConfig;

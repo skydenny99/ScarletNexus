@@ -14,6 +14,8 @@
 #include "BaseDebugHelper.h"
 #include "BaseFunctionLibrary.h"
 #include "Components/ComboSystemComponent.h"
+#include "Components/PsychokinesisComponent.h"
+#include "Components/SphereComponent.h"
 #include "Components/TargetTrackingSpringArmComponent.h"
 #include "Components/UnlockSystemComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -86,6 +88,13 @@ ACharacter_Kasane::ACharacter_Kasane()
 	MovementModeChangedDelegate.AddDynamic(this, &ACharacter_Kasane::OnFalling);
 	GetMesh()->SetAllowAnimCurveEvaluation(true);
 
+	PsychBoundary = CreateDefaultSubobject<USphereComponent>(TEXT("PsychBoundary"));
+	PsychBoundary->SetupAttachment(RootComponent);
+	PsychBoundary->InitSphereRadius(500.f);
+	PsychokinesisComponent = CreateDefaultSubobject<UPsychokinesisComponent>(TEXT("PsychokinesisComponent"));
+	PsychokinesisComponent->InitBoundary(PsychBoundary);
+
+	
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh> WeaponMesh(TEXT("/Game/Resources/Weapons/WP0200/WP200_Base.WP200_Base"));
 	if (WeaponMesh.Succeeded())
 	{
