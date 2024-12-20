@@ -68,7 +68,7 @@ protected:
 	void UpdatePsychTargetLocation(APsychokineticThrowableProp* Target);
 	
 public:
-	void InitComponents(USphereComponent* InDetectionBoundary, USkeletalMeshComponent* InSkeletalMesh = nullptr);
+	void InitComponents(USphereComponent* InDetectionBoundary, USkeletalMeshComponent* InSkeletalMesh);
 	FOnPsychTargetUpdated OnPsychTargetUpdated;
 
 	UFUNCTION(BlueprintPure)

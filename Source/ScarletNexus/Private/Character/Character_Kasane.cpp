@@ -112,7 +112,7 @@ ACharacter_Kasane::ACharacter_Kasane()
 	{
 		PsychObject->SetAnimInstanceClass(PsychObjectAnimAsset.Class);
 	}
-	PsychokinesisComponent->InitComponents(PsychBoundary);
+	PsychokinesisComponent->InitComponents(PsychBoundary, PsychObject);
 	
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh> WeaponMesh(TEXT("/Game/Resources/Weapons/WP0200/WP200_Base.WP200_Base"));
 	if (WeaponMesh.Succeeded())
@@ -164,7 +164,7 @@ void ACharacter_Kasane::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	InputComp->BindNativeInputAction(InputConfig, BaseGameplayTags::InputTag_Move, ETriggerEvent::Triggered, this, &ACharacter_Kasane::UpdateMovementElapsedTime);
 	InputComp->BindNativeInputAction(InputConfig, BaseGameplayTags::InputTag_Move, ETriggerEvent::Completed, this, &ACharacter_Kasane::ResetMovementElapsedTime);
 	InputComp->BindNativeInputAction(InputConfig, BaseGameplayTags::InputTag_Look, ETriggerEvent::Triggered, this, &ACharacter_Kasane::OnInputLookTriggered);
-	InputComp->BindNativeInputAction(InputConfig, BaseGameplayTags::InputTag_Targeting_On, ETriggerEvent::Triggered, this, &ACharacter_Kasane::OnTargetingInputTriggered);
+	InputComp->BindNativeInputAction(InputConfig, BaseGameplayTags::InputTag_Targeting_Toggle, ETriggerEvent::Triggered, this, &ACharacter_Kasane::OnTargetingInputTriggered);
 	InputComp->BindAbilityInputAction(InputConfig, this, &ACharacter_Kasane::OnAbilityInputTriggered);
 	InputComp->BindDirectionInput(DirectionInputConfig, this, &ACharacter_Kasane::PushInput);
 	InputComp->BindActionInstanceWithTag(InputConfig, this);

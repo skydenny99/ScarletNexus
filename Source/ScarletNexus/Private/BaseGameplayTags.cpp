@@ -20,10 +20,8 @@ namespace BaseGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_Attack_Psych_Special, "InputTag.Attack.Psych.Special");
 
 	//Targeting (LockOn)
-	UE_DEFINE_GAMEPLAY_TAG(InputTag_Targeting_On, "InputTag.Targeting.On");
-	UE_DEFINE_GAMEPLAY_TAG(InputTag_Targeting_Off, "InputTag.Targeting.Off");
-	UE_DEFINE_GAMEPLAY_TAG(InputTag_Targeting_Change_Left, "InputTag.Targeting.Change.Left");
-	UE_DEFINE_GAMEPLAY_TAG(InputTag_Targeting_Change_Right, "InputTag.Targeting.Change.Right");
+	UE_DEFINE_GAMEPLAY_TAG(InputTag_Targeting_Toggle, "InputTag.Targeting.Toggle");
+	UE_DEFINE_GAMEPLAY_TAG(InputTag_Targeting_Change, "InputTag.Targeting.Change");
 
 	//Item
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_Item_Use, "InputTag.Item.Use");
