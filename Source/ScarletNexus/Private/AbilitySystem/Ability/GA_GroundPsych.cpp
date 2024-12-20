@@ -33,3 +33,9 @@ void UGA_GroundPsych::PreActivate(const FGameplayAbilitySpecHandle Handle, const
 	OnActivatePsychAbility();
 }
 
+
+void UGA_GroundPsych::ThrowProjectile()
+{
+	ActivateThrowPsychAbility();
+}
+

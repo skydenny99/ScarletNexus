@@ -6,6 +6,20 @@
 #include "Components/ActorComponent.h"
 #include "PsychokinesisComponent.generated.h"
 
+class APsychokineticThrowableProp;
+class UDataAsset_PsychMontage;
+
+UENUM(BlueprintType)
+enum class EPsychType : uint8
+{
+	LeR,
+	LeL,
+	AeL,
+	AeR,
+	ReR,
+	ReL
+};
+
 class APsychokineticPropBase;
 class USphereComponent;
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnPsychTargetUpdated, APsychokineticPropBase*)
@@ -20,6 +34,10 @@ public:
 	UPsychokinesisComponent();
 
 protected:
+	
+	UPROPERTY(EditDefaultsOnly, Category="Psych")
+	UDataAsset_PsychMontage* PsychMontageData;
+	
 	UPROPERTY(EditDefaultsOnly)
 	USphereComponent* DetectionBoundary;
 	
@@ -27,6 +45,8 @@ protected:
 	TArray<APsychokineticPropBase*> PsychTargetCandidates;
 	UPROPERTY()
 	APsychokineticPropBase* PsychTarget;
+	UPROPERTY()
+	USkeletalMeshComponent* PsychSkeletalMesh;
 	
 
 	
@@ -45,12 +65,18 @@ protected:
 	UFUNCTION()
 	void OnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
+	void UpdatePsychTargetLocation(APsychokineticThrowableProp* Target);
 	
 public:
-	void InitBoundary(USphereComponent* InDetectionBoundary);
+	void InitComponents(USphereComponent* InDetectionBoundary, USkeletalMeshComponent* InSkeletalMesh = nullptr);
 	FOnPsychTargetUpdated OnPsychTargetUpdated;
 
 	UFUNCTION(BlueprintPure)
 	FORCEINLINE APsychokineticPropBase* GetPsychTarget() const {return PsychTarget;}
-		
+
+	UFUNCTION(BlueprintCallable)
+	void PlayGroundPsychMontage(const EPsychType& PsychType, int32 ComboCount);
+
+	UFUNCTION(BlueprintCallable)
+	void PlayAerialPsychMontage(int32 ComboCount);
 };

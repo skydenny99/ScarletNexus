@@ -4,9 +4,11 @@
 #include "Utility/PsychokinesisAbilityHelper.h"
 
 #include "Actor/PsychokineticPropBase.h"
+#include "Actor/PsychokineticThrowableProp.h"
 #include "Character/Character_Kasane.h"
 #include "Components/ComboSystemComponent.h"
 #include "Components/PsychokinesisComponent.h"
+#include "Components/TargetTrackingSpringArmComponent.h"
 
 
 void PsychokinesisAbilityHelper::InitComponents(ACharacter_Kasane* Character)
@@ -14,8 +16,10 @@ void PsychokinesisAbilityHelper::InitComponents(ACharacter_Kasane* Character)
 	check(Character)
 	PsychokinesisComponent = Character->GetPsychokinesisComponent();
 	TargetTrackingComponent = Character->GetTargetTrackingComponent();
+	ComboSystemComponent = Character->GetComboSystemComponent();
 	check(PsychokinesisComponent)
 	check(TargetTrackingComponent)
+	check(ComboSystemComponent)
 }
 
 bool PsychokinesisAbilityHelper::HasPsychokineticPropInRange() const
@@ -32,6 +36,10 @@ void PsychokinesisAbilityHelper::OnActivatePsychAbility()
 
 void PsychokinesisAbilityHelper::ActivateThrowPsychAbility()
 {
+	auto ThrowableProp = Cast<APsychokineticThrowableProp>(CurrentPsychTarget);
+	if (TargetTrackingComponent->GetCurrentTarget())
+		ThrowableProp->SetTarget(TargetTrackingComponent->GetCurrentTarget());
+	ThrowableProp->Launch();
 }
 
 void PsychokinesisAbilityHelper::ActivateSpecialPsychAbility()

@@ -99,8 +99,20 @@ ACharacter_Kasane::ACharacter_Kasane()
 	PsychBoundary->SetupAttachment(RootComponent);
 	PsychBoundary->InitSphereRadius(500.f);
 	PsychokinesisComponent = CreateDefaultSubobject<UPsychokinesisComponent>(TEXT("PsychokinesisComponent"));
-	PsychokinesisComponent->InitBoundary(PsychBoundary);
-
+	USkeletalMeshComponent* PsychObject = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("PsychObject"));
+	static ConstructorHelpers::FObjectFinder<USkeletalMesh> PsychObjectAsset(TEXT("/Game/Resources/Psychokinesis/Common/AS_Psy_Common.AS_Psy_Common"));
+	if (PsychObjectAsset.Succeeded())
+	{
+		PsychObject->SetSkeletalMesh(PsychObjectAsset.Object);
+		PsychObject->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		PsychObject->SetHiddenInGame(true);
+	}
+	static ConstructorHelpers::FClassFinder<UAnimInstance> PsychObjectAnimAsset(TEXT(""));
+	if (PsychObjectAnimAsset.Succeeded())
+	{
+		PsychObject->SetAnimInstanceClass(PsychObjectAnimAsset.Class);
+	}
+	PsychokinesisComponent->InitComponents(PsychBoundary);
 	
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh> WeaponMesh(TEXT("/Game/Resources/Weapons/WP0200/WP200_Base.WP200_Base"));
 	if (WeaponMesh.Succeeded())

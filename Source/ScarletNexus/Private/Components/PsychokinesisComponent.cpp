@@ -5,8 +5,11 @@
 
 #include "BaseDebugHelper.h"
 #include "Actor/PsychokineticPropBase.h"
+#include "Actor/PsychokineticThrowableProp.h"
 #include "Components/SphereComponent.h"
+#include "DataAsset/DataAsset_PsychMontage.h"
 #include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetMathLibrary.h"
 
 // Sets default values for this component's properties
 UPsychokinesisComponent::UPsychokinesisComponent()
@@ -74,14 +77,28 @@ void UPsychokinesisComponent::BeginPlay()
 	GetWorld()->GetTimerManager().SetTimer(UpdateTimer, this, &UPsychokinesisComponent::UpdateNearestPsychTarget, 0.1f, true);
 }
 
-void UPsychokinesisComponent::InitBoundary(USphereComponent* InDetectionBoundary)
+void UPsychokinesisComponent::PlayGroundPsychMontage(const EPsychType& PsychType, int32 ComboCount)
+{
+	auto GroundMontages = PsychMontageData->GroundAnimMontages.Find(PsychType);
+	PsychSkeletalMesh->GetAnimInstance()->Montage_Play(GroundMontages->AnimMontages[ComboCount]);
+}
+
+void UPsychokinesisComponent::PlayAerialPsychMontage(int32 ComboCount)
+{
+}
+
+
+void UPsychokinesisComponent::InitComponents(USphereComponent* InDetectionBoundary,
+											 USkeletalMeshComponent* InSkeletalMesh)
 {
 	check(InDetectionBoundary);
 	DetectionBoundary = InDetectionBoundary;
 	DetectionBoundary->OnComponentBeginOverlap.AddDynamic(this, &UPsychokinesisComponent::OnOverlapBegin);
 	DetectionBoundary->OnComponentEndOverlap.AddDynamic(this, &UPsychokinesisComponent::OnOverlapEnd);
-}
 
+	check(InSkeletalMesh)
+	PsychSkeletalMesh = InSkeletalMesh;
+}
 
 void UPsychokinesisComponent::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
                                              UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -100,5 +117,21 @@ void UPsychokinesisComponent::OnOverlapEnd(UPrimitiveComponent* OverlappedCompon
 	if (Temp == PsychTarget)
 	{
 		PsychTarget = nullptr;
+	}
+}
+
+
+void UPsychokinesisComponent::UpdatePsychTargetLocation(APsychokineticThrowableProp* Target)
+{
+	if (Target->IsAttached()) return;
+	FVector DesiredLocation = PsychSkeletalMesh->GetBoneLocation(FName("joint_001"));
+	if (FVector::Distance(DesiredLocation, Target->GetActorLocation()) < 100.f)
+	{
+		Target->AttachToComponent(PsychSkeletalMesh, FAttachmentTransformRules::KeepWorldTransform, FName("joint_001"));
+		Target->Attached();
+	}
+	else
+	{
+		Target->SetActorLocation(UKismetMathLibrary::VInterpTo(Target->GetActorLocation(), DesiredLocation, GetWorld()->GetDeltaSeconds(), 15.f));
 	}
 }
