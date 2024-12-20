@@ -56,7 +56,7 @@ public:
 	void OnDamaged(const float Damage);
 
 	UFUNCTION(BlueprintImplementableEvent)
-	void UpdateDebuff(EBaseDebuffType DebuffType);
+	void UpdateDebuff(EBaseDebuffType DebuffType = EBaseDebuffType::NONE);
 	
 	void UpdateHp(const float Value);
 

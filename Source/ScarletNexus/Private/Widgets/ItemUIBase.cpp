@@ -3,20 +3,31 @@
 
 #include "Widgets/ItemUIBase.h"
 
+#include "ToolContextInterfaces.h"
 #include "Components/Image.h"
+#include "Basetype/BaseStructType.h"
 #include "Kismet/KismetMaterialLibrary.h"
-
 
 void UItemUIBase::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
-	
-	ProgressbarInstance = UKismetMaterialLibrary::CreateDynamicMaterialInstance(GetWorld(),Progressbar);
-	Item_Progressbar->SetBrushFromMaterial(ProgressbarInstance);
-	ProgressbarInstance->SetScalarParameterValue("Percent",1.0f);
+
+	ArrowMaterialInstance = UKismetMaterialLibrary::CreateDynamicMaterialInstance(GetWorld(),ArrowMaterial);
+	DownArrow_B->SetBrushFromMaterial(ArrowMaterialInstance);
 }
 
-void UItemUIBase::OnUseItem()
+void UItemUIBase::UpdateGauge(const FConsumItemInfo& Item)
 {
-	
+	ItemMaterialInstance = UKismetMaterialLibrary::CreateDynamicMaterialInstance(GetWorld(),Item.Material);
+	Item_Progressbar->SetBrushFromMaterial(ItemMaterialInstance);
+	ItemMaterialInstance->SetVectorParameterValue("Color",Item.Color);
+	ItemMaterialInstance->SetScalarParameterValue("Percent",Item.Percentage);
+
+	ArrowMaterialInstance->SetVectorParameterValue("Color",Item.Color);
+
+	if (Item.Percentage >= 1)
+	{
+		//blink
+	}
 }
+

@@ -8,6 +8,8 @@
 
 class UMaterial;
 class UMaterialInstanceDynamic;
+class UImage;
+struct FConsumItemInfo;
 
 /**
  * 
@@ -16,20 +18,27 @@ UCLASS()
 class SCARLETNEXUS_API UItemUIBase : public UWidgetBase
 {
 	GENERATED_BODY()
-
+private:
+	FTimerHandle ItemCoolTimerHandle;
+	
 protected:
-	UPROPERTY(EditDefaultsOnly)
-	UMaterial* Progressbar;
-
 	UPROPERTY()
-	UMaterialInstanceDynamic* ProgressbarInstance;
+	UMaterialInstanceDynamic* ItemMaterialInstance;
 	
 	UPROPERTY(meta = (BindWidget))
-	class UImage* Item_Progressbar;
+	UImage* Item_Progressbar;
+	
+	UPROPERTY(EditDefaultsOnly)
+	UMaterial* ArrowMaterial;
 
+	UPROPERTY()
+	UMaterialInstanceDynamic* ArrowMaterialInstance;
+	
+	UPROPERTY(meta = (BindWidget))
+	UImage* DownArrow_B;
+	
 public:
 	virtual void NativeOnInitialized() override;
 	
-	UFUNCTION(BlueprintCallable)
-	void OnUseItem();
+	void UpdateGauge(const FConsumItemInfo& Item);
 };

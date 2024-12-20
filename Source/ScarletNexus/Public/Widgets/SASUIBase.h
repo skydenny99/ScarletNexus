@@ -91,4 +91,6 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void UpdateBottomGauge(const float Percent);
+
+	//TODO void SwitchSAS();
 };
