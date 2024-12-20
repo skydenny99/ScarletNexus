@@ -93,4 +93,8 @@ void UPsychokinesisComponent::OnOverlapEnd(UPrimitiveComponent* OverlappedCompon
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
 	PsychTargetCandidates.Remove(OtherActor);
+	if (OtherActor == PsychTarget)
+	{
+		PsychTarget = nullptr;
+	}
 }

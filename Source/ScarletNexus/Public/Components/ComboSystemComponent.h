@@ -112,7 +112,7 @@ public:
 	};
 	void SetupChargeProperty(float CompletionTime, bool AutoCompletion = true)
 	{
-		ActionElapsedTime = CompletionTime;
+		ChargeCompletionTime = CompletionTime;
 		bIsAutoCompletion = AutoCompletion;
 	}
 	
