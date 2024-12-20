@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "BaseType/BaseEnumType.h"
+#include "Abilities/GameplayAbilityTypes.h"
+
 #include "ProjectileBase.generated.h"
 
 
@@ -36,8 +38,16 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"), Category = "Projectile")
 	EProjectileDamagePolicy ProjectileDamagePolicy = EProjectileDamagePolicy::OnHit;
+	
+	//스폰시 노출가능하도록 메크로에서 ExposeOnSpawn사용
+	UPROPERTY(BlueprintReadOnly, Category="Projectile", meta = (ExposeOnSpawn = true))
+	FGameplayEffectSpecHandle ProjectileDamageSpecHandle;
 
 
+	UFUNCTION()
+	void HandleApplyProjectile(APawn* HitPawn, FGameplayEventData& Payload);
+
+	
 	UFUNCTION()
 	virtual void OnProjectileHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit );
 
@@ -47,4 +57,5 @@ protected:
 	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "On Spawn Projectile Hit FX"))
 	void BP_OnSpawnProjectileHitFX(const FVector& HitLocation);
 
+	
 };

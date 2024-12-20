@@ -2,10 +2,14 @@
 
 
 #include "Items/Projectile/ProjectileBase.h"
+
+#include "AbilitySystemBlueprintLibrary.h"
 #include "NiagaraComponent.h"
 #include "Abilities/GameplayAbilityTypes.h"
 #include "Components/BoxComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "BaseFunctionLibrary.h"
+#include "BaseGameplayTags.h"
 
 // Sets default values
 AProjectileBase::AProjectileBase()
@@ -48,6 +52,21 @@ void AProjectileBase::BeginPlay()
 	
 }
 
+void AProjectileBase::HandleApplyProjectile(APawn* HitPawn, FGameplayEventData& Payload)
+{
+	checkf(ProjectileDamageSpecHandle.IsValid(), TEXT("ProjectileDamageSpecHandle must be valid"));
+	const bool bWasApplied = UBaseFunctionLibrary::ApplyGameplayEffectSpecHandleToTargetActor(GetInstigator(), HitPawn, ProjectileDamageSpecHandle);
+
+	if (bWasApplied)
+	{
+		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
+			HitPawn,
+			BaseGameplayTags::Shared_Event_HitReact_Normal,
+			Payload
+		);
+	}
+}
+
 void AProjectileBase::OnProjectileHit(UPrimitiveComponent* HitComponent, AActor* OtherActor,
                                       UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
@@ -59,6 +78,7 @@ void AProjectileBase::OnProjectileHit(UPrimitiveComponent* HitComponent, AActor*
 	if (HitPawn != nullptr)
 	{
 		Destroy();
+		return;
 	}
 
 	// GE Data setting
@@ -67,12 +87,9 @@ void AProjectileBase::OnProjectileHit(UPrimitiveComponent* HitComponent, AActor*
 	Data.Target = HitPawn;
 
 	//Apply projectile Damage ::TODO
+	HandleApplyProjectile(HitPawn, Data);	
+	
 	Destroy();
-	
-
-	
-
-	
 	
 	
 }

@@ -113,3 +113,14 @@ EBaseAIDirectionType UBaseFunctionLibrary::ComputeAIDirection(AActor* Target, AA
 
 	
 }
+
+bool UBaseFunctionLibrary::ApplyGameplayEffectSpecHandleToTargetActor(AActor* Instigator, AActor* TargetActor,
+	const FGameplayEffectSpecHandle& OutSpecHandle)
+{
+	UBaseAbilitySystemComponent* SourceASC =  NativeGetAbilitySystemComponentFromActor(Instigator);
+	UBaseAbilitySystemComponent* TargetASC = NativeGetAbilitySystemComponentFromActor(TargetActor);
+	
+	FActiveGameplayEffectHandle ActiveGameplayEffectHandle = SourceASC->ApplyGameplayEffectSpecToTarget(*OutSpecHandle.Data,TargetASC);
+	
+	return ActiveGameplayEffectHandle.WasSuccessfullyApplied();
+}

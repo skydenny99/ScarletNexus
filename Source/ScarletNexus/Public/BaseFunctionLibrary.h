@@ -44,6 +44,10 @@ public:
 
 	UFUNCTION(BlueprintPure, Category = "FunctionLibrary")
 	static EBaseAIDirectionType ComputeAIDirection(AActor* Target, AActor* SelfActor, float& OutAngleDifference);
+
+
+	UFUNCTION(BlueprintPure, Category = "FunctionLibrary")
+	static bool ApplyGameplayEffectSpecHandleToTargetActor(AActor* Instigator, AActor* TargetActor, const FGameplayEffectSpecHandle& OutSpecHandle);
 	
 
 };

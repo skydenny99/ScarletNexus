@@ -34,13 +34,26 @@ void UEnemyAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectM
 	if (Data.EvaluatedData.Attribute == GetDamageTakenAttribute())
 	{
 		const float BeforeHp = GetCurrentHp();
+		const float BeforeDownGauge = GetCurrentDownGauge();
+		const float BeforeBrainCrushGauge = GetCurrentBrainCrushGauge();
+		
 		const float Damage = GetDamageTaken();
 
+		// HP
 		const float NewCurrentHp = FMath::Clamp(BeforeHp - Damage, 0.0f, GetMaxHp());
 		SetCurrentHp(NewCurrentHp);
+		
+		// Down Gauge
+		const float NewDownGauge = FMath::Clamp(BeforeDownGauge - Damage/2, 0.0f, GetMaxDownGauge());
+		SetCurrentDownGauge(NewDownGauge);
+		
+		// BrainCrush Gauge
+		const float NewBrainCrushGauge = FMath::Clamp(BeforeBrainCrushGauge - Damage/3, 0.0f, GetMaxBrainCrushGauge());
+		SetCurrentBrainCrushGauge(NewBrainCrushGauge);
+		
 
-		const FString DebugString = FString::Printf(TEXT("Before Hp: %f, Damage: %f, NewCurrentHp : %f"), BeforeHp, Damage, NewCurrentHp);
-		Debug::Print(DebugString, FColor::Green);
+		// const FString DebugString = FString::Printf(TEXT("Before Hp: %f, Damage: %f, NewCurrentHp : %f"), BeforeHp, Damage, NewCurrentHp);
+		// Debug::Print(DebugString, FColor::Green);
 	}
 	
 }
