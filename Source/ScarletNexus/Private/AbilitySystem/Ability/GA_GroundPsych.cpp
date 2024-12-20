@@ -11,8 +11,7 @@
 void UGA_GroundPsych::OnGiveAbility(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec)
 {
 	Super::OnGiveAbility(ActorInfo, Spec);
-	PsychokinesisComponent = Kasane->GetPsychokinesisComponent();
-	check(PsychokinesisComponent);
+	InitComponents(Kasane);
 }
 
 bool UGA_GroundPsych::CanActivateAbility(const FGameplayAbilitySpecHandle Handle,
@@ -21,7 +20,7 @@ bool UGA_GroundPsych::CanActivateAbility(const FGameplayAbilitySpecHandle Handle
 {
 	if (Super::CanActivateAbility(Handle, ActorInfo, SourceTags, TargetTags, OptionalRelevantTags))
 	{
-		return PsychokinesisComponent->GetPsychTarget() != nullptr;
+		return HasPsychokineticPropInRange();
 	}
 	return false;
 }
@@ -31,7 +30,6 @@ void UGA_GroundPsych::PreActivate(const FGameplayAbilitySpecHandle Handle, const
 	FOnGameplayAbilityEnded::FDelegate* OnGameplayAbilityEndedDelegate, const FGameplayEventData* TriggerEventData)
 {
 	Super::PreActivate(Handle, ActorInfo, ActivationInfo, OnGameplayAbilityEndedDelegate, TriggerEventData);
-	ComboSystem->StartCharging();
-	ComboSystem->SetupChargeProperty(1.f, true);
+	OnActivatePsychAbility();
 }
 

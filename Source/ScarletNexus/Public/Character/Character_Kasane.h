@@ -89,4 +89,5 @@ public:
 	FORCEINLINE bool NeedToMove() const { return MovementElapsedTime > DodgeAllowThreshold; }
 	FORCEINLINE UComboSystemComponent* GetComboSystemComponent() const { return ComboSystemComponent; };
 	FORCEINLINE UPsychokinesisComponent* GetPsychokinesisComponent() const { return PsychokinesisComponent; };
+	FORCEINLINE UTargetTrackingSpringArmComponent* GetTargetTrackingComponent() const { return CameraBoom; } 
 };

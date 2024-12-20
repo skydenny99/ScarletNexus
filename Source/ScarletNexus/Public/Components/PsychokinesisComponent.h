@@ -6,8 +6,9 @@
 #include "Components/ActorComponent.h"
 #include "PsychokinesisComponent.generated.h"
 
+class APsychokineticPropBase;
 class USphereComponent;
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnPsychTargetUpdated, AActor*)
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnPsychTargetUpdated, APsychokineticPropBase*)
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class SCARLETNEXUS_API UPsychokinesisComponent : public UActorComponent
@@ -23,9 +24,10 @@ protected:
 	USphereComponent* DetectionBoundary;
 	
 	UPROPERTY()
-	TArray<AActor*> PsychTargetCandidates;
+	TArray<APsychokineticPropBase*> PsychTargetCandidates;
 	UPROPERTY()
-	AActor* PsychTarget;
+	APsychokineticPropBase* PsychTarget;
+	
 
 	
 	
@@ -49,6 +51,6 @@ public:
 	FOnPsychTargetUpdated OnPsychTargetUpdated;
 
 	UFUNCTION(BlueprintPure)
-	FORCEINLINE AActor* GetPsychTarget() const {return PsychTarget;}
+	FORCEINLINE APsychokineticPropBase* GetPsychTarget() const {return PsychTarget;}
 		
 };

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "AbilitySystem/Ability/GA_GroundAttackAbilityBase.h"
+#include "Utility/PsychokinesisAbilityHelper.h"
 #include "GA_GroundPsych.generated.h"
 
 class UPsychokinesisComponent;
@@ -11,13 +12,11 @@ class UPsychokinesisComponent;
  * 
  */
 UCLASS()
-class SCARLETNEXUS_API UGA_GroundPsych : public UGA_GroundAttackAbilityBase
+class SCARLETNEXUS_API UGA_GroundPsych : public UGA_GroundAttackAbilityBase, public PsychokinesisAbilityHelper
 {
 	GENERATED_BODY()
 
 protected:
-	UPROPERTY()
-	UPsychokinesisComponent* PsychokinesisComponent;
 	
 	virtual void OnGiveAbility(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec) override;
 	virtual bool CanActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayTagContainer* SourceTags = nullptr, const FGameplayTagContainer* TargetTags = nullptr, FGameplayTagContainer* OptionalRelevantTags = nullptr) const override;

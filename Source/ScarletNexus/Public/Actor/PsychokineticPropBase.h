@@ -30,5 +30,5 @@ public:
 	void ActivateControl();
 	void DeactivateControl();
 	void DissolveProp();
-
+	FORCEINLINE float GetChargeTime() const { return ChargeTime; }
 };

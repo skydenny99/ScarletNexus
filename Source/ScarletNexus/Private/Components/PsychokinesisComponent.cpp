@@ -4,6 +4,7 @@
 #include "Components/PsychokinesisComponent.h"
 
 #include "BaseDebugHelper.h"
+#include "Actor/PsychokineticPropBase.h"
 #include "Components/SphereComponent.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -26,7 +27,7 @@ void UPsychokinesisComponent::UpdateNearestPsychTarget()
 	FVector CameraLocation = CameraManager->GetCameraLocation();
 	FVector CameraForward = CameraManager->GetActorForwardVector();
 
-	AActor* NearestPsychTarget = nullptr;
+	APsychokineticPropBase* NearestPsychTarget = nullptr;
 	float CharacterDotProduct = -1;
 	float MinDistanceSquared = INFINITY;
 	for (auto Candidate : PsychTargetCandidates)
@@ -85,15 +86,18 @@ void UPsychokinesisComponent::InitBoundary(USphereComponent* InDetectionBoundary
 void UPsychokinesisComponent::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
                                              UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (OtherActor == GetOwner()) return;
-	PsychTargetCandidates.AddUnique(OtherActor);
+	APsychokineticPropBase* Temp = Cast<APsychokineticPropBase>(OtherActor);
+	if (Temp == nullptr) return;
+	PsychTargetCandidates.AddUnique(Temp);
 }
 
 void UPsychokinesisComponent::OnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	PsychTargetCandidates.Remove(OtherActor);
-	if (OtherActor == PsychTarget)
+	APsychokineticPropBase* Temp = Cast<APsychokineticPropBase>(OtherActor);
+	if (Temp == nullptr) return;
+	PsychTargetCandidates.Remove(Temp);
+	if (Temp == PsychTarget)
 	{
 		PsychTarget = nullptr;
 	}
