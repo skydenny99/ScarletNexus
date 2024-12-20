@@ -22,3 +22,19 @@ struct FSASData
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
 	float Percent;
 };
+
+
+USTRUCT(BlueprintType)
+struct FConsumItemInfo
+{
+	GENERATED_BODY()
+
+	//sprite
+	FName Name;
+	FColor Color;
+	float Cooldown;
+	float Percentage;
+
+	UPROPERTY(EditDefaultsOnly)
+	UMaterial* Material;
+};
