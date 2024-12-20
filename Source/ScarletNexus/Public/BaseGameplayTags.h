@@ -201,12 +201,20 @@ namespace BaseGameplayTags
 	
 	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Enemy_Boss_Ability_Move_BackRun);
 
+	
+
 
 
 
 	// CommonEnemy
 	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Enemy_Common_Ability_Attack_Melee);
 	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Enemy_Common_Ability_Attack_Ranged);
+	
+	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Enemy_Common_Ability_Status_Dead);
+	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Enemy_Common_Ability_Status_down);
+	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Enemy_Common_Ability_Status_BCChance);
+
+	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Enemy_Common_Ability_Spawn_Core);
 
 
 
@@ -218,6 +226,13 @@ namespace BaseGameplayTags
 
 	// Enemy Event
 	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Enemy_Event_SpawnProjectile);
+	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Enemy_Event_SpawnCore);
+
+
+	// State
+	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Enemy_State_Dead);
+	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Enemy_State_Down);
+	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Enemy_State_BCChance);
 	
 	
 #pragma endregion

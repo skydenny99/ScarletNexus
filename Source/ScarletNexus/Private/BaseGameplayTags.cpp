@@ -196,6 +196,13 @@ namespace BaseGameplayTags
 	// CommonEnemy
 	UE_DEFINE_GAMEPLAY_TAG(Enemy_Common_Ability_Attack_Melee, "Enemy.Common.Ability.Attack.Melee");
 	UE_DEFINE_GAMEPLAY_TAG(Enemy_Common_Ability_Attack_Ranged, "Enemy.Common.Ability.Attack.Ranged");
+	
+	UE_DEFINE_GAMEPLAY_TAG(Enemy_Common_Ability_Status_Dead, "Enemy.Common.Ability.Status.Dead");
+	UE_DEFINE_GAMEPLAY_TAG(Enemy_Common_Ability_Status_down, "Enemy.Common.Ability.Status.down");
+	UE_DEFINE_GAMEPLAY_TAG(Enemy_Common_Ability_Status_BCChance, "Enemy.Common.Ability.Status.BCChance");
+
+	
+	UE_DEFINE_GAMEPLAY_TAG(Enemy_Common_Ability_Spawn_Core, "Enemy.Common.Ability.Spawn.Core");
 
 
 	// Weapon
@@ -205,6 +212,13 @@ namespace BaseGameplayTags
 
 	//EnemyEvent
 	UE_DEFINE_GAMEPLAY_TAG(Enemy_Event_SpawnProjectile, "Enemy.Event.SpawnProjectile");
+	UE_DEFINE_GAMEPLAY_TAG(Enemy_Event_SpawnCore, "Enemy.Event.SpawnCore");
+	
+
+	// State
+	UE_DEFINE_GAMEPLAY_TAG(Enemy_State_Dead, "Enemy.State.Dead");
+	UE_DEFINE_GAMEPLAY_TAG(Enemy_State_Down, "Enemy.State.Down");
+	UE_DEFINE_GAMEPLAY_TAG(Enemy_State_BCChance, "Enemy.State.BCChance");
 
 
 	

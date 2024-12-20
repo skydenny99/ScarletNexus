@@ -10,6 +10,9 @@
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "BaseFunctionLibrary.h"
 #include "BaseGameplayTags.h"
+#include "BaseDebugHelper.h"
+
+
 
 // Sets default values
 AProjectileBase::AProjectileBase()
@@ -24,6 +27,9 @@ AProjectileBase::AProjectileBase()
 	CollsionBoxComponent->SetCollisionResponseToChannel(ECC_WorldDynamic, ECR_Block);
 	CollsionBoxComponent->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Block);
 
+	CollsionBoxComponent->OnComponentHit.AddUniqueDynamic(this, &AProjectileBase::OnProjectileHit);
+	CollsionBoxComponent->OnComponentBeginOverlap.AddUniqueDynamic(this, &AProjectileBase::OnProjectileBeginOverlap);
+	
 	NiagaraComponent = CreateDefaultSubobject<UNiagaraComponent>(TEXT("NiagaraComponent"));
 	NiagaraComponent->SetupAttachment(GetRootComponent());
 
@@ -34,10 +40,9 @@ AProjectileBase::AProjectileBase()
 	ProjectileMovementComponent->ProjectileGravityScale = 0.0f;
 
 	//수명
-	InitialLifeSpan = 4.0f;
+	// InitialLifeSpan = 4.0f;
 
-	CollsionBoxComponent->OnComponentHit.AddUniqueDynamic(this, &AProjectileBase::OnProjectileHit);
-	CollsionBoxComponent->OnComponentBeginOverlap.AddUniqueDynamic(this, &AProjectileBase::OnProjectileBeginOverlap);
+	
 }
 
 void AProjectileBase::BeginPlay()
@@ -47,7 +52,7 @@ void AProjectileBase::BeginPlay()
 	if (ProjectileDamagePolicy == EProjectileDamagePolicy::OnBeginOverlap)
 	{
 		//오버랩인경우 오버랩 Response로 변경
-		CollsionBoxComponent->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
+		// CollsionBoxComponent->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
 	}
 	
 }
@@ -75,7 +80,7 @@ void AProjectileBase::OnProjectileHit(UPrimitiveComponent* HitComponent, AActor*
 
 	APawn* HitPawn = Cast<APawn>(OtherActor);
 
-	if (HitPawn != nullptr)
+	if (HitPawn == nullptr)
 	{
 		Destroy();
 		return;
@@ -86,6 +91,11 @@ void AProjectileBase::OnProjectileHit(UPrimitiveComponent* HitComponent, AActor*
 	Data.Instigator = this;
 	Data.Target = HitPawn;
 
+	Debug::Print(GetName() + TEXT(" Projectile Hit Pawn ") + HitPawn->GetName(), FColor::Black);
+	Debug::Print(GetName() + TEXT(" Projectile Hit Pawn ") + HitPawn->GetName(), FColor::Green);
+	
+	
+	
 	//Apply projectile Damage ::TODO
 	HandleApplyProjectile(HitPawn, Data);	
 	
@@ -98,7 +108,7 @@ void AProjectileBase::OnProjectileBeginOverlap(UPrimitiveComponent* OverlappedCo
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 
-	
+	Debug::Print(GetName() + TEXT(" Projectile BeginOverlap "), FColor::White);
 }
 
 

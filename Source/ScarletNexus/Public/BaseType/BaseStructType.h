@@ -13,3 +13,11 @@ public:
 	BaseStructType();
 	~BaseStructType();
 };
+
+UENUM(BlueprintType)
+enum class EBaseAbilityActivationPolicy : uint8
+{
+	OnTriggered,
+	OnGiven
+};
+

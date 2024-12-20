@@ -13,6 +13,7 @@ ABaseEnemyCharacter::ABaseEnemyCharacter()
 	EnemyCombatComponent = CreateDefaultSubobject<UEnemyCombatComponent>(TEXT("EnemyCombatComponent"));
 
 	BaseAttributeSet = CreateDefaultSubobject<UEnemyAttributeSet>(TEXT("EnemyAttributeSet"));
+	
 }
 
 void ABaseEnemyCharacter::PossessedBy(AController* NewController)

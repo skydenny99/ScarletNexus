@@ -48,7 +48,7 @@ void UGEExecCalc_DamageTaken::Execute_Implementation(const FGameplayEffectCustom
 	float SourceAttack = 0.f;
 	
 	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(GetDamageCapture().AttackDef, EvaluateParams, SourceAttack);
-	// Debug::Print(TEXT("SourceAttack"), SourceAttack);
+	Debug::Print(TEXT("SourceAttack"), SourceAttack);
 
 	float BaseDamage = 0.f;
 

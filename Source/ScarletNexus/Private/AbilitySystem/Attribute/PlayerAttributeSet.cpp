@@ -2,7 +2,7 @@
 
 
 #include "AbilitySystem/Attribute/PlayerAttributeSet.h"
-
+#include "GameplayEffectExtension.h"
 #include "BaseDebugHelper.h"
 
 UPlayerAttributeSet::UPlayerAttributeSet()
@@ -18,7 +18,35 @@ UPlayerAttributeSet::UPlayerAttributeSet()
 
 void UPlayerAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data)
 {
-	// Super::PostGameplayEffectExecute(Data);
+	Super::PostGameplayEffectExecute(Data);
+	
+	if (Data.EvaluatedData.Attribute == GetCurrentHpAttribute())
+	{
+		const float NewCurrentHp = FMath::Clamp(GetCurrentHp(), 0.0f, GetMaxHp());
+		SetCurrentHp(NewCurrentHp);
+	}
+	
+
+	if (Data.EvaluatedData.Attribute == GetDamageTakenAttribute())
+	{
+		const float BeforeHp = GetCurrentHp();
+		
+		const float Damage = GetDamageTaken();
+		
+		const float CashedDefence = GetDefence();
+		
+		// HP
+		const float NewCurrentHp = FMath::Clamp(BeforeHp - (Damage - CashedDefence), 0.0f, GetMaxHp());
+		SetCurrentHp(NewCurrentHp);
+		
+		
+
+		const FString DebugString = FString::Printf(TEXT("Before Hp: %f, Damage: %f, NewCurrentHp : %f"), BeforeHp, Damage, NewCurrentHp);
+		Debug::Print(DebugString, FColor::Green);
+	}
+
+
+	
 
 
 	

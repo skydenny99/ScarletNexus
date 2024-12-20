@@ -4,9 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "Abilities/GameplayAbility.h"
+#include "BaseType/BaseStructType.h"
 #include "GameplayAbilityBase.generated.h"
 
 enum class EBaseSuccessType : uint8;
+enum class EBaseAbilityActivationPolicy : uint8;
 class UBaseAbilitySystemComponent;
 class UPawnCombatComponent;
 
@@ -19,6 +21,9 @@ class SCARLETNEXUS_API UGameplayAbilityBase : public UGameplayAbility
 	GENERATED_BODY()
 	
 public:
+	UPROPERTY(EditDefaultsOnly, Category = "Ability")
+	EBaseAbilityActivationPolicy AbilityActivationPolicy = EBaseAbilityActivationPolicy::OnTriggered;
+	
 	UFUNCTION(BlueprintPure, Category = "Ability")
 	UBaseAbilitySystemComponent* GetBaseAbilitySystemComponent() const;
 
