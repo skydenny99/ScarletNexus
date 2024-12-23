@@ -59,8 +59,8 @@ void UGEExecCalc_EnemyTakeDamage::Execute_Implementation(
 		}
 	}
 
-	const float FinalDamage = BaseDamage + BaseDamage;
-	Debug::Print(TEXT("Enemy FinalDamage"), FinalDamage);
+	const float FinalDamage = SourceAttack + BaseDamage;
+	Debug::Print(TEXT("Enemy FinalDamage : SourceAttack + BaseDamage"), FinalDamage);
 
 
 	if (FinalDamage > 0.f)
