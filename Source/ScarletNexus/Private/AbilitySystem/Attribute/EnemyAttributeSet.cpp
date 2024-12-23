@@ -57,39 +57,45 @@ void UEnemyAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectM
 		// const FString DebugString = FString::Printf(TEXT("Before Hp: %f, Damage: %f, NewCurrentHp : %f"), BeforeHp, Damage, NewCurrentHp);
 		// Debug::Print(DebugString, FColor::Green);
 
-
-		// Down Process
-		if (NewDownGauge <= 0.f)
+		if (NewCurrentHp == 0.f)    
 		{
-			UBaseFunctionLibrary::AddPlaygameTagToActor(Data.Target.GetAvatarActor(), BaseGameplayTags::Enemy_State_Down);
-			UBaseFunctionLibrary::NativeGetAbilitySystemComponentFromActor(Data.Target.GetAvatarActor())->TryActivateAbilityByTag(BaseGameplayTags::Enemy_Common_Ability_Status_down);
-
-			// 다운상태일시 회복
-			if (UBaseFunctionLibrary::NativeActorHasTag(Data.Target.GetAvatarActor(),BaseGameplayTags::Enemy_State_Down))
-			{
-				
-				// SetCurrentDownGauge(GetMaxDownGauge());
-				//UBaseFunctionLibrary::RemovePlayGameTagFromActor(Data.Target.GetAvatarActor(), BaseGameplayTags::Enemy_State_Down);
-			}
-			
+			UBaseFunctionLibrary::AddPlaygameTagToActor(Data.Target.GetAvatarActor(), BaseGameplayTags::Shared_State_Dead);
+			UBaseFunctionLibrary::NativeGetAbilitySystemComponentFromActor(Data.Target.GetAvatarActor())->TryActivateAbilityByTag(BaseGameplayTags::Shared_Ability_Dead);
 		}
 
+		//  Check Death
+		if (!UBaseFunctionLibrary::NativeActorHasTag(Data.Target.GetAvatarActor(),BaseGameplayTags::Shared_State_Dead))
+		{
+			// Down Process
+			if (NewDownGauge <= 0.f && !UBaseFunctionLibrary::NativeActorHasTag(Data.Target.GetAvatarActor(),BaseGameplayTags::Enemy_State_Down))
+			{
+				if (!(NewBrainCrushGauge <= 0.f))
+				{
+					UBaseFunctionLibrary::AddPlaygameTagToActor(Data.Target.GetAvatarActor(), BaseGameplayTags::Enemy_State_Down);
+					UBaseFunctionLibrary::NativeGetAbilitySystemComponentFromActor(Data.Target.GetAvatarActor())->TryActivateAbilityByTag(BaseGameplayTags::Enemy_Common_Ability_Status_down);
+				}
+				// (UBaseFunctionLibrary::NativeActorHasTag(Data.Target.GetAvatarActor(),BaseGameplayTags::Enemy_State_Down))
+				//{
+				// SetCurrentDownGauge(GetMaxDownGauge());
+				// UBaseFunctionLibrary::RemovePlayGameTagFromActor(Data.Target.GetAvatarActor(), BaseGameplayTags::Enemy_State_Down);
+				//}
+			
+			}
 
-		// brain Crush
-		// if (NewBrainCrushGauge <= 0.f)
-		// {
-		// 	UBaseFunctionLibrary::AddPlaygameTagToActor(Data.Target.GetAvatarActor(), BaseGameplayTags::Enemy_State_BCChance);
-		// 	UBaseFunctionLibrary::NativeGetAbilitySystemComponentFromActor(Data.Target.GetAvatarActor())->TryActivateAbilityByTag(BaseGameplayTags::Enemy_Common_Ability_Status_BCChance);
-		//
-		// 	if (UBaseFunctionLibrary::NativeActorHasTag(Data.Target.GetAvatarActor(),BaseGameplayTags::Enemy_State_BCChance))
-		// 	{
-		// 		SetCurrentBrainCrushGauge(GetMaxBrainCrushGauge());
-		// 		UBaseFunctionLibrary::RemovePlayGameTagFromActor(Data.Target.GetAvatarActor(), BaseGameplayTags::Enemy_State_BCChance);				
-		// 	}
-		// }
+
+			// brain Crush
+			if (NewBrainCrushGauge <= 0.f && !UBaseFunctionLibrary::NativeActorHasTag(Data.Target.GetAvatarActor(),BaseGameplayTags::Enemy_State_BCChance))
+			{
+				UBaseFunctionLibrary::AddPlaygameTagToActor(Data.Target.GetAvatarActor(), BaseGameplayTags::Enemy_State_BCChance);
+				UBaseFunctionLibrary::NativeGetAbilitySystemComponentFromActor(Data.Target.GetAvatarActor())->TryActivateAbilityByTag(BaseGameplayTags::Enemy_Common_Ability_Status_BCChance);
 		
-		
+				// if (UBaseFunctionLibrary::NativeActorHasTag(Data.Target.GetAvatarActor(),BaseGameplayTags::Enemy_State_BCChance))
+				// {
+				// 	SetCurrentBrainCrushGauge(GetMaxBrainCrushGauge());
+				// 	UBaseFunctionLibrary::RemovePlayGameTagFromActor(Data.Target.GetAvatarActor(), BaseGameplayTags::Enemy_State_BCChance);				
+				// }
+			}
+		}
 	}
-
 
 }

@@ -129,6 +129,8 @@ namespace BaseGameplayTags
 
 	
 	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Ability_SpawnWeapon);
+	
+	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Ability_Dead);
 
 	
 
@@ -146,6 +148,8 @@ namespace BaseGameplayTags
 
 	// Shared State
 	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_State_Down);
+	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_State_Dead);
+	
 
 
 	// Set By Caller

@@ -125,6 +125,7 @@ namespace BaseGameplayTags
 
 	
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Ability_SpawnWeapon, "Shared.Ability.SpawnWeapon");
+	UE_DEFINE_GAMEPLAY_TAG(Shared_Ability_Dead, "Shared.Ability.Dead");
 
 
 	// Shared - Event
@@ -142,6 +143,7 @@ namespace BaseGameplayTags
 
 	// Shared - State
 	UE_DEFINE_GAMEPLAY_TAG(Shared_State_Down, "Shared.State.Down");
+	UE_DEFINE_GAMEPLAY_TAG(Shared_State_Dead, "Shared.State.Dead");
 
 
 	// Set By Caller

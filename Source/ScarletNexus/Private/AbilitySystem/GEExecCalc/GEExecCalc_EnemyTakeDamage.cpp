@@ -20,7 +20,7 @@ struct FEnemyDamageCapture
 		DEFINE_ATTRIBUTE_CAPTUREDEF(UPlayerAttributeSet, DamageTaken, Target, false);
 	}
 };
-static const FEnemyDamageCapture& GetDamageCapture()
+static const FEnemyDamageCapture& GetEnemyDamageCapture()
 {
 	static FEnemyDamageCapture EnemyDamageCapture;
 	return EnemyDamageCapture;
@@ -28,7 +28,7 @@ static const FEnemyDamageCapture& GetDamageCapture()
 
 UGEExecCalc_EnemyTakeDamage::UGEExecCalc_EnemyTakeDamage()
 {
-	RelevantAttributesToCapture.Add(GetDamageCapture().EnemyAttackDef);
+	RelevantAttributesToCapture.Add(GetEnemyDamageCapture().EnemyAttackDef);
 }
 
 void UGEExecCalc_EnemyTakeDamage::Execute_Implementation(
@@ -45,7 +45,7 @@ void UGEExecCalc_EnemyTakeDamage::Execute_Implementation(
 
 	float SourceAttack = 0.f;
 	
-	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(GetDamageCapture().EnemyAttackDef, EvaluateParams, SourceAttack);
+	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(GetEnemyDamageCapture().EnemyAttackDef, EvaluateParams, SourceAttack);
 	Debug::Print(TEXT("Enemy SourceAttack"), SourceAttack);
 
 	float BaseDamage = 0.f;
@@ -67,7 +67,7 @@ void UGEExecCalc_EnemyTakeDamage::Execute_Implementation(
 	{
 		OutExecutionOutput.AddOutputModifier(
 			FGameplayModifierEvaluatedData(
-				GetDamageCapture().DamageTakenProperty,
+				GetEnemyDamageCapture().DamageTakenProperty,
 				EGameplayModOp::Override,
 				FinalDamage
 			)

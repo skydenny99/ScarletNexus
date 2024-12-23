@@ -42,6 +42,9 @@ class SCARLETNEXUS_API UEnemyAttributeSet : public UBaseAttributeSet
 	FGameplayAttributeData MaxDownGauge;
 	ATTRIBUTE_ACCESSORS(UEnemyAttributeSet, MaxDownGauge)
 
+	UFUNCTION(BlueprintCallable, Category = "Attributes")
+	void ResetDownGaugeBP() { SetCurrentDownGauge(GetMaxDownGauge()); }
+
 	UPROPERTY(BlueprintReadOnly, Category="Status")
 	FGameplayAttributeData CurrentBrainCrushGauge;
 	ATTRIBUTE_ACCESSORS(UEnemyAttributeSet, CurrentBrainCrushGauge)
@@ -49,6 +52,9 @@ class SCARLETNEXUS_API UEnemyAttributeSet : public UBaseAttributeSet
 	UPROPERTY(BlueprintReadOnly, Category = "Status")
 	FGameplayAttributeData MaxBrainCrushGauge;
 	ATTRIBUTE_ACCESSORS(UEnemyAttributeSet, MaxBrainCrushGauge)
+
+	UFUNCTION(BlueprintCallable, Category = "Attributes")
+	void ResetBrainCrushGaugeBP() { SetCurrentBrainCrushGauge(GetMaxBrainCrushGauge()); }
 	
 	UPROPERTY(BlueprintReadOnly, Category = "Damage")
 	FGameplayAttributeData EnemyAttack;
