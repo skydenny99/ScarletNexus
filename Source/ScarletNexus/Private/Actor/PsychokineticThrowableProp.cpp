@@ -21,6 +21,7 @@ APsychokineticThrowableProp::APsychokineticThrowableProp()
 
 void APsychokineticThrowableProp::Launch()
 {
+	ProjectileMovementComponent->ProjectileGravityScale = 0.f;
 	SetActorLocation(GetActorLocation() + FVector(0, 0, 300));
 	if (TargetActor)
 	{

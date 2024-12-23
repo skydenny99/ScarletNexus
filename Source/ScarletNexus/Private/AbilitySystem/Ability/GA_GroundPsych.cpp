@@ -39,3 +39,8 @@ void UGA_GroundPsych::ThrowProjectile()
 	ActivateThrowPsychAbility();
 }
 
+void UGA_GroundPsych::PlayDebugCombo()
+{
+	Kasane->GetPsychokinesisComponent()->PlayGroundPsychMontage(EPsychType::AeR, 3);
+}
+

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "AbilitySystem/Ability/GA_GroundAttackAbilityBase.h"
+#include "Character/Character_Kasane.h"
 #include "Utility/PsychokinesisAbilityHelper.h"
 #include "GA_GroundPsych.generated.h"
 
@@ -24,4 +25,10 @@ protected:
 
 	UFUNCTION(BlueprintCallable)
 	void ThrowProjectile();
+
+	UFUNCTION(BlueprintPure)
+	UAnimInstance* GetKasaneAnimInstance() const {return Kasane->GetMesh()->GetAnimInstance();}
+
+	UFUNCTION(BlueprintCallable)
+	void PlayDebugCombo();
 };

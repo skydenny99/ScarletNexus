@@ -145,9 +145,8 @@ void UComboSystemComponent::UpdateInfoByUnlock()
 void UComboSystemComponent::OnMovementModeChange(ACharacter* Character, EMovementMode PrevMovementMode, uint8 PreviousCustomMode)
 {
 	// Reset All Combo;
-	Debug::Print("Reset Combo Count");
-	ResetGroundCombo();
-	ResetAerialCombo();
+	Debug::Print("Reset Weapon Combo Count");
+	ResetWeaponCombo();
 }
 
 

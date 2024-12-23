@@ -45,7 +45,7 @@ protected:
 	TArray<APsychokineticPropBase*> PsychTargetCandidates;
 	UPROPERTY()
 	APsychokineticPropBase* PsychTarget;
-	UPROPERTY()
+	UPROPERTY(EditDefaultsOnly)
 	USkeletalMeshComponent* PsychSkeletalMesh;
 	
 
@@ -79,4 +79,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void PlayAerialPsychMontage(int32 ComboCount);
+
+	UFUNCTION(BlueprintPure)
+	USkeletalMeshComponent* GetPsychSkeletalMesh() const { return PsychSkeletalMesh; }
 };

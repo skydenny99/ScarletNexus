@@ -13,13 +13,14 @@
 #include "DataAsset/DataAsset_StartupBase.h"
 #include "BaseDebugHelper.h"
 #include "BaseFunctionLibrary.h"
+#include "Camera/CameraActor.h"
 #include "Components/ComboSystemComponent.h"
 #include "Components/PsychokinesisComponent.h"
 #include "Components/SphereComponent.h"
 #include "Components/TargetTrackingSpringArmComponent.h"
 #include "Components/UnlockSystemComponent.h"
 #include "Kismet/GameplayStatics.h"
-#include "Kismet/KismetMathLibrary.h"
+#include "GameFramework/RootMotionSource.h"
 
 ACharacter_Kasane::ACharacter_Kasane()
 {
@@ -73,9 +74,13 @@ ACharacter_Kasane::ACharacter_Kasane()
 	CameraBoom->CameraRotationLagSpeed = 15.f;
 	//CameraBoom->bUseCameraLagSubstepping = true;
 
-	UCameraComponent* MainCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("MainCamera"));
+	MainCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("MainCamera"));
 	MainCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	MainCamera->bUsePawnControlRotation = false;
+
+	ComboDirectCameraActor = CreateDefaultSubobject<UChildActorComponent>(TEXT("ComboDirectCameraActor"));
+	ComboDirectCameraActor->SetChildActorClass(ACameraActor::StaticClass());
+	ComboDirectCameraActor->SetupAttachment(MainBody, FName("CameraPos"));
 
 	UCharacterMovementComponent* Movement = GetCharacterMovement();
 	Movement->bOrientRotationToMovement = true;
@@ -100,14 +105,16 @@ ACharacter_Kasane::ACharacter_Kasane()
 	PsychBoundary->InitSphereRadius(500.f);
 	PsychokinesisComponent = CreateDefaultSubobject<UPsychokinesisComponent>(TEXT("PsychokinesisComponent"));
 	USkeletalMeshComponent* PsychObject = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("PsychObject"));
+	PsychObject->SetRelativeLocationAndRotation(FVector(0.f, 0.f, -100.f), FRotator(0.f, -90.f, 0.f));
+	PsychObject->SetupAttachment(RootComponent);
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh> PsychObjectAsset(TEXT("/Game/Resources/Psychokinesis/Common/AS_Psy_Common.AS_Psy_Common"));
 	if (PsychObjectAsset.Succeeded())
 	{
 		PsychObject->SetSkeletalMesh(PsychObjectAsset.Object);
 		PsychObject->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-		PsychObject->SetHiddenInGame(true);
+		//PsychObject->SetHiddenInGame(true);
 	}
-	static ConstructorHelpers::FClassFinder<UAnimInstance> PsychObjectAnimAsset(TEXT(""));
+	static ConstructorHelpers::FClassFinder<UAnimInstance> PsychObjectAnimAsset(TEXT("/Game/_BP/Character/Kasane/PsychAnimation/ABP_Psych.ABP_Psych_C"));
 	if (PsychObjectAnimAsset.Succeeded())
 	{
 		PsychObject->SetAnimInstanceClass(PsychObjectAnimAsset.Class);
