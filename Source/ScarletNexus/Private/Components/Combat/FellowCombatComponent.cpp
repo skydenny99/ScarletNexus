@@ -29,6 +29,6 @@ void UFellowCombatComponent::OnHitTargetActor(AActor* HitActor)
 
 void UFellowCombatComponent::OnWeaponPulledFromTargetActor(AActor* InterectedActor)
 {
-	Debug::Print(GetOwningPawn()->GetActorLabel() + "  weapon pulled from " + InterectedActor->GetActorLabel(), FColor::White);
+	// Debug::Print(GetOwningPawn()->GetActorLabel() + "  weapon pulled from " + InterectedActor->GetActorLabel(), FColor::White);
 	
 }

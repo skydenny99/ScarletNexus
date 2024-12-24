@@ -40,7 +40,7 @@ AProjectileBase::AProjectileBase()
 	ProjectileMovementComponent->ProjectileGravityScale = 0.0f;
 
 	//수명
-	// InitialLifeSpan = 4.0f;
+	InitialLifeSpan = 4.0f;
 
 	
 }
@@ -94,7 +94,8 @@ void AProjectileBase::OnProjectileHit(UPrimitiveComponent* HitComponent, AActor*
 	Debug::Print(GetName() + TEXT(" Projectile Hit Pawn ") + HitPawn->GetName(), FColor::Black);
 	Debug::Print(GetName() + TEXT(" Projectile Hit Pawn ") + HitPawn->GetName(), FColor::Green);
 	
-	
+
+	// Data.Target 무적태그 확인
 	
 	//Apply projectile Damage ::TODO
 	HandleApplyProjectile(HitPawn, Data);	

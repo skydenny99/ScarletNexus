@@ -23,6 +23,7 @@ void UEnemyCombatComponent::OnHitTargetActor(AActor* HitActor)
 	Data.Target = HitActor;
 
 	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(GetOwningPawn(), BaseGameplayTags::Shared_Event_Hit_Normal, Data);
+	
 }
 
 void UEnemyCombatComponent::OnWeaponPulledFromTargetActor(AActor* InterectedActor)

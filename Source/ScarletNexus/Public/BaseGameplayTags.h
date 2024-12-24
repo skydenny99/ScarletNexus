@@ -76,7 +76,8 @@ namespace BaseGameplayTags
 
 	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Ability_Attack_Special_Psych);
 	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Ability_Attack_Backstep);
-
+	
+	
 	// Ability - Move
 	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Ability_Move_Dash);
 	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Ability_Move_Dodge);
@@ -149,6 +150,7 @@ namespace BaseGameplayTags
 	// Shared State
 	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_State_Down);
 	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_State_Dead);
+	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_State_Invincible);
 	
 
 
@@ -200,19 +202,21 @@ namespace BaseGameplayTags
 	// Boss
 	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Enemy_Boss_Ability_Attack_WaterBall);
 	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Enemy_Boss_Ability_Attack_MeleeAttack);
-
+	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Enemy_Boss_Ability_Attack_Jump);
 
 	
 	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Enemy_Boss_Ability_Move_BackRun);
+	
+	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Enemy_Boss_Ability_JumpAble);
+	
+	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Enemy_Boss_Weapon_Boss);
 
 	
-
-
-
 
 	// CommonEnemy
 	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Enemy_Common_Ability_Attack_Melee);
 	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Enemy_Common_Ability_Attack_Ranged);
+	
 	
 	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Enemy_Common_Ability_Status_Dead);
 	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Enemy_Common_Ability_Status_down);

@@ -54,6 +54,7 @@ void UEnemyAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectM
 		SetCurrentBrainCrushGauge(NewBrainCrushGauge);
 		
 
+		
 		// const FString DebugString = FString::Printf(TEXT("Before Hp: %f, Damage: %f, NewCurrentHp : %f"), BeforeHp, Damage, NewCurrentHp);
 		// Debug::Print(DebugString, FColor::Green);
 

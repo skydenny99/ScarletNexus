@@ -74,6 +74,8 @@ namespace BaseGameplayTags
 
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Special_Psych, "Player.Ability.Attack.Special.Psych");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Backstep, "Player.Ability.Attack.Backstep");
+	
+	
 
 	// Ability - Move
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Move_Dash, "Player.Ability.Move.Dash");
@@ -144,6 +146,7 @@ namespace BaseGameplayTags
 	// Shared - State
 	UE_DEFINE_GAMEPLAY_TAG(Shared_State_Down, "Shared.State.Down");
 	UE_DEFINE_GAMEPLAY_TAG(Shared_State_Dead, "Shared.State.Dead");
+	UE_DEFINE_GAMEPLAY_TAG(Shared_State_Invincible, "Shared.State.Invincible");
 
 
 	// Set By Caller
@@ -190,14 +193,23 @@ namespace BaseGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(Enemy_Boss_Ability_Attack_WaterBall, "Enemy.Boss.Ability.Attack.WaterBall");
 	
 	UE_DEFINE_GAMEPLAY_TAG(Enemy_Boss_Ability_Attack_MeleeAttack, "Enemy.Boss.Ability.Attack.MeleeAttack");
+
+	UE_DEFINE_GAMEPLAY_TAG(Enemy_Boss_Ability_Attack_Jump, "Enemy.Boss.Ability.Attack.Jump");
 	
 	UE_DEFINE_GAMEPLAY_TAG(Enemy_Boss_Ability_Move_BackRun, "Enemy.Boss.Ability.Move.BackRun");
+	
+	UE_DEFINE_GAMEPLAY_TAG(Enemy_Boss_Ability_JumpAble, "Enemy.Boss.Ability.JumpAble");
+
+	
+	UE_DEFINE_GAMEPLAY_TAG(Enemy_Boss_Weapon_Boss, "Enemy.Boss.Weapon.Boss");
 
 
 
 	// CommonEnemy
 	UE_DEFINE_GAMEPLAY_TAG(Enemy_Common_Ability_Attack_Melee, "Enemy.Common.Ability.Attack.Melee");
 	UE_DEFINE_GAMEPLAY_TAG(Enemy_Common_Ability_Attack_Ranged, "Enemy.Common.Ability.Attack.Ranged");
+	
+
 	
 	UE_DEFINE_GAMEPLAY_TAG(Enemy_Common_Ability_Status_Dead, "Enemy.Common.Ability.Status.Dead");
 	UE_DEFINE_GAMEPLAY_TAG(Enemy_Common_Ability_Status_down, "Enemy.Common.Ability.Status.down");
