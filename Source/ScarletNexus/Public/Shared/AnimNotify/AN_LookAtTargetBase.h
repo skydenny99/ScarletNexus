@@ -14,7 +14,7 @@ class SCARLETNEXUS_API UAN_LookAtTargetBase : public UAnimNotify
 {
 	GENERATED_BODY()
 protected:
-	virtual AActor* GetTargetActor() const {return nullptr;}
+	virtual AActor* GetTargetActor(AActor* Owner) const {return nullptr;}
 
 public:
 	virtual void Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, const FAnimNotifyEventReference& EventReference) override;

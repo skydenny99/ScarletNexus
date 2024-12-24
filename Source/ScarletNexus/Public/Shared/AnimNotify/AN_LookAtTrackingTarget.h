@@ -13,5 +13,7 @@ UCLASS()
 class SCARLETNEXUS_API UAN_LookAtTrackingTarget : public UAN_LookAtTargetBase
 {
 	GENERATED_BODY()
-	
+
+protected:
+	virtual AActor* GetTargetActor(AActor* Owner) const override;
 };

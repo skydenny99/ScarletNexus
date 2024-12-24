@@ -9,7 +9,7 @@ void UAN_LookAtTargetBase::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenc
                                   const FAnimNotifyEventReference& EventReference)
 {
 	Super::Notify(MeshComp, Animation, EventReference);
-	if (const AActor* Target = GetTargetActor())
+	if (const AActor* Target = GetTargetActor(MeshComp->GetOwner()))
 	{
 		AActor* Owner = MeshComp->GetOwner();
 		FRotator NewRot = UKismetMathLibrary::FindLookAtRotation(Owner->GetActorLocation(), Target->GetActorLocation());
