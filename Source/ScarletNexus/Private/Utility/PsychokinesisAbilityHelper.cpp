@@ -17,29 +17,36 @@ void PsychokinesisAbilityHelper::InitComponents(ACharacter_Kasane* Character)
 	PsychokinesisComponent = Character->GetPsychokinesisComponent();
 	TargetTrackingComponent = Character->GetTargetTrackingComponent();
 	ComboSystemComponent = Character->GetComboSystemComponent();
-	check(PsychokinesisComponent)
-	check(TargetTrackingComponent)
-	check(ComboSystemComponent)
+	check(PsychokinesisComponent.IsValid())
+	check(TargetTrackingComponent.IsValid())
+	check(ComboSystemComponent.IsValid())
 }
 
 bool PsychokinesisAbilityHelper::HasPsychokineticPropInRange() const
 {
-	return PsychokinesisComponent->GetPsychTarget() != nullptr;
+	return PsychokinesisComponent.IsValid() ? PsychokinesisComponent->GetPsychTarget() != nullptr : false;
 }
 
 void PsychokinesisAbilityHelper::OnActivatePsychAbility()
 {
-	CurrentPsychTarget = PsychokinesisComponent->GetPsychTarget();
-	ComboSystemComponent->SetupChargeProperty(CurrentPsychTarget->GetChargeTime(), true);
-	ComboSystemComponent->StartCharging();
+	if (PsychokinesisComponent.IsValid() && ComboSystemComponent.IsValid())
+	{
+		CurrentPsychTarget = PsychokinesisComponent->GetPsychTarget();
+		PsychokinesisComponent->SetBlockUpdate(true);
+		ComboSystemComponent->SetupChargeProperty(CurrentPsychTarget->GetChargeTime(), true);
+		ComboSystemComponent->StartCharging();
+	}
 }
 
 void PsychokinesisAbilityHelper::ActivateThrowPsychAbility()
 {
-	auto ThrowableProp = Cast<APsychokineticThrowableProp>(CurrentPsychTarget);
-	if (TargetTrackingComponent->GetCurrentTarget())
-		ThrowableProp->SetTarget(TargetTrackingComponent->GetCurrentTarget());
-	ThrowableProp->Launch();
+	if (CurrentPsychTarget.IsValid() && TargetTrackingComponent.IsValid())
+	{
+		auto ThrowableProp = Cast<APsychokineticThrowableProp>(CurrentPsychTarget);
+		if (TargetTrackingComponent->GetCurrentTarget())
+			ThrowableProp->SetTarget(TargetTrackingComponent->GetCurrentTarget());
+		ThrowableProp->Launch();
+	}
 }
 
 void PsychokinesisAbilityHelper::ActivateSpecialPsychAbility()

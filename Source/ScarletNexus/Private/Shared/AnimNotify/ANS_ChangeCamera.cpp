@@ -9,12 +9,9 @@ void UANS_ChangeCamera::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSeque
                                     const FAnimNotifyEventReference& EventReference)
 {
 	Super::NotifyBegin(MeshComp, Animation, TotalDuration, EventReference);
-	if (MeshComp != nullptr)
+	if (ACharacter_Kasane* Character = Cast<ACharacter_Kasane>(MeshComp->GetOwner()))
 	{
-		if (ACharacter_Kasane* Character = Cast<ACharacter_Kasane>(MeshComp->GetOwner()))
-		{
-			Character->ChangeCamera(false);
-		}
+		Character->ChangeCamera(false);
 	}
 	
 }
@@ -23,11 +20,8 @@ void UANS_ChangeCamera::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequenc
                                   const FAnimNotifyEventReference& EventReference)
 {
 	Super::NotifyEnd(MeshComp, Animation, EventReference);
-	if (MeshComp != nullptr)
+	if (ACharacter_Kasane* Character = Cast<ACharacter_Kasane>(MeshComp->GetOwner()))
 	{
-		if (ACharacter_Kasane* Character = Cast<ACharacter_Kasane>(MeshComp->GetOwner()))
-		{
-			Character->ChangeCamera(true);
-		}
+		Character->ChangeCamera(true);
 	}
 }

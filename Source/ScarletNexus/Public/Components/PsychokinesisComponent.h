@@ -34,6 +34,7 @@ public:
 	UPsychokinesisComponent();
 
 protected:
+	bool bBlockUpdate = false;
 	
 	UPROPERTY(EditDefaultsOnly, Category="Psych")
 	UDataAsset_PsychMontage* PsychMontageData;
@@ -65,14 +66,16 @@ protected:
 	UFUNCTION()
 	void OnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
-	void UpdatePsychTargetLocation(APsychokineticThrowableProp* Target);
 	
 public:
 	void InitComponents(USphereComponent* InDetectionBoundary, USkeletalMeshComponent* InSkeletalMesh);
+	void UpdatePsychTargetLocation(APsychokineticThrowableProp* Target, float DeltaTime);
 	FOnPsychTargetUpdated OnPsychTargetUpdated;
 
 	UFUNCTION(BlueprintPure)
 	FORCEINLINE APsychokineticPropBase* GetPsychTarget() const {return PsychTarget;}
+
+	FORCEINLINE void SetBlockUpdate(bool InBlockUpdate) {bBlockUpdate = InBlockUpdate;}
 
 	UFUNCTION(BlueprintCallable)
 	void PlayGroundPsychMontage(const EPsychType& PsychType, int32 ComboCount);

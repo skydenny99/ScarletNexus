@@ -133,6 +133,7 @@ namespace BaseGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_Charge, "Shared.Event.Charge");
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_Charge_Cancel, "Shared.Event.Charge.Cancel");
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_Charge_Confirm, "Shared.Event.Charge.Confirm");
+	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_ThrowProjectile, "Shared.Event.ThrowProjectile");
 
 	
 

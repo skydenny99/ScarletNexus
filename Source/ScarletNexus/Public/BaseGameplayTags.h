@@ -137,6 +137,7 @@ namespace BaseGameplayTags
 	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Event_Charge);
 	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Event_Charge_Cancel);
 	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Event_Charge_Confirm);
+	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Event_ThrowProjectile);
 	
 
 	// Shared - Status

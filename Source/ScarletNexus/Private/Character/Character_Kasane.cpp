@@ -105,8 +105,8 @@ ACharacter_Kasane::ACharacter_Kasane()
 	PsychBoundary->InitSphereRadius(500.f);
 	PsychokinesisComponent = CreateDefaultSubobject<UPsychokinesisComponent>(TEXT("PsychokinesisComponent"));
 	USkeletalMeshComponent* PsychObject = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("PsychObject"));
-	PsychObject->SetRelativeLocationAndRotation(FVector(0.f, 0.f, -100.f), FRotator(0.f, -90.f, 0.f));
-	PsychObject->SetupAttachment(RootComponent);
+	//PsychObject->SetRelativeRotation(FRotator(0.f, -90.f, 0.f));
+	PsychObject->SetupAttachment(GetMesh());
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh> PsychObjectAsset(TEXT("/Game/Resources/Psychokinesis/Common/AS_Psy_Common.AS_Psy_Common"));
 	if (PsychObjectAsset.Succeeded())
 	{
@@ -221,7 +221,7 @@ void ACharacter_Kasane::OnTargetingInputTriggered(const FInputActionValue& Value
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ACharacter::StaticClass(), TargetActors);
 	TargetActors.Remove(this);
 	CameraBoom->SetFoundTargets(TargetActors);
-	CameraBoom->SetTargetTracking(true);
+	CameraBoom->ToggleTargetTracking();
 }
 
 

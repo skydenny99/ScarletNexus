@@ -27,6 +27,11 @@ void UTargetTrackingSpringArmComponent::ChangeTarget(bool bIsLeft)
 	TargetActor = FoundTargets[TargetIndex];
 }
 
+void UTargetTrackingSpringArmComponent::ToggleTargetTracking()
+{
+	SetTargetTracking(!bIsTargetTracking);
+}
+
 void UTargetTrackingSpringArmComponent::SetTargetTracking(bool IsTargetTracking)
 {
 	bIsTargetTracking = IsTargetTracking && (FoundTargets.IsEmpty() == false);

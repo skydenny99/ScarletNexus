@@ -23,7 +23,7 @@ UPsychokinesisComponent::UPsychokinesisComponent()
 
 void UPsychokinesisComponent::UpdateNearestPsychTarget()
 {
-	if (PsychTargetCandidates.IsEmpty()) return;
+	if (PsychTargetCandidates.IsEmpty() || bBlockUpdate) return;
 	APlayerCameraManager* CameraManager = UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0);
 	FVector CharacterLocation = GetOwner()->GetActorLocation();
 	FVector CharacterForward = GetOwner()->GetActorForwardVector();
@@ -114,14 +114,14 @@ void UPsychokinesisComponent::OnOverlapEnd(UPrimitiveComponent* OverlappedCompon
 	APsychokineticPropBase* Temp = Cast<APsychokineticPropBase>(OtherActor);
 	if (Temp == nullptr) return;
 	PsychTargetCandidates.Remove(Temp);
-	if (Temp == PsychTarget)
+	if (Temp == PsychTarget && bBlockUpdate == false)
 	{
 		PsychTarget = nullptr;
 	}
 }
 
 
-void UPsychokinesisComponent::UpdatePsychTargetLocation(APsychokineticThrowableProp* Target)
+void UPsychokinesisComponent::UpdatePsychTargetLocation(APsychokineticThrowableProp* Target, float DeltaTime)
 {
 	if (Target->IsAttached()) return;
 	FVector DesiredLocation = PsychSkeletalMesh->GetBoneLocation(FName("joint_001"));
@@ -132,6 +132,6 @@ void UPsychokinesisComponent::UpdatePsychTargetLocation(APsychokineticThrowableP
 	}
 	else
 	{
-		Target->SetActorLocation(UKismetMathLibrary::VInterpTo(Target->GetActorLocation(), DesiredLocation, GetWorld()->GetDeltaSeconds(), 15.f));
+		Target->SetActorLocation(UKismetMathLibrary::VInterpTo(Target->GetActorLocation(), DesiredLocation, DeltaTime, 15.f));
 	}
 }

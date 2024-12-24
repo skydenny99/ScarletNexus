@@ -18,11 +18,18 @@ APsychokineticThrowableProp::APsychokineticThrowableProp()
 }
 
 
+void APsychokineticThrowableProp::FloatingTick(float DeltaTime)
+{
+	SetActorLocation(UKismetMathLibrary::VInterpTo(GetActorLocation(), GetActorLocation() + FVector::UpVector * (FloatingHeight / ChargeTime), DeltaTime, 1.f));
+}
 
 void APsychokineticThrowableProp::Launch()
 {
+	if (bIsAttached)
+	{
+		DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+	}
 	ProjectileMovementComponent->ProjectileGravityScale = 0.f;
-	SetActorLocation(GetActorLocation() + FVector(0, 0, 300));
 	if (TargetActor)
 	{
 		FRotator LookAtRot = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), TargetActor->GetActorLocation());

@@ -62,6 +62,7 @@ public:
 	FORCEINLINE void SetFoundTargets(const TArray<AActor*>& Targets) { FoundTargets = Targets; }
 	void SortByDistance();
 	void ChangeTarget(bool bIsLeft = true);
+	void ToggleTargetTracking();
 	void SetTargetTracking(bool IsTargetTracking);
 	void SetTargetTrackingByAttack(AActor* AttackTarget);
 	FORCEINLINE void StartResetTimer() { ResetTimer = 0.f; }

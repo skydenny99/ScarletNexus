@@ -156,7 +156,6 @@ void UComboSystemComponent::ProcessInputAction(FGameplayTag InputTag, ETriggerEv
 	{
 	case ETriggerEvent::Triggered:
 		if (ShouldBlockInputAction()) return;
-		Debug::Print(bIsCharging ? TEXT("On") : TEXT("Off"), FColor::Red);
 		if (bIsCharging)
 		{
 			ActionElapsedTime = Instance.GetElapsedTime();

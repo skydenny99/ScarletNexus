@@ -21,8 +21,6 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly)
 	float ChargeTime = 1.f;
-	UPROPERTY(EditDefaultsOnly)
-	float FloatingHeight = 100.f;
 
 	UPROPERTY(EditDefaultsOnly)
 	int32 PsychCost = 10;

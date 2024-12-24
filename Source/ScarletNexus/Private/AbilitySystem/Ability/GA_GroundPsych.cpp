@@ -7,6 +7,8 @@
 #include "Character/Character_Kasane.h"
 #include "Components/ComboSystemComponent.h"
 #include "Components/PsychokinesisComponent.h"
+#include "Components/TargetTrackingSpringArmComponent.h"
+#include "Kismet/KismetMathLibrary.h"
 
 void UGA_GroundPsych::OnGiveAbility(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec)
 {
@@ -33,14 +35,19 @@ void UGA_GroundPsych::PreActivate(const FGameplayAbilitySpecHandle Handle, const
 	OnActivatePsychAbility();
 }
 
+void UGA_GroundPsych::OnEndAbility(UGameplayAbility* Ability)
+{
+	Super::OnEndAbility(Ability);
+	PsychokinesisComponent->SetBlockUpdate(false);
+}
+
 
 void UGA_GroundPsych::ThrowProjectile()
 {
 	ActivateThrowPsychAbility();
 }
 
-void UGA_GroundPsych::PlayDebugCombo()
+EPsychType UGA_GroundPsych::GetPsychType()
 {
-	Kasane->GetPsychokinesisComponent()->PlayGroundPsychMontage(EPsychType::AeR, 3);
+	return static_cast<EPsychType>(UKismetMathLibrary::RandomIntegerInRange(0, 5));
 }
-

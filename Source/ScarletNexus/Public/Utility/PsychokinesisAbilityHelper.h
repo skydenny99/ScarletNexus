@@ -15,10 +15,10 @@ class UPsychokinesisComponent;
 class SCARLETNEXUS_API PsychokinesisAbilityHelper
 {
 protected:
-	UPsychokinesisComponent* PsychokinesisComponent = nullptr;
-	UTargetTrackingSpringArmComponent* TargetTrackingComponent = nullptr;
-	UComboSystemComponent* ComboSystemComponent = nullptr;
-	APsychokineticPropBase* CurrentPsychTarget = nullptr;
+	TWeakObjectPtr<UPsychokinesisComponent> PsychokinesisComponent = nullptr;
+	TWeakObjectPtr<UTargetTrackingSpringArmComponent> TargetTrackingComponent = nullptr;
+	TWeakObjectPtr<UComboSystemComponent> ComboSystemComponent = nullptr;
+	TWeakObjectPtr<APsychokineticPropBase> CurrentPsychTarget = nullptr;
 
 	void InitComponents(ACharacter_Kasane* Character);
 	bool HasPsychokineticPropInRange() const;
