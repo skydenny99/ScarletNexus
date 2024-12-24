@@ -48,7 +48,8 @@ void APsychokineticThrowableProp::Launch()
 	SetActorRotation(LookAtRot);
 	
 	ProjectileMovementComponent->SetUpdatedComponent(RootComponent);
-	ProjectileMovementComponent->Velocity = (GetActorForwardVector() * 5000.f); 
+	ProjectileMovementComponent->Velocity = (GetActorForwardVector() * 5000.f);
+	SetLifeSpan(5.f);
 }
 
 
