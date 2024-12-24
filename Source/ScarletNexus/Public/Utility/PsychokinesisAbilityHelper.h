@@ -12,18 +12,11 @@ class UPsychokinesisComponent;
 /**
  * 
  */
-class SCARLETNEXUS_API PsychokinesisAbilityHelper
+struct FPsychokinesisAbilityHelper
 {
-protected:
-	TWeakObjectPtr<UPsychokinesisComponent> PsychokinesisComponent = nullptr;
-	TWeakObjectPtr<UTargetTrackingSpringArmComponent> TargetTrackingComponent = nullptr;
-	TWeakObjectPtr<UComboSystemComponent> ComboSystemComponent = nullptr;
-	TWeakObjectPtr<APsychokineticPropBase> CurrentPsychTarget = nullptr;
+	static bool HasPsychokineticPropInRange(const ACharacter_Kasane* Kasane);
+	static void OnActivatePsychAbility(const ACharacter_Kasane* Kasane);
 
-	void InitComponents(ACharacter_Kasane* Character);
-	bool HasPsychokineticPropInRange() const;
-	void OnActivatePsychAbility();
-
-	void ActivateThrowPsychAbility();
-	void ActivateSpecialPsychAbility();
+	static void ActivateThrowPsychAbility(const ACharacter_Kasane* Kasane);
+	static void ActivateSpecialPsychAbility();
 };

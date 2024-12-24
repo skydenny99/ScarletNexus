@@ -14,7 +14,7 @@ class UPsychokinesisComponent;
  * 
  */
 UCLASS()
-class SCARLETNEXUS_API UGA_GroundPsych : public UGA_GroundAttackAbilityBase, public PsychokinesisAbilityHelper
+class SCARLETNEXUS_API UGA_GroundPsych : public UGA_GroundAttackAbilityBase
 {
 	GENERATED_BODY()
 

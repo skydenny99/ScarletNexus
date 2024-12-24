@@ -13,7 +13,6 @@
 void UGA_GroundPsych::OnGiveAbility(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec)
 {
 	Super::OnGiveAbility(ActorInfo, Spec);
-	InitComponents(Kasane);
 }
 
 bool UGA_GroundPsych::CanActivateAbility(const FGameplayAbilitySpecHandle Handle,
@@ -22,7 +21,7 @@ bool UGA_GroundPsych::CanActivateAbility(const FGameplayAbilitySpecHandle Handle
 {
 	if (Super::CanActivateAbility(Handle, ActorInfo, SourceTags, TargetTags, OptionalRelevantTags))
 	{
-		return HasPsychokineticPropInRange();
+		return FPsychokinesisAbilityHelper::HasPsychokineticPropInRange(Kasane);
 	}
 	return false;
 }
@@ -32,19 +31,19 @@ void UGA_GroundPsych::PreActivate(const FGameplayAbilitySpecHandle Handle, const
 	FOnGameplayAbilityEnded::FDelegate* OnGameplayAbilityEndedDelegate, const FGameplayEventData* TriggerEventData)
 {
 	Super::PreActivate(Handle, ActorInfo, ActivationInfo, OnGameplayAbilityEndedDelegate, TriggerEventData);
-	OnActivatePsychAbility();
+	FPsychokinesisAbilityHelper::OnActivatePsychAbility(Kasane);
 }
 
 void UGA_GroundPsych::OnEndAbility(UGameplayAbility* Ability)
 {
 	Super::OnEndAbility(Ability);
-	PsychokinesisComponent->SetBlockUpdate(false);
+	Kasane->GetPsychokinesisComponent()->SetBlockUpdate(false);
 }
 
 
 void UGA_GroundPsych::ThrowProjectile()
 {
-	ActivateThrowPsychAbility();
+	FPsychokinesisAbilityHelper::ActivateThrowPsychAbility(Kasane);
 }
 
 EPsychType UGA_GroundPsych::GetPsychType()

@@ -11,44 +11,48 @@
 #include "Components/TargetTrackingSpringArmComponent.h"
 
 
-void PsychokinesisAbilityHelper::InitComponents(ACharacter_Kasane* Character)
+bool FPsychokinesisAbilityHelper::HasPsychokineticPropInRange(const ACharacter_Kasane* Kasane)
 {
-	check(Character)
-	PsychokinesisComponent = Character->GetPsychokinesisComponent();
-	TargetTrackingComponent = Character->GetTargetTrackingComponent();
-	ComboSystemComponent = Character->GetComboSystemComponent();
-	check(PsychokinesisComponent.IsValid())
-	check(TargetTrackingComponent.IsValid())
-	check(ComboSystemComponent.IsValid())
+	if (Kasane == nullptr) return false;
+	const UPsychokinesisComponent* PsychokinesisComponent = Kasane->GetPsychokinesisComponent();
+	return PsychokinesisComponent ? PsychokinesisComponent->GetPsychTarget() != nullptr : false;
 }
 
-bool PsychokinesisAbilityHelper::HasPsychokineticPropInRange() const
+void FPsychokinesisAbilityHelper::OnActivatePsychAbility(const ACharacter_Kasane* Kasane)
 {
-	return PsychokinesisComponent.IsValid() ? PsychokinesisComponent->GetPsychTarget() != nullptr : false;
-}
-
-void PsychokinesisAbilityHelper::OnActivatePsychAbility()
-{
-	if (PsychokinesisComponent.IsValid() && ComboSystemComponent.IsValid())
+	if (Kasane == nullptr) return;
+	UPsychokinesisComponent* PsychokinesisComponent = Kasane->GetPsychokinesisComponent();
+	UComboSystemComponent* ComboSystem = Kasane->GetComboSystemComponent();
+	if (PsychokinesisComponent && ComboSystem)
 	{
-		CurrentPsychTarget = PsychokinesisComponent->GetPsychTarget();
 		PsychokinesisComponent->SetBlockUpdate(true);
-		ComboSystemComponent->SetupChargeProperty(CurrentPsychTarget->GetChargeTime(), true);
-		ComboSystemComponent->StartCharging();
+		ComboSystem->SetupChargeProperty(PsychokinesisComponent->GetPsychTarget()->GetChargeTime(), true);
+		ComboSystem->StartCharging();
 	}
 }
 
-void PsychokinesisAbilityHelper::ActivateThrowPsychAbility()
+void FPsychokinesisAbilityHelper::ActivateThrowPsychAbility(const ACharacter_Kasane* Kasane)
 {
-	if (CurrentPsychTarget.IsValid() && TargetTrackingComponent.IsValid())
+	if (Kasane == nullptr) return;
+	UPsychokinesisComponent* PsychokinesisComponent = Kasane->GetPsychokinesisComponent();
+	UTargetTrackingSpringArmComponent* TargetTracking = Kasane->GetTargetTrackingComponent();
+	if (PsychokinesisComponent && TargetTracking)
 	{
-		auto ThrowableProp = Cast<APsychokineticThrowableProp>(CurrentPsychTarget);
-		if (TargetTrackingComponent->GetCurrentTarget())
-			ThrowableProp->SetTarget(TargetTrackingComponent->GetCurrentTarget());
+		const auto ThrowableProp = Cast<APsychokineticThrowableProp>(PsychokinesisComponent->GetPsychTarget());
+		if (AActor* Target = TargetTracking->GetCurrentTarget())
+		{
+			ThrowableProp->SetTargetLocation(Target->GetActorLocation());
+		}
+		else
+		{
+			const FVector Forward = Kasane->GetActorForwardVector();
+			ThrowableProp->SetTargetLocation(Kasane->GetActorLocation() + Forward * 1000.f);
+		}
 		ThrowableProp->Launch();
 	}
 }
 
-void PsychokinesisAbilityHelper::ActivateSpecialPsychAbility()
+
+void FPsychokinesisAbilityHelper::ActivateSpecialPsychAbility()
 {
 }

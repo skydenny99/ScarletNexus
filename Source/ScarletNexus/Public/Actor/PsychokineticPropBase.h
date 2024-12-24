@@ -19,7 +19,7 @@ protected:
 	int32 CurrentControlNum = 0;
 	int32 MaxControlNum = 5;
 
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly, meta=(ClampMin="0.3"))
 	float ChargeTime = 1.f;
 
 	UPROPERTY(EditDefaultsOnly)

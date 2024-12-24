@@ -30,11 +30,10 @@ void APsychokineticThrowableProp::Launch()
 		DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
 	}
 	ProjectileMovementComponent->ProjectileGravityScale = 0.f;
-	if (TargetActor)
-	{
-		FRotator LookAtRot = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), TargetActor->GetActorLocation());
-		SetActorRotation(LookAtRot);
-	}
+	
+	const FRotator LookAtRot = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), TargetLocation);
+	SetActorRotation(LookAtRot);
+	
 	ProjectileMovementComponent->SetUpdatedComponent(RootComponent);
 	ProjectileMovementComponent->Velocity = (GetActorForwardVector() * 5000.f); 
 }
