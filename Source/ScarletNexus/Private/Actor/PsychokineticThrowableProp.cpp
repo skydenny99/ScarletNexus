@@ -5,6 +5,7 @@
 
 #include "BaseDebugHelper.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 
 APsychokineticThrowableProp::APsychokineticThrowableProp()
@@ -30,7 +31,19 @@ void APsychokineticThrowableProp::Launch()
 		DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
 	}
 	ProjectileMovementComponent->ProjectileGravityScale = 0.f;
-	
+
+	FVector TargetLocation = FVector::ZeroVector;
+	if (CurrentTarget != nullptr)
+	{
+		TargetLocation = CurrentTarget->GetActorLocation();
+	}
+	else
+	{
+		if (APlayerCameraManager* CameraManager = UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0))
+		{
+			TargetLocation = CameraManager->GetActorForwardVector() * 1000.f;
+		}
+	}
 	const FRotator LookAtRot = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), TargetLocation);
 	SetActorRotation(LookAtRot);
 	

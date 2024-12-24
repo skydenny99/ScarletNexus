@@ -95,7 +95,7 @@ bool UComboSystemComponent::TryActivateAbilityByInputTag(FGameplayTag tag)
 	
 	if (AbilityTag.IsValid() == false || AbilitySpecs.Contains(AbilityTag) == false)
 	{
-		Debug::Print("Ability not found", FColor::Red);
+		Debug::Print("Triggered: Ability not found", FColor::Red);
 		return false;
 	}
 	if (BaseAbilitySystemComponent->TryActivateAbility(AbilitySpecs[AbilityTag].Handle))
@@ -104,7 +104,7 @@ bool UComboSystemComponent::TryActivateAbilityByInputTag(FGameplayTag tag)
 		return true;
 	}
 	
-	Debug::Print("Ability try failed (Triggered)", FColor::Red);
+	Debug::Print("Triggered: Ability try failed", FColor::Red);
 	return false;
 }
 
@@ -175,14 +175,23 @@ void UComboSystemComponent::ProcessInputAction(FGameplayTag InputTag, ETriggerEv
 		}
 		break;
 	case ETriggerEvent::Completed:
-		if (LastChargeAbilityInputTag.MatchesTagExact(InputTag))
+		if (LastChargeAbilityInputTag.IsValid())
 		{
-			LastChargeAbilityInputTag = FGameplayTag();
+			if (LastChargeAbilityInputTag.MatchesTagExact(InputTag))
+			{
+				LastChargeAbilityInputTag = FGameplayTag();
+			}
+			else
+			{
+				return;
+			}
 		}
 		if (bIsCharging)
 		{
 				TryActivateChargeAbility();
 		}
+		else
+		{
 			if (InputTag == BaseGameplayTags::InputTag_Attack_Weapon_Special)
 			{
 				// TODO activate or cancel charging ability
@@ -191,7 +200,7 @@ void UComboSystemComponent::ProcessInputAction(FGameplayTag InputTag, ETriggerEv
 						BaseGameplayTags::Player_Ability_Attack_Aerial_Backstep : BaseGameplayTags::Player_Ability_Attack_Ground_Backstep;
 				if (AbilityTag.IsValid() == false || AbilitySpecs.Contains(AbilityTag) == false)
 				{
-					Debug::Print("Ability not found", FColor::Red);
+					Debug::Print("Completed: Ability not found", FColor::Red);
 					return;
 				}
 				if (BaseAbilitySystemComponent->TryActivateAbility(AbilitySpecs[AbilityTag].Handle))
@@ -201,9 +210,11 @@ void UComboSystemComponent::ProcessInputAction(FGameplayTag InputTag, ETriggerEv
 				}
 				else
 				{
-					Debug::Print("Ability try failed (Completed)", FColor::Red);
+					Debug::Print("Completed: Ability try failed", FColor::Red);
 				}
 			}
+		}
+			
 		break;
 	default:
 		break;

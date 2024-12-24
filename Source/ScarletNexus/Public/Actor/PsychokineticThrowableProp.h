@@ -25,13 +25,15 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly)
 	UProjectileMovementComponent* ProjectileMovementComponent;
-	FVector TargetLocation;
+
+	UPROPERTY()
+	AActor* CurrentTarget;
 	bool bIsAttached = false;
 
 public:
 	FORCEINLINE void Attached() { bIsAttached = true; }
 	FORCEINLINE bool IsAttached() const { return bIsAttached; }
-	FORCEINLINE void SetTargetLocation(const FVector& Target) {TargetLocation = Target;}
+	FORCEINLINE void SetTarget(AActor* Target) {CurrentTarget = Target;}
 
 	void FloatingTick(float DeltaTime);
 	void Launch();

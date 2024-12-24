@@ -39,15 +39,7 @@ void FPsychokinesisAbilityHelper::ActivateThrowPsychAbility(const ACharacter_Kas
 	if (PsychokinesisComponent && TargetTracking)
 	{
 		const auto ThrowableProp = Cast<APsychokineticThrowableProp>(PsychokinesisComponent->GetPsychTarget());
-		if (AActor* Target = TargetTracking->GetCurrentTarget())
-		{
-			ThrowableProp->SetTargetLocation(Target->GetActorLocation());
-		}
-		else
-		{
-			const FVector Forward = Kasane->GetActorForwardVector();
-			ThrowableProp->SetTargetLocation(Kasane->GetActorLocation() + Forward * 1000.f);
-		}
+		ThrowableProp->SetTarget(TargetTracking->GetCurrentTarget());
 		ThrowableProp->Launch();
 	}
 }

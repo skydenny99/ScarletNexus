@@ -102,7 +102,7 @@ ACharacter_Kasane::ACharacter_Kasane()
 
 	PsychBoundary = CreateDefaultSubobject<USphereComponent>(TEXT("PsychBoundary"));
 	PsychBoundary->SetupAttachment(RootComponent);
-	PsychBoundary->InitSphereRadius(500.f);
+	PsychBoundary->InitSphereRadius(1500.f);
 	PsychokinesisComponent = CreateDefaultSubobject<UPsychokinesisComponent>(TEXT("PsychokinesisComponent"));
 	USkeletalMeshComponent* PsychObject = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("PsychObject"));
 	//PsychObject->SetRelativeRotation(FRotator(0.f, -90.f, 0.f));
@@ -112,7 +112,7 @@ ACharacter_Kasane::ACharacter_Kasane()
 	{
 		PsychObject->SetSkeletalMesh(PsychObjectAsset.Object);
 		PsychObject->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-		//PsychObject->SetHiddenInGame(true);
+		PsychObject->SetHiddenInGame(true);
 	}
 	static ConstructorHelpers::FClassFinder<UAnimInstance> PsychObjectAnimAsset(TEXT("/Game/_BP/Character/Kasane/PsychAnimation/ABP_Psych.ABP_Psych_C"));
 	if (PsychObjectAnimAsset.Succeeded())
