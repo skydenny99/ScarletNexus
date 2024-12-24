@@ -6,6 +6,7 @@
 #include "Widgets/WidgetBase.h"
 #include "ItemBGBase.generated.h"
 
+class UPaperSprite;
 class UTextBlock;
 class UImage;
 struct FConsumItemInfo;
@@ -19,6 +20,9 @@ class SCARLETNEXUS_API UItemBGBase : public UWidgetBase
 	GENERATED_BODY()
 
 protected:
+	UPROPERTY()
+	UMaterialInstance* MaterialInstance;
+	
 	UPROPERTY()
 	UMaterialInstanceDynamic* LeftMaterialInstance;
 
@@ -68,11 +72,17 @@ protected:
 	UImage* Glow;
 
 public:
-	virtual void NativeOnInitialized() override;
+	virtual void NativeConstruct() override;
 	
 	UFUNCTION()
-	void UpdateBGItemBeforeSwap(const TArray<FConsumItemInfo>& Items, const int32 Front, const bool bIsRight);
+	static int32 Side (const int Index,const int Lenght,const bool bIsLeft);
 
-	UFUNCTION()
-	void UpdateBGItem(const TArray<FConsumItemInfo>& Items, const int32 Front);
+	UFUNCTION(BlueprintCallable)
+	void UpdateBefore(const TArray<FConsumItemInfo>& Items, const int32 Middle, const bool bIsLeft);
+
+	UFUNCTION(BlueprintCallable)
+	void UpdateAfter(const TArray<FConsumItemInfo>& Items, const int32 Middle);
+
+	UFUNCTION(BlueprintCallable)
+	void Init(const TArray<FConsumItemInfo>& Items, const int32 Middle);
 };

@@ -5,47 +5,63 @@
 #include "Kismet/KismetMaterialLibrary.h"
 #include "Components/Image.h"
 #include "Styling/SlateBrush.h"
-#include "PaperSpriteBlueprintLibrary.h"
-#include "BaseType/BaseEnumType.h"
 
-void UBossUIBase::NativeOnInitialized()
+void UBossUIBase::NativeConstruct()
 {
-	Super::NativeOnInitialized();
-	
-	HpMaterialDynamicInstance = UKismetMaterialLibrary::CreateDynamicMaterialInstance(GetWorld(), HpMaterial);
-	Boss_HealthGauge->SetBrushFromMaterial(HpMaterialDynamicInstance);
-	HpMaterialDynamicInstance->SetScalarParameterValue("Percent",1.0f);
+	Super::NativeConstruct();
 
-	StunMaterialDynamicInstance = UKismetMaterialLibrary::CreateDynamicMaterialInstance(GetWorld(), StunMaterial);
-	Boss_StunGauge->SetBrushFromMaterial(StunMaterialDynamicInstance);
-	StunMaterialDynamicInstance->SetScalarParameterValue("Percent",1.0f);
+	HpDynamicMaterialInstance = UKismetMaterialLibrary::CreateDynamicMaterialInstance(GetWorld(), HpMaterial);
+	Boss_HealthGauge->SetBrushFromMaterial(HpDynamicMaterialInstance);
+	HpDynamicMaterialInstance->SetScalarParameterValue("TopProgress",1.0f);
+	
+	StunDynamicMaterialInstance = UKismetMaterialLibrary::CreateDynamicMaterialInstance(GetWorld(), StunMaterial);
+	Boss_StunGauge->SetBrushFromMaterial(StunDynamicMaterialInstance);
+	StunDynamicMaterialInstance->SetScalarParameterValue("Percent",1.0f);
 	
 	Boss_Debuff_Icon->SetVisibility(ESlateVisibility::Hidden);
 
-	MaxHp = 1000.0f;
-	CurrentHp = MaxHp;
+	Percent = 1.0f;
+	PrevTopProgress = 1.0f;
+	BottomProgress = 0.0f;
+	AnimationSpeed = 0.15f;
+	bIsActive = false;
 }
 
-void UBossUIBase::OnDamaged(const float Damage)
+void UBossUIBase::OnDamaged(const float SetPercent)
 {
-	CurrentHp -= Damage;
+	Percent = SetPercent;
+	UE_LOG(LogTemp, Warning, TEXT("percent : %f"),Percent);
+	bIsActive = true;
+}
 
-	if (CurrentHp <= 0)
+void UBossUIBase::UpdateHp(const float TopProgress, const float DeltaSec)
+{
+	BottomProgress += PrevTopProgress - TopProgress;
+	PrevTopProgress = TopProgress;
+
+	HpDynamicMaterialInstance->SetScalarParameterValue("TopProgress",TopProgress);
+	HpDynamicMaterialInstance->SetScalarParameterValue("BottomProgress",BottomProgress);
+	const float Value = BottomProgress - DeltaSec * AnimationSpeed;
+	BottomProgress = FMath::Clamp(Value,0.0f,BottomProgress);
+	if (BottomProgress == 0.0f)
 	{
-		RemoveFromParent();
+		bIsActive = false;
 	}
-	
-	UpdateHp(CurrentHp / MaxHp);
-
-	UpdateDebuff(EBaseDebuffType::CONFUSE);
 }
 
-void UBossUIBase::UpdateHp(const float Value)
+inline void UBossUIBase::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 {
-	HpMaterialDynamicInstance->SetScalarParameterValue("Percent",Value);
+	Super::NativeTick(MyGeometry, InDeltaTime);
+
+	if (bIsActive == false && BottomProgress == 0.0f)
+	{
+		return;
+	}
+	UpdateHp(Percent, InDeltaTime);
 }
 
 void UBossUIBase::UpdateStunGauge(const float Value)
 {
-	StunMaterialDynamicInstance->SetScalarParameterValue("Percent",Value);
+	StunDynamicMaterialInstance->SetScalarParameterValue("Percent",Value);
 }
+

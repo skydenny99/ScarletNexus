@@ -29,14 +29,20 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* T_RHealthPoint_Max;
 
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* T_LName;
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* T_RName;
+
 public:
-	UFUNCTION()
-	void Init(const float LeftFellowHp,const float RightFellowHp);
+	UFUNCTION(BlueprintCallable)
+	void Init(const FString LName, const float LeftFellowHp, const FString RName, const float RightFellowHp);
 	
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 	void UpdateFellowLeftHp(const float LeftHp);
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 	void UpdateFellowRightHp(const float RightHp);
 	
 };

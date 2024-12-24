@@ -22,8 +22,11 @@ private:
 	FTimerHandle ItemCoolTimerHandle;
 	
 protected:
+	UPROPERTY(EditAnywhere)
+	UMaterial* GaugeMaterial;
+	
 	UPROPERTY()
-	UMaterialInstanceDynamic* ItemMaterialInstance;
+	UMaterialInstanceDynamic* GaugeMaterialInstance;
 	
 	UPROPERTY(meta = (BindWidget))
 	UImage* Item_Progressbar;
@@ -39,6 +42,7 @@ protected:
 	
 public:
 	virtual void NativeOnInitialized() override;
-	
+
+	UFUNCTION(BlueprintCallable)
 	void UpdateGauge(const FConsumItemInfo& Item);
 };

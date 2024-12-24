@@ -6,54 +6,74 @@
 #include "Components/Image.h"
 #include "Components/TextBlock.h"
 #include "Kismet/KismetMaterialLibrary.h"
+#include "Styling/SlateBrush.h"
+#include "PaperSpriteBlueprintLibrary.h"
 
-void UItemBGBase::NativeOnInitialized()
+void UItemBGBase::NativeConstruct()
 {
-	Super::NativeOnInitialized();
+	Super::NativeConstruct();
 
-	UE_LOG(LogTemp, Warning, TEXT("UItemBGBase::NativeOnInitialize"));
 	GlowMaterialInstance = UKismetMaterialLibrary::CreateDynamicMaterialInstance(GetWorld(),GlowMaterial);
 	Glow->SetBrushFromMaterial(GlowMaterialInstance);
-	auto c = FFloat16(0x25EE341A);
 	Glow->SetColorAndOpacity(FColor::Green);
 	Glow->SetOpacity(0.1f);
 }
 
-void UItemBGBase::UpdateBGItemBeforeSwap(const TArray<FConsumItemInfo>& Items, const int32 Front, const bool bIsRight)
+int UItemBGBase::Side(const int Index,const int Lenght, const bool bIsLeft)
 {
-	const int32 Rear = (Items.Num()-1+Front)%Items.Num();
-	
-	if (bIsRight)
+	return bIsLeft ? (Index-1 + Lenght) % Lenght : (Index+1 + Lenght) % Lenght;
+}
+
+void UItemBGBase::UpdateBefore(const TArray<FConsumItemInfo>& Items, const int32 Middle, const bool bIsLeft)
+{
+	const int Index = Side(Middle,Items.Num(),bIsLeft);
+
+	Glow->SetColorAndOpacity(Items[Index].Color);
+	T_ItemName->SetText(FText::FromName(Items[Index].Name));
+	Glow->SetOpacity(0.1f);
+
+	if (bIsLeft)
 	{
-		T_ItemName->SetText(FText::FromName(Items[Front+1].Name));
-		LeftMaterialInstance = UKismetMaterialLibrary::CreateDynamicMaterialInstance(GetWorld(), Items[Rear].Material);
-		LeftSwapMaterialInstance = UKismetMaterialLibrary::CreateDynamicMaterialInstance(GetWorld(), Items[Rear-1].Material);
-		MiddleMaterialInstance = UKismetMaterialLibrary::CreateDynamicMaterialInstance(GetWorld(), Items[Front].Material);
-		MiddleSwapMaterialInstance = LeftMaterialInstance;
-		RightMaterialInstance = UKismetMaterialLibrary::CreateDynamicMaterialInstance(GetWorld(), Items[Front+1].Material);
-		RightSwapMaterialInstance = MiddleMaterialInstance;
-		Glow->SetColorAndOpacity(Items[Front+1].Color);
+		LeftSwapMaterialInstance = UKismetMaterialLibrary::CreateDynamicMaterialInstance(GetWorld(),Items[Side(Index,Items.Num(),bIsLeft)].ItemMaterial);
+		Item_Right_Swap->SetBrushFromMaterial(MiddleMaterialInstance);
+		Item_Middle_Swap->SetBrushFromMaterial(LeftMaterialInstance);
+		Item_Left_Swap->SetBrushFromMaterial(LeftSwapMaterialInstance);
 	}
 	else
 	{
-		T_ItemName->SetText(FText::FromName(Items[Rear].Name));
-		RightMaterialInstance = UKismetMaterialLibrary::CreateDynamicMaterialInstance(GetWorld(), Items[Front+1].Material);
-		RightSwapMaterialInstance = UKismetMaterialLibrary::CreateDynamicMaterialInstance(GetWorld(), Items[Front+2].Material);
-		MiddleMaterialInstance = UKismetMaterialLibrary::CreateDynamicMaterialInstance(GetWorld(), Items[Front].Material);
-		MiddleSwapMaterialInstance = RightMaterialInstance;
-		LeftMaterialInstance = UKismetMaterialLibrary::CreateDynamicMaterialInstance(GetWorld(), Items[Rear].Material);
-		LeftSwapMaterialInstance = MiddleMaterialInstance;
-		Glow->SetColorAndOpacity(Items[Rear].Color);
+		RightSwapMaterialInstance = UKismetMaterialLibrary::CreateDynamicMaterialInstance(GetWorld(),Items[Side(Index,Items.Num(),bIsLeft)].ItemMaterial);
+		Item_Left_Swap->SetBrushFromMaterial(MiddleMaterialInstance);
+		Item_Middle_Swap->SetBrushFromMaterial(RightMaterialInstance);
+		Item_Right_Swap->SetBrushFromMaterial(RightSwapMaterialInstance);
 	}
 }
 
-void UItemBGBase::UpdateBGItem(const TArray<FConsumItemInfo>& Items, const int32 Front)
+void UItemBGBase::UpdateAfter(const TArray<FConsumItemInfo>& Items, const int32 Middle)
 {
-	const int32 Rear = (Items.Num()-1+Front)%Items.Num();
-	T_ItemName->SetText(FText::FromName(Items[Front].Name));
-	LeftMaterialInstance = UKismetMaterialLibrary::CreateDynamicMaterialInstance(GetWorld(), Items[Rear].Material);
-	MiddleMaterialInstance = UKismetMaterialLibrary::CreateDynamicMaterialInstance(GetWorld(), Items[Front].Material);
-	RightMaterialInstance = UKismetMaterialLibrary::CreateDynamicMaterialInstance(GetWorld(), Items[Front+1].Material);
-	Glow->SetColorAndOpacity(Items[Front].Color);
-	//Glow->SetOpacity(0.1f);
+	LeftMaterialInstance = UKismetMaterialLibrary::CreateDynamicMaterialInstance(GetWorld(),Items[Side(Middle,Items.Num(),true)].ItemMaterial);
+	MiddleMaterialInstance = UKismetMaterialLibrary::CreateDynamicMaterialInstance(GetWorld(),Items[Middle].ItemMaterial);
+	RightMaterialInstance = UKismetMaterialLibrary::CreateDynamicMaterialInstance(GetWorld(),Items[Side(Middle,Items.Num(),false)].ItemMaterial);
+	Item_Left->SetBrushFromMaterial(LeftMaterialInstance);
+	Item_Middle->SetBrushFromMaterial(MiddleMaterialInstance);
+	Item_Right->SetBrushFromMaterial(RightMaterialInstance);
+	Glow->SetOpacity(0.1f);
+}
+
+void UItemBGBase::Init(const TArray<FConsumItemInfo>& Items, const int32 Middle)
+{
+	const int Index = Side(Middle,Items.Num(),true);
+
+	LeftSwapMaterialInstance = UKismetMaterialLibrary::CreateDynamicMaterialInstance(GetWorld(),Items[Side(Index,Items.Num(),true)].ItemMaterial);
+	LeftMaterialInstance = UKismetMaterialLibrary::CreateDynamicMaterialInstance(GetWorld(),Items[Side(Middle,Items.Num(),true)].ItemMaterial);
+	MiddleMaterialInstance = UKismetMaterialLibrary::CreateDynamicMaterialInstance(GetWorld(),Items[Middle].ItemMaterial);
+	MiddleSwapMaterialInstance = UKismetMaterialLibrary::CreateDynamicMaterialInstance(GetWorld(),Items[Middle].ItemMaterial);
+	RightMaterialInstance = UKismetMaterialLibrary::CreateDynamicMaterialInstance(GetWorld(),Items[Side(Middle,Items.Num(),false)].ItemMaterial);
+	RightSwapMaterialInstance = UKismetMaterialLibrary::CreateDynamicMaterialInstance(GetWorld(),Items[Side(Index,Items.Num(),false)].ItemMaterial);
+	Item_Left->SetBrushFromMaterial(LeftSwapMaterialInstance);
+	Item_Middle->SetBrushFromMaterial(MiddleSwapMaterialInstance);
+	Item_Right->SetBrushFromMaterial(RightSwapMaterialInstance);
+	
+	Glow->SetColorAndOpacity(Items[Middle].Color);
+	T_ItemName->SetText(FText::FromName(Items[Middle].Name));
+	Glow->SetOpacity(0.1f);
 }

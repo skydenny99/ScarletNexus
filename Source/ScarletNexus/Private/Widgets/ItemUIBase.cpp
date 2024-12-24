@@ -14,14 +14,15 @@ void UItemUIBase::NativeOnInitialized()
 
 	ArrowMaterialInstance = UKismetMaterialLibrary::CreateDynamicMaterialInstance(GetWorld(),ArrowMaterial);
 	DownArrow_B->SetBrushFromMaterial(ArrowMaterialInstance);
+	GaugeMaterialInstance = UKismetMaterialLibrary::CreateDynamicMaterialInstance(GetWorld(),GaugeMaterial);
+	Item_Progressbar->SetBrushFromMaterial(GaugeMaterialInstance);
+	GaugeMaterialInstance->SetScalarParameterValue("Progress", 1.0f);
 }
 
 void UItemUIBase::UpdateGauge(const FConsumItemInfo& Item)
 {
-	ItemMaterialInstance = UKismetMaterialLibrary::CreateDynamicMaterialInstance(GetWorld(),Item.Material);
-	Item_Progressbar->SetBrushFromMaterial(ItemMaterialInstance);
-	ItemMaterialInstance->SetVectorParameterValue("Color",Item.Color);
-	ItemMaterialInstance->SetScalarParameterValue("Percent",Item.Percentage);
+	GaugeMaterialInstance->SetVectorParameterValue("Color",Item.Color);
+	GaugeMaterialInstance->SetScalarParameterValue("Percent",Item.Percentage);
 
 	ArrowMaterialInstance->SetVectorParameterValue("Color",Item.Color);
 

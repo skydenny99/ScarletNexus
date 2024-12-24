@@ -26,14 +26,26 @@ protected:
 	UPaperSprite* SAS_L;
 
 	UPROPERTY(EditDefaultsOnly, Category = "SASMat")
-	UMaterial* SAS_R;
+	UPaperSprite* SAS_L_Back;
 
 	UPROPERTY(EditDefaultsOnly, Category = "SASMat")
-	UMaterial* SAS_T;
+	UPaperSprite* SAS_R;
 
 	UPROPERTY(EditDefaultsOnly, Category = "SASMat")
-	UMaterial* SAS_B;
+	UPaperSprite* SAS_R_Back;
 
+	UPROPERTY(EditDefaultsOnly, Category = "SASMat")
+	UPaperSprite* SAS_T;
+
+	UPROPERTY(EditDefaultsOnly, Category = "SASMat")
+	UPaperSprite* SAS_T_Back;
+
+	UPROPERTY(EditDefaultsOnly, Category = "SASMat")
+	UPaperSprite* SAS_B;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "SASMat")
+	UPaperSprite* SAS_B_Back;
+	
 	UPROPERTY(EditDefaultsOnly, Category = "SASMat")
 	UMaterial* SAS_Gauge;
 	

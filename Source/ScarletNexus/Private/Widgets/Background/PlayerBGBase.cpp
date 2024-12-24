@@ -11,7 +11,7 @@ void UPlayerBGBase::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
 	//TODO::Incoding problem
-	FString A = UKismetSystemLibrary::MakeLiteralString("카사네 랜들");
+	FString A = UKismetSystemLibrary::MakeLiteralString("Kasane Randle");
 	T_PlayerName->SetText(UKismetTextLibrary::Conv_StringToText(A.TrimQuotes()));
 	
 	T_HealthPoint->SetText(FText::FromString(FString::FromInt(1234)));
@@ -20,7 +20,7 @@ void UPlayerBGBase::NativeOnInitialized()
 
 void UPlayerBGBase::UpdateHp(float HealthPoint)
 {
-	T_HealthPoint->SetText(FText::FromString(FString::SanitizeFloat(HealthPoint)));
+	T_HealthPoint->SetText(FText::FromString(FString::FromInt(static_cast<int>(HealthPoint))));
 }
 
 void UPlayerBGBase::Init(const FString& Name, const float HpMax)

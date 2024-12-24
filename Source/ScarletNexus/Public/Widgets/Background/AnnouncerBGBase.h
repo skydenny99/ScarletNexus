@@ -9,6 +9,8 @@
 class UImage;
 class UOverlay;
 class UTextBlock;
+class UMaterial;
+class UMaterialInstanceDynamic;
 
 /**
  * 
@@ -19,16 +21,22 @@ class SCARLETNEXUS_API UAnnouncerBGBase : public UWidgetBase
 	GENERATED_BODY()
 
 protected:
-	UPROPERTY(meta = (BindWidget))
-	UOverlay* Base;
-
+	UPROPERTY(EditDefaultsOnly)
+	TArray<UMaterial*> Textures;
+	
+	UPROPERTY()
+	UMaterialInstanceDynamic* MaterialInstance;
+	
 	UPROPERTY(meta = (BindWidget))
 	UImage* IMG_Face;
 
 	UPROPERTY(meta = (BindWidget))
-	UImage* LodingAnim;
+	UTextBlock* T_Announce;
 
-	UPROPERTY(meta = (BindWidget))
-	UTextBlock* Text;
-	
+public:
+	UFUNCTION(BlueprintCallable)
+	void UpdateFace(UMaterial* Face);
+
+	UFUNCTION(BlueprintCallable)
+	void UpdateAnnounce(const FString InputText);
 };

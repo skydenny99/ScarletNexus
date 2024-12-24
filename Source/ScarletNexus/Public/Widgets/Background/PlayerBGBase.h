@@ -38,7 +38,7 @@ public:
 	UFUNCTION()
 	void Init(const FString& Name, const float HpMax);
 	
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 	void UpdateHp(float HealthPoint);
 };
 

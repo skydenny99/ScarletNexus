@@ -21,8 +21,11 @@ class SCARLETNEXUS_API UBossUIBase : public UWidgetBase
 	GENERATED_BODY()
 	
 private:
-	float CurrentHp;
-	float MaxHp;
+	float Percent;
+	float PrevTopProgress;
+	float BottomProgress;
+	float AnimationSpeed;
+	bool bIsActive;
 	
 protected:
 	UPROPERTY(EditDefaultsOnly)
@@ -35,14 +38,14 @@ protected:
 	TArray<UPaperSprite*> DebuffMaterial;
 	
 	UPROPERTY()
-	UMaterialInstanceDynamic* HpMaterialDynamicInstance;
+	UMaterialInstanceDynamic* HpDynamicMaterialInstance;
 
 	UPROPERTY()
-	UMaterialInstanceDynamic* StunMaterialDynamicInstance;
+	UMaterialInstanceDynamic* StunDynamicMaterialInstance;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UImage* Boss_HealthGauge;
-
+	
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UImage* Boss_StunGauge;
 
@@ -50,16 +53,23 @@ protected:
 	class UImage* Boss_Debuff_Icon;
 	
 public:
-	virtual void NativeOnInitialized() override;
-
-	UFUNCTION(BlueprintCallable, Category = "CaculateFunction")
-	void OnDamaged(const float Damage);
+	//virtual void NativeOnInitialized() override;
+	virtual void NativeConstruct() override;
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void UpdateDebuff(EBaseDebuffType DebuffType = EBaseDebuffType::NONE);
+
+	UFUNCTION(BlueprintCallable)
+	void OnDamaged(const float SetPercent);
 	
-	void UpdateHp(const float Value);
+	UFUNCTION(BlueprintCallable)
+	void UpdateHp(const float TopProgress, const float DeltaSec);
 
 	UFUNCTION(BlueprintCallable)
 	void UpdateStunGauge(const float Value);
+	
+	UFUNCTION()
+	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 };
+
+
