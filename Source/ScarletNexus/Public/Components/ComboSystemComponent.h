@@ -37,12 +37,15 @@ public:
 private:
 	virtual void BeginPlay() override;
 
+	UPROPERTY()
 	ACharacter_Kasane* Kasane;
+	UPROPERTY()
 	UBaseAbilitySystemComponent* BaseAbilitySystemComponent;
 	TMap<FGameplayTag, FGameplayAbilitySpec> AbilitySpecs;
 
-	bool bIsComboAttacking = false;
-	
+	bool bIsPsychComboAttacking = false;
+	FTimerHandle PsychComboResetTimerHandle;
+	float PsychComboResetLifeTime;
 
 public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Combo")
@@ -75,6 +78,7 @@ private:
 	
 
 public:
+	void InitKasane(ACharacter_Kasane* InKasane);
 	void GrantAttackAbilites(UAbilitySystemComponent* ASC, int32 Level = 1);
 	void UpdateInfoByUnlock();
 
@@ -115,7 +119,13 @@ public:
 		ChargeCompletionTime = CompletionTime;
 		bIsAutoCompletion = AutoCompletion;
 	}
+
+	UFUNCTION(BlueprintCallable, Category="Combo")
+	void StartPsychComboTimer();
+
+	UFUNCTION(BlueprintCallable, Category="Combo")
+	void StopPsychComboTimer();
 	
 	UFUNCTION(BlueprintCallable, Category="Combo", meta=(ExpandBoolAsExecs = "InCombo"))
-	void IsComboAttacking(bool& InCombo) { InCombo = bIsComboAttacking; }
+	void IsPsychComboAttacking(bool& InCombo) { InCombo = bIsPsychComboAttacking; }
 };

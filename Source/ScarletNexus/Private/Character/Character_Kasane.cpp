@@ -147,6 +147,7 @@ void ACharacter_Kasane::PossessedBy(AController* NewController)
 
 	if (ComboSystemComponent)
 	{
+		ComboSystemComponent->InitKasane(this);
 		ComboSystemComponent->GrantAttackAbilites(BaseAbilitySystemComponent);
 	}
 }

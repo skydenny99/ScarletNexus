@@ -20,11 +20,6 @@ UComboSystemComponent::UComboSystemComponent()
 	PrimaryComponentTick.bCanEverTick = false;
 
 	// ...
-	Kasane = Cast<ACharacter_Kasane>(GetOwner());
-	if (Kasane)
-	{
-		BaseAbilitySystemComponent = Kasane->GetBaseAbilitySystemComponent();
-	}
 }
 
 void UComboSystemComponent::BeginPlay()
@@ -36,6 +31,15 @@ void UComboSystemComponent::BeginPlay()
 	}
 }
 
+
+void UComboSystemComponent::InitKasane(ACharacter_Kasane* InKasane)
+{
+	Kasane = InKasane;
+	if (Kasane)
+	{
+		BaseAbilitySystemComponent = Kasane->GetBaseAbilitySystemComponent();
+	}
+}
 
 void UComboSystemComponent::GrantAttackAbilites(UAbilitySystemComponent* ASC, int32 Level)
 {
@@ -254,5 +258,29 @@ void UComboSystemComponent::ResetWeaponCombo()
 	WeaponAerialCombo.CurrentComboCount = 0;
 	BackstepGroundCombo.CurrentComboCount = 0;
 	BackstepAerialCombo.CurrentComboCount = 0;
+}
+
+void UComboSystemComponent::StartPsychComboTimer()
+{
+	bIsPsychComboAttacking = true;
+	FTimerDelegate timerDelegate;
+	timerDelegate.BindLambda([this]()
+	{
+		if (this)
+		{
+			PsychGroundCombo.CurrentComboCount = 0;
+			PsychAerialCombo.CurrentComboCount = 0;
+			bIsPsychComboAttacking = false;
+		}
+	});
+	GetWorld()->GetTimerManager().SetTimer(PsychComboResetTimerHandle, timerDelegate, PsychComboResetLifeTime, false);
+}
+
+void UComboSystemComponent::StopPsychComboTimer()
+{
+	PsychGroundCombo.CurrentComboCount = 0;
+	PsychAerialCombo.CurrentComboCount = 0;
+	bIsPsychComboAttacking = false;
+	GetWorld()->GetTimerManager().ClearTimer(PsychComboResetTimerHandle);
 }
 
