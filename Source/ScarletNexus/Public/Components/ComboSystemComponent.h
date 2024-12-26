@@ -91,7 +91,6 @@ public:
 	
 
 	void ProcessInputAction(FGameplayTag InputTag, ETriggerEvent TriggerEvent, const FInputActionInstance& Instance);
-	bool ShouldBlockInputAction();
 
 	UFUNCTION(BlueprintCallable, Category="Combo")
 	void IncreaseCombo(UPARAM(ref) FComboCounter& ComboCounter);

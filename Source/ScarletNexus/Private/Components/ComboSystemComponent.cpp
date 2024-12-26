@@ -120,6 +120,7 @@ void UComboSystemComponent::TryActivateChargeAbility()
 	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(Kasane, BaseGameplayTags::Shared_Event_Charge, EventData);
 
 	bIsCharging = false;
+	UBaseFunctionLibrary::RemovePlayGameTagFromActor(Kasane, BaseGameplayTags::Player_Status_Charging);
 	bChargeAbilityAlreadyTriggered = true;
 	ActionElapsedTime = 0.f;
 }
@@ -159,10 +160,16 @@ void UComboSystemComponent::ProcessInputAction(FGameplayTag InputTag, ETriggerEv
 	switch (TriggerEvent)
 	{
 	case ETriggerEvent::Triggered:
-		if (ShouldBlockInputAction()) return;
 		if (bIsCharging)
 		{
-			ActionElapsedTime = Instance.GetElapsedTime();
+			if (UBaseFunctionLibrary::NativeActorHasTag(Kasane, BaseGameplayTags::Player_Status_Charging))
+			{
+				ActionElapsedTime = Instance.GetElapsedTime();
+			}
+			else
+			{
+				ActionElapsedTime = 0.f;
+			}
 			if (bIsAutoCompletion && ActionElapsedTime > ChargeCompletionTime)
 			{
 				TryActivateChargeAbility();
@@ -225,13 +232,6 @@ void UComboSystemComponent::ProcessInputAction(FGameplayTag InputTag, ETriggerEv
 	}
 }
 
-bool UComboSystemComponent::ShouldBlockInputAction()
-{
-	if (UBaseFunctionLibrary::NativeActorHasTag(Kasane, BaseGameplayTags::Player_Status_Charging))
-		return true;
-	
-	return false;
-}
 
 void UComboSystemComponent::IncreaseCombo(FComboCounter& ComboCounter)
 {
