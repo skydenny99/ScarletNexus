@@ -5,6 +5,8 @@
 #include "Character/Character_Kasane.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "BaseDebugHelper.h"
+#include "BaseFunctionLibrary.h"
+#include "Components/ComboSystemComponent.h"
 
 void UGA_JumpBase::OnGiveAbility(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec)
 {
@@ -41,6 +43,7 @@ void UGA_JumpBase::ActivateAbility(const FGameplayAbilitySpecHandle Handle, cons
 	{
 		MovementComponent->JumpZVelocity = JumpPower[Kasane->JumpCurrentCount];
 		Kasane->Jump();
+		Kasane->GetComboSystemComponent()->ResetWeaponCombo();
 		FTimerDelegate Dele;
 		Dele.BindUObject(this, &UGA_JumpBase::EndAbility, Handle, ActorInfo, ActivationInfo, false, false);
 		GetWorld()->GetTimerManager().SetTimer(ResetJumpTimer, Dele, 0.3f, false);

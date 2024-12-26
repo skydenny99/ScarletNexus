@@ -78,5 +78,11 @@ void UBaseInputComponent::BindActionInstanceWithTag(const UDataAsset_InputConfig
 			{
 				ContextObject->OnAttackInputTriggered(InputConfig.InputTag, ActionInstance);
 			});
+		
+		BindActionInstanceLambda(InputConfig.InputAction, ETriggerEvent::Completed,
+			[InputConfig, ContextObject] (const FInputActionInstance& ActionInstance)
+			{
+				ContextObject->OnAttackInputCompleted(InputConfig.InputTag, ActionInstance);
+			});
 	}
 }

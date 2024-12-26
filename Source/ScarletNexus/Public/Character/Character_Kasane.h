@@ -6,8 +6,13 @@
 #include "InputActionValue.h"
 #include "BaseType/BaseEnumType.h"
 #include "Character/BaseCharacter.h"
+#include "Kismet/GameplayStatics.h"
 #include "Character_Kasane.generated.h"
 
+class UCameraComponent;
+class UPsychokinesisComponent;
+class USphereComponent;
+class UTargetTrackingSpringArmComponent;
 class UComboSystemComponent;
 struct FInputActionInstance;
 class UDataAsset_DirectionInputConfig;
@@ -27,8 +32,23 @@ public:
 	ACharacter_Kasane();
 
 protected:
+	UPROPERTY(VisibleDefaultsOnly, Category="Camera")
+	UCameraComponent* MainCamera;
+	
+	UPROPERTY(VisibleDefaultsOnly, Category="Camera")
+	UChildActorComponent* ComboDirectCameraActor;
+	
+	UPROPERTY(EditAnywhere, Category="Camera")
+	UTargetTrackingSpringArmComponent* CameraBoom;
+	
 	UPROPERTY(EditDefaultsOnly, Category="Battle")
 	UComboSystemComponent* ComboSystemComponent;
+
+	UPROPERTY(EditDefaultsOnly, Category="Psych")
+	USphereComponent* PsychBoundary;
+
+	UPROPERTY(EditDefaultsOnly, Category="Psych")
+	UPsychokinesisComponent* PsychokinesisComponent;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	UDataAsset_InputConfig* InputConfig;
@@ -37,12 +57,16 @@ protected:
 	UDataAsset_DirectionInputConfig* DirectionInputConfig;
 	virtual void PossessedBy(AController* NewController) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	virtual void BeginPlay() override;
 
 	void OnInputMoveTriggered(const FInputActionValue& Value);
 	void OnInputLookTriggered(const FInputActionValue& Value);
 	void OnAbilityInputTriggered(FGameplayTag InputTag);
 	void UpdateMovementElapsedTime(const FInputActionInstance& Instance);
 	void ResetMovementElapsedTime(const FInputActionValue& Value);
+	void OnTargetingInputTriggered(const FInputActionValue& Value);
+
+	
 public:
 	void OnAttackInputTriggered(FGameplayTag InputTag, const FInputActionInstance& Instance);
 	void OnAttackInputCompleted(FGameplayTag InputTag, const FInputActionInstance& Instance);
@@ -72,5 +96,33 @@ public:
 	void ActivateDash(bool bIsDashing);
 	FORCEINLINE float GetMovementElapsedTime() const { return MovementElapsedTime; };
 	FORCEINLINE bool NeedToMove() const { return MovementElapsedTime > DodgeAllowThreshold; }
+
+	UFUNCTION(BlueprintPure)
 	FORCEINLINE UComboSystemComponent* GetComboSystemComponent() const { return ComboSystemComponent; };
+	
+	UFUNCTION(BlueprintPure)
+	FORCEINLINE UPsychokinesisComponent* GetPsychokinesisComponent() const { return PsychokinesisComponent; };
+	
+	UFUNCTION(BlueprintPure)
+	FORCEINLINE UTargetTrackingSpringArmComponent* GetTargetTrackingComponent() const { return CameraBoom; }
+
+	void ChangeCamera(bool bUseMain = true);
+	FORCEINLINE UCameraComponent* GetMainCamera() const { return MainCamera; }
+	FORCEINLINE AActor* GetComboDirectCameraActor() const { return ComboDirectCameraActor->GetChildActor(); }
+	
 };
+
+inline void ACharacter_Kasane::ChangeCamera(bool bUseMain)
+{
+	auto PC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	if (bUseMain)
+		PC->SetViewTargetWithBlend(this, 1.f);
+	else
+		PC->SetViewTargetWithBlend(ComboDirectCameraActor->GetChildActor(), 1.f);
+}
+
+inline void ACharacter_Kasane::BeginPlay()
+{
+	Super::BeginPlay();
+	ComboDirectCameraActor->CreateChildActor();
+}

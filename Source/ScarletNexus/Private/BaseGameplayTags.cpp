@@ -20,10 +20,8 @@ namespace BaseGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_Attack_Psych_Special, "InputTag.Attack.Psych.Special");
 
 	//Targeting (LockOn)
-	UE_DEFINE_GAMEPLAY_TAG(InputTag_Targeting_On, "InputTag.Targeting.On");
-	UE_DEFINE_GAMEPLAY_TAG(InputTag_Targeting_Off, "InputTag.Targeting.Off");
-	UE_DEFINE_GAMEPLAY_TAG(InputTag_Targeting_Change_Left, "InputTag.Targeting.Change.Left");
-	UE_DEFINE_GAMEPLAY_TAG(InputTag_Targeting_Change_Right, "InputTag.Targeting.Change.Right");
+	UE_DEFINE_GAMEPLAY_TAG(InputTag_Targeting_Toggle, "InputTag.Targeting.Toggle");
+	UE_DEFINE_GAMEPLAY_TAG(InputTag_Targeting_Change, "InputTag.Targeting.Change");
 
 	//Item
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_Item_Use, "InputTag.Item.Use");
@@ -73,9 +71,10 @@ namespace BaseGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Aerial_Psych, "Player.Ability.Attack.Aerial.Psych");
 
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Special_Psych, "Player.Ability.Attack.Special.Psych");
-	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Backstep, "Player.Ability.Attack.Backstep");
-	
-	
+	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Ground_Backstep, "Player.Ability.Attack.Ground.Backstep");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Aerial_Backstep, "Player.Ability.Attack.Aerial.Backstep");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Ground_DashAttack, "Player.Ability.Attack.Ground.DashAttack");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Aerial_DashAttack, "Player.Ability.Attack.Aerial.DashAttack");
 
 	// Ability - Move
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Move_Dash, "Player.Ability.Move.Dash");
@@ -97,6 +96,7 @@ namespace BaseGameplayTags
 
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_Move_Run, "Player.Status.Move.Run");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_Move_Dash, "Player.Status.Move.Dash");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Status_Move_Dodge, "Player.Status.Move.Dodge");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_Move_Dodge_Instant, "Player.Status.Move.Dodge.Instant");
 	
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_Charging, "Player.Status.Charging");
@@ -135,6 +135,9 @@ namespace BaseGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_Hit_Critical, "Shared.Event.Hit.Critical");
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_Hit_KnockDown, "Shared.Event.Hit.KnockDown");
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_Combo, "Shared.Event.Combo");
+	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_Charge_Cancel, "Shared.Event.Charge.Cancel");
+	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_Charge_Confirm, "Shared.Event.Charge.Confirm");
+	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_ThrowProjectile, "Shared.Event.ThrowProjectile");
 
 
 	
@@ -144,6 +147,8 @@ namespace BaseGameplayTags
 
 
 	// Shared - State
+	UE_DEFINE_GAMEPLAY_TAG(Shared_Status_CanAttack, "Shared.Status.CanAttack");
+	UE_DEFINE_GAMEPLAY_TAG(Shared_Status_CanMove, "Shared.Status.CanMove");
 	UE_DEFINE_GAMEPLAY_TAG(Shared_State_Down, "Shared.State.Down");
 	UE_DEFINE_GAMEPLAY_TAG(Shared_State_Dead, "Shared.State.Dead");
 	UE_DEFINE_GAMEPLAY_TAG(Shared_State_Invincible, "Shared.State.Invincible");

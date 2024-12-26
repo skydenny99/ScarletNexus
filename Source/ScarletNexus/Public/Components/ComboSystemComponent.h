@@ -10,6 +10,8 @@
 #include "ComboSystemComponent.generated.h"
 
 
+class UDataAsset_AttackAbility;
+
 USTRUCT(BlueprintType)
 struct FComboCounter
 {
@@ -32,70 +34,103 @@ class SCARLETNEXUS_API UComboSystemComponent : public UActorComponent
 public:	
 	// Sets default values for this component's properties
 	UComboSystemComponent();
-
 private:
+	virtual void BeginPlay() override;
+
+	UPROPERTY()
 	ACharacter_Kasane* Kasane;
+	UPROPERTY()
 	UBaseAbilitySystemComponent* BaseAbilitySystemComponent;
 	TMap<FGameplayTag, FGameplayAbilitySpec> AbilitySpecs;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Combo", meta=(AllowPrivateAccess=true))
-	FComboCounter WeaponGroundCombo;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Combo", meta=(AllowPrivateAccess=true))
-	FComboCounter WeaponAerialCombo;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Combo", meta=(AllowPrivateAccess=true))
-	FComboCounter PsychGroundCombo;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Combo", meta=(AllowPrivateAccess=true))
-	FComboCounter PsychAerialCombo;
-	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Combo", meta=(AllowPrivateAccess=true))
-	int32 CurrentBackstepAttackCount;
+	bool bIsPsychComboAttacking = false;
+	FTimerHandle PsychComboResetTimerHandle;
+	float PsychComboResetLifeTime = 3.f;
 
+public:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Combo")
+	FComboCounter WeaponGroundCombo;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Combo")
+	FComboCounter WeaponAerialCombo;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Combo")
+	FComboCounter PsychGroundCombo;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Combo")
+	FComboCounter PsychAerialCombo;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Combo")
+	FComboCounter BackstepGroundCombo;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Combo")
+	FComboCounter BackstepAerialCombo;
+
+private:
+	bool bIsCharging = false;
+	bool bIsAutoCompletion = false;
+	bool bChargeAbilityAlreadyTriggered = false;
+	
 	float ActionElapsedTime;
 	float ChargeAttackThreshold = 0.3f;
+	float ChargeCompletionTime = 0.1f;
+
+	FGameplayTag LastChargeAbilityInputTag;
 	FGameplayTag LastActivatedGameplayTag;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Ability", meta=(AllowPrivateAccess=true))
-	TSubclassOf<UGameplayAbilityBase> WeaponGroundAttackAbility;
-	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Ability", meta=(AllowPrivateAccess=true))
-	TSubclassOf<UGameplayAbilityBase> WeaponAerialAttackAbility;
-	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Ability", meta=(AllowPrivateAccess=true))
-	TSubclassOf<UGameplayAbilityBase> WeaponBackstepAbility;
-	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Ability", meta=(AllowPrivateAccess=true))
-	TSubclassOf<UGameplayAbilityBase> WeaponChargeAttackAbility;
-	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Ability", meta=(AllowPrivateAccess=true))
-	TSubclassOf<UGameplayAbilityBase> PsychGroundAttackAbility;
-	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Ability", meta=(AllowPrivateAccess=true))
-	TSubclassOf<UGameplayAbilityBase> PsychAerialAttackAbility;
-	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Ability", meta=(AllowPrivateAccess=true))
-	TSubclassOf<UGameplayAbilityBase> PsychSpecialAttackAbility;
+	UDataAsset_AttackAbility* AbilityAsset;
 	
 
 public:
+	void InitKasane(ACharacter_Kasane* InKasane);
 	void GrantAttackAbilites(UAbilitySystemComponent* ASC, int32 Level = 1);
-	void TryActivateAbilityByInputTag(FGameplayTag tag);
+	void UpdateInfoByUnlock();
+
+	bool TryActivateAbilityByInputTag(FGameplayTag tag);
+	void TryActivateChargeAbility();
 	bool TryCancelAttackAbility();
 	
-	void UpdateInfoByUnlock();
-	
 	UFUNCTION()
-	void ResetAllCombo(ACharacter* Character, EMovementMode PrevMovementMode, uint8 PreviousCustomMode);
+	void OnMovementModeChange(ACharacter* Character, EMovementMode PrevMovementMode, uint8 PreviousCustomMode);
 	
-	void ResetAttackCombo();
 
-	UFUNCTION()
-	void ResetBackstepCount();
-
-	void ProcessInputAction(FGameplayTag ActionTag, ETriggerEvent TriggerEvent, const FInputActionInstance& Instance);
-	bool ShouldBlockInputAction();
+	void ProcessInputAction(FGameplayTag InputTag, ETriggerEvent TriggerEvent, const FInputActionInstance& Instance);
 
 	UFUNCTION(BlueprintCallable, Category="Combo")
 	void IncreaseCombo(UPARAM(ref) FComboCounter& ComboCounter);
 
 	FORCEINLINE FGameplayTag GetAttackType() const {return LastActivatedGameplayTag;}
+	UFUNCTION()
+	FORCEINLINE void ResetActivateAbilityTag() {LastActivatedGameplayTag = FGameplayTag();}
+
+	UFUNCTION(BlueprintCallable, Category="Combo")
+	void ResetGroundCombo();
+	
+	UFUNCTION(BlueprintCallable, Category="Combo")
+	void ResetAerialCombo();
+	
+	UFUNCTION(BlueprintCallable, Category="Combo")
+	void ResetWeaponCombo();
+
+	void StartCharging()
+	{
+		bIsCharging = true;
+		bChargeAbilityAlreadyTriggered = false;
+	};
+	void SetupChargeProperty(float CompletionTime, bool AutoCompletion = true)
+	{
+		ChargeCompletionTime = CompletionTime;
+		bIsAutoCompletion = AutoCompletion;
+	}
+
+	UFUNCTION(BlueprintCallable, Category="Combo")
+	void StartPsychComboTimer();
+
+	UFUNCTION(BlueprintCallable, Category="Combo")
+	void ClearPsychComboTimer();
+
+	UFUNCTION(BlueprintCallable, Category="Combo")
+	void StopPsychComboTimer();
+	
+	UFUNCTION(BlueprintCallable, Category="Combo", meta=(ExpandBoolAsExecs = "InCombo"))
+	void IsPsychComboAttacking(bool& InCombo) { InCombo = bIsPsychComboAttacking; }
+
+	UFUNCTION(BlueprintPure, Category="Combo")
+	FORCEINLINE bool GetIsPsychComboAttacking() const { return bIsPsychComboAttacking; }
 };

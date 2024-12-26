@@ -4,10 +4,13 @@
 #include "AbilitySystem/Ability/GA_Dodge_Player.h"
 
 #include "BaseDebugHelper.h"
+#include "BaseFunctionLibrary.h"
+#include "BaseGameplayTags.h"
 #include "AnimInstance/KasaneAnimInstance.h"
 #include "BaseType/BaseEnumType.h"
 #include "Character/BaseCharacter.h"
 #include "Character/Character_Kasane.h"
+#include "Components/ComboSystemComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 
@@ -27,6 +30,7 @@ void UGA_Dodge_Player::OnGiveAbility(const FGameplayAbilityActorInfo* ActorInfo,
 	DodgeCharacter->MovementModeChangedDelegate.AddDynamic(this, &UGA_Dodge_Player::ResetDodgeCount);
 	DodgeMovementComponent = DodgeCharacter->GetCharacterMovement();
 	check(DodgeMovementComponent);
+	OnGameplayAbilityCancelled.AddUObject(this, &UGA_Dodge_Player::OnCancelDodge);
 }
 
 bool UGA_Dodge_Player::CanActivateAbility(const FGameplayAbilitySpecHandle Handle,
@@ -124,6 +128,8 @@ void UGA_Dodge_Player::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 	EBaseDirectionType DodgeDir = EBaseDirectionType::Max;
 	GetCharacterDodgeDirection(DodgeDir);
 	PlayDodgeAnimation(DodgeDir);
+	UBaseFunctionLibrary::AddPlaygameTagToActor(DodgeCharacter, BaseGameplayTags::Shared_Status_CanMove);
+	UBaseFunctionLibrary::AddPlaygameTagToActor(DodgeCharacter, BaseGameplayTags::Player_Status_Move_Dodge);
 	if (DodgeMovementComponent->IsFalling())
 		DodgeCount++;
 }
@@ -136,6 +142,7 @@ void UGA_Dodge_Player::PlayDodgeAnimation(EBaseDirectionType Direction)
 	
 	ACharacter_Kasane* Kasane = Cast<ACharacter_Kasane>(DodgeCharacter);
 	Kasane->ActivateDash(true);
+	Kasane->GetComboSystemComponent()->ResetWeaponCombo();
 }
 
 void UGA_Dodge_Player::OnEndDodge()
@@ -145,7 +152,18 @@ void UGA_Dodge_Player::OnEndDodge()
 	Velocity.Z = 0;
 	DodgeMovementComponent->Velocity = Velocity;
 	DodgeMovementComponent->GravityScale = 3;
+	UBaseFunctionLibrary::RemovePlayGameTagFromActor(DodgeCharacter, BaseGameplayTags::Player_Status_Move_Dodge);
 	K2_EndAbility();
+}
+
+void UGA_Dodge_Player::OnCancelDodge()
+{
+	FVector Velocity = DodgeMovementComponent->Velocity;
+	Velocity /= 3.f;
+	Velocity.Z = 0;
+	DodgeMovementComponent->Velocity = Velocity;
+	DodgeMovementComponent->GravityScale = 3;
+	UBaseFunctionLibrary::RemovePlayGameTagFromActor(DodgeCharacter, BaseGameplayTags::Player_Status_Move_Dodge);
 }
 
 void UGA_Dodge_Player::ResetDodgeCount(ACharacter* Character, EMovementMode PrevMovementMode, uint8 PreviousCustomMode)

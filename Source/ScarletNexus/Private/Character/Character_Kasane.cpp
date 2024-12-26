@@ -1,4 +1,4 @@
-                                                                // Fill out your copyright notice in the Description page of Project Settings.
+// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "Character/Character_Kasane.h"
@@ -13,9 +13,14 @@
 #include "DataAsset/DataAsset_StartupBase.h"
 #include "BaseDebugHelper.h"
 #include "BaseFunctionLibrary.h"
+#include "Camera/CameraActor.h"
 #include "Components/ComboSystemComponent.h"
+#include "Components/PsychokinesisComponent.h"
+#include "Components/SphereComponent.h"
+#include "Components/TargetTrackingSpringArmComponent.h"
 #include "Components/UnlockSystemComponent.h"
-#include "Kismet/KismetMathLibrary.h"
+#include "Kismet/GameplayStatics.h"
+#include "GameFramework/RootMotionSource.h"
 
 ACharacter_Kasane::ACharacter_Kasane()
 {
@@ -26,6 +31,13 @@ ACharacter_Kasane::ACharacter_Kasane()
 	{
 		MainBody->SetSkeletalMesh(MainBodyMesh.Object);
 	}
+
+	static ConstructorHelpers::FClassFinder<UAnimInstance> MainBodyAnim(TEXT("/Game/_BP/Character/Kasane/Animation/ABP_KasaneAnimInstance.ABP_KasaneAnimInstance_C"));
+	if (MainBodyAnim.Succeeded())
+	{
+		MainBody->SetAnimInstanceClass(MainBodyAnim.Class);
+	}
+	
 
 	USkeletalMeshComponent* OutlineBody = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Outline"));
 
@@ -51,17 +63,24 @@ ACharacter_Kasane::ACharacter_Kasane()
 	bUseControllerRotationRoll = false;
 	bUseControllerRotationYaw = false;
 
-	USpringArmComponent* CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
+	CameraBoom = CreateDefaultSubobject<UTargetTrackingSpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(MainBody, FName("Waist"));
-	CameraBoom->bUsePawnControlRotation = true;
+	CameraBoom->bUsePawnControlRotation = false;
 	CameraBoom->SocketOffset = FVector(0.f, 0.f, 100.f);
 	CameraBoom->TargetArmLength = 500.f;
 	CameraBoom->bEnableCameraLag = true;
 	CameraBoom->CameraLagSpeed = 5.f;
+	CameraBoom->bEnableCameraRotationLag = true;
+	CameraBoom->CameraRotationLagSpeed = 15.f;
+	//CameraBoom->bUseCameraLagSubstepping = true;
 
-	UCameraComponent* MainCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("MainCamera"));
+	MainCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("MainCamera"));
 	MainCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	MainCamera->bUsePawnControlRotation = false;
+
+	ComboDirectCameraActor = CreateDefaultSubobject<UChildActorComponent>(TEXT("ComboDirectCameraActor"));
+	ComboDirectCameraActor->SetChildActorClass(ACameraActor::StaticClass());
+	ComboDirectCameraActor->SetupAttachment(MainBody, FName("CameraPos"));
 
 	UCharacterMovementComponent* Movement = GetCharacterMovement();
 	Movement->bOrientRotationToMovement = true;
@@ -81,6 +100,27 @@ ACharacter_Kasane::ACharacter_Kasane()
 	MovementModeChangedDelegate.AddDynamic(this, &ACharacter_Kasane::OnFalling);
 	GetMesh()->SetAllowAnimCurveEvaluation(true);
 
+	PsychBoundary = CreateDefaultSubobject<USphereComponent>(TEXT("PsychBoundary"));
+	PsychBoundary->SetupAttachment(RootComponent);
+	PsychBoundary->InitSphereRadius(1500.f);
+	PsychokinesisComponent = CreateDefaultSubobject<UPsychokinesisComponent>(TEXT("PsychokinesisComponent"));
+	USkeletalMeshComponent* PsychObject = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("PsychObject"));
+	//PsychObject->SetRelativeRotation(FRotator(0.f, -90.f, 0.f));
+	PsychObject->SetupAttachment(GetMesh());
+	static ConstructorHelpers::FObjectFinder<USkeletalMesh> PsychObjectAsset(TEXT("/Game/Resources/Psychokinesis/Common/AS_Psy_Common.AS_Psy_Common"));
+	if (PsychObjectAsset.Succeeded())
+	{
+		PsychObject->SetSkeletalMesh(PsychObjectAsset.Object);
+		PsychObject->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		PsychObject->SetHiddenInGame(true);
+	}
+	static ConstructorHelpers::FClassFinder<UAnimInstance> PsychObjectAnimAsset(TEXT("/Game/_BP/Character/Kasane/PsychAnimation/ABP_Psych.ABP_Psych_C"));
+	if (PsychObjectAnimAsset.Succeeded())
+	{
+		PsychObject->SetAnimInstanceClass(PsychObjectAnimAsset.Class);
+	}
+	PsychokinesisComponent->InitComponents(PsychBoundary, PsychObject);
+	
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh> WeaponMesh(TEXT("/Game/Resources/Weapons/WP0200/WP200_Base.WP200_Base"));
 	if (WeaponMesh.Succeeded())
 	{
@@ -107,6 +147,7 @@ void ACharacter_Kasane::PossessedBy(AController* NewController)
 
 	if (ComboSystemComponent)
 	{
+		ComboSystemComponent->InitKasane(this);
 		ComboSystemComponent->GrantAttackAbilites(BaseAbilitySystemComponent);
 	}
 }
@@ -131,6 +172,7 @@ void ACharacter_Kasane::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	InputComp->BindNativeInputAction(InputConfig, BaseGameplayTags::InputTag_Move, ETriggerEvent::Triggered, this, &ACharacter_Kasane::UpdateMovementElapsedTime);
 	InputComp->BindNativeInputAction(InputConfig, BaseGameplayTags::InputTag_Move, ETriggerEvent::Completed, this, &ACharacter_Kasane::ResetMovementElapsedTime);
 	InputComp->BindNativeInputAction(InputConfig, BaseGameplayTags::InputTag_Look, ETriggerEvent::Triggered, this, &ACharacter_Kasane::OnInputLookTriggered);
+	InputComp->BindNativeInputAction(InputConfig, BaseGameplayTags::InputTag_Targeting_Toggle, ETriggerEvent::Triggered, this, &ACharacter_Kasane::OnTargetingInputTriggered);
 	InputComp->BindAbilityInputAction(InputConfig, this, &ACharacter_Kasane::OnAbilityInputTriggered);
 	InputComp->BindDirectionInput(DirectionInputConfig, this, &ACharacter_Kasane::PushInput);
 	InputComp->BindActionInstanceWithTag(InputConfig, this);
@@ -151,9 +193,11 @@ void ACharacter_Kasane::OnInputMoveTriggered(const FInputActionValue& Value)
 	{
 		AddMovementInput(RightDirection, MovementVector.Y);
 	}
-	if (ComboSystemComponent->TryCancelAttackAbility())
+
+	if (UBaseFunctionLibrary::NativeActorHasTag(this, BaseGameplayTags::Shared_Status_CanMove))
 	{
-		//GetCharacterMovement()->Velocity = GetCharacterMovement()->MaxWalkSpeed * (ForwardDirection + RightDirection);
+		ComboSystemComponent->TryCancelAttackAbility();
+		ComboSystemComponent->ResetWeaponCombo();
 	}
 }
 
@@ -169,11 +213,22 @@ void ACharacter_Kasane::OnInputLookTriggered(const FInputActionValue& Value)
 	{
 		AddControllerPitchInput(LookAxisVector.Y);
 	}
+	CameraBoom->StartResetTimer();
 }
+
+void ACharacter_Kasane::OnTargetingInputTriggered(const FInputActionValue& Value)
+{
+	TArray<AActor*> TargetActors;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ACharacter::StaticClass(), TargetActors);
+	TargetActors.Remove(this);
+	CameraBoom->SetFoundTargets(TargetActors);
+	CameraBoom->ToggleTargetTracking();
+}
+
 
 void ACharacter_Kasane::OnAbilityInputTriggered(FGameplayTag InputTag)
 {
-	if (UBaseFunctionLibrary::NativeActorHasTag(this, BaseGameplayTags::Shared_Event_Combo) == false) return;
+	if (UBaseFunctionLibrary::NativeActorHasTag(this, BaseGameplayTags::Shared_Status_CanAttack) == false) return;
 	//ComboSystemComponent->TryCancelAttackAbility();
 	BaseAbilitySystemComponent->OnAbilityInputTriggered(InputTag);
 }
@@ -210,7 +265,6 @@ void ACharacter_Kasane::OnFalling(ACharacter* Character, EMovementMode PrevMovem
 
 void ACharacter_Kasane::PushInput(EBaseDirectionType Direction)
 {
-	GetWorldTimerManager().ClearTimer(DodgeThresholdTimer);
 	switch (Direction)
 	{
 		case EBaseDirectionType::Left:
