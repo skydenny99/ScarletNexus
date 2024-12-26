@@ -5,14 +5,21 @@
 #include "Components/Image.h"
 #include "Components/TextBlock.h"
 #include "kismet/KismetMaterialLibrary.h"
+#include "components/UI/PlayerUIComponent.h"
 
-void UAnnouncerBGBase::UpdateFace(UMaterial* Face)
+void UAnnouncerBGBase::UpdateAnnounce(UMaterial* Face, const FString InputText)
 {
+	//Face
 	MaterialInstance = UKismetMaterialLibrary::CreateDynamicMaterialInstance(GetWorld(),Face);
 	IMG_Face->SetBrushFromMaterial(MaterialInstance);
+	
+	//Text
+	T_Announce->SetText(FText::FromString(InputText));
 }
 
-void UAnnouncerBGBase::UpdateAnnounce(const FString InputText)
+void UAnnouncerBGBase::OnOwningPlayerUIComponentInitialized(UPlayerUIComponent* PlayerUIComponent) const
 {
-	T_Announce->SetText(FText::FromString(InputText));
+	Super::OnOwningPlayerUIComponentInitialized(PlayerUIComponent);
+
+	PlayerUIComponent->OnUpdateAnnounce.AddDynamic(this,&UAnnouncerBGBase::UpdateAnnounce);
 }

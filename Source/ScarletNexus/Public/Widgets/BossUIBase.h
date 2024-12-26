@@ -32,7 +32,7 @@ protected:
 	UMaterial* HpMaterial;
 
 	UPROPERTY(EditDefaultsOnly)
-	UMaterial* StunMaterial;
+	UMaterial* BrainCrashMaterial;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	TArray<UPaperSprite*> DebuffMaterial;
@@ -41,13 +41,13 @@ protected:
 	UMaterialInstanceDynamic* HpDynamicMaterialInstance;
 
 	UPROPERTY()
-	UMaterialInstanceDynamic* StunDynamicMaterialInstance;
+	UMaterialInstanceDynamic* BrainCrashDynamicMaterialInstance;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UImage* Boss_HealthGauge;
 	
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UImage* Boss_StunGauge;
+	class UImage* Boss_BrainCrashGauge;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UImage* Boss_Debuff_Icon;
@@ -66,7 +66,10 @@ public:
 	void UpdateHp(const float TopProgress, const float DeltaSec);
 
 	UFUNCTION(BlueprintCallable)
-	void UpdateStunGauge(const float Value);
+	void UpdateBrainCrashGauge(const float Value);
+
+	UFUNCTION()
+	void OnOwningEnemyUIComponentInitialized(UEnemyUIComponent* EnemyUIComponent) const override;
 	
 	UFUNCTION()
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;

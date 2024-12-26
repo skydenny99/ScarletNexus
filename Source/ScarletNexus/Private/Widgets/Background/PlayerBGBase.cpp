@@ -6,6 +6,7 @@
 #include "Components/TextBlock.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Kismet/KismetTextLibrary.h"
+#include "Components/UI/PlayerUIComponent.h"
 
 void UPlayerBGBase::NativeOnInitialized()
 {
@@ -28,4 +29,13 @@ void UPlayerBGBase::Init(const FString& Name, const float HpMax)
 	T_PlayerName->SetText(FText::FromString(Name));
 	T_HealthPoint->SetText(FText::FromString(FString::FromInt(HpMax)));
 	T_HealthPoint_Max->SetText(FText::FromString(FString::FromInt(HpMax)));
+}
+
+void UPlayerBGBase::OnOwningPlayerUIComponentInitialized(UPlayerUIComponent* PlayerUIComponent) const
+{
+	Super::OnOwningPlayerUIComponentInitialized(PlayerUIComponent);
+
+	PlayerUIComponent->OnDebuffChanged.AddDynamic(this,&UPlayerBGBase::UpdateDebuff);
+	PlayerUIComponent->OnInitPlayer.AddDynamic(this,&UPlayerBGBase::Init);
+	PlayerUIComponent->OnPlayerHpChanged.AddDynamic(this,&UPlayerBGBase::UpdateHp);
 }

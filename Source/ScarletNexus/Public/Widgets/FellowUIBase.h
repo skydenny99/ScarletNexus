@@ -57,6 +57,9 @@ public:
 	UFUNCTION()
 	void UpdateLeftHp(const float TopProgress,const float DeltaSec);
 
+	UFUNCTION()
+	void OnOwningPlayerUIComponentInitialized(UPlayerUIComponent* PlayerUIComponent) const override;
+
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
 };

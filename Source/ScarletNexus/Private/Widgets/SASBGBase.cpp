@@ -2,7 +2,7 @@
 
 
 #include "Widgets/SASBGBase.h"
-
+#include "Components/UI/PlayerUIComponent.h"
 #include "Components/Image.h"
 
 void USASBGBase::OnToggleCtrl()
@@ -54,4 +54,13 @@ void USASBGBase::OnToggleSwitch()
 		SwitchLight->SetRenderTranslation(FVector2D(-37.0f,0.0f));
 	}
 	
+}
+
+void USASBGBase::OnOwningPlayerUIComponentInitialized(UPlayerUIComponent* PlayerUIComponent) const
+{
+	Super::OnOwningPlayerUIComponentInitialized(PlayerUIComponent);
+
+	PlayerUIComponent->OnCtrlKeyDown.AddDynamic(this,&USASBGBase::OnToggleCtrl);
+	PlayerUIComponent->OnAltKeyDown.AddDynamic(this,&USASBGBase::OnToggleAlt);
+	PlayerUIComponent->OnXKeyDown.AddDynamic(this,&USASBGBase::OnToggleSwitch);
 }

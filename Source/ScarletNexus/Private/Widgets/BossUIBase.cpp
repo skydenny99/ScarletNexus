@@ -5,6 +5,7 @@
 #include "Kismet/KismetMaterialLibrary.h"
 #include "Components/Image.h"
 #include "Styling/SlateBrush.h"
+#include "Components/UI/EnemyUIComponent.h"
 
 void UBossUIBase::NativeConstruct()
 {
@@ -14,9 +15,9 @@ void UBossUIBase::NativeConstruct()
 	Boss_HealthGauge->SetBrushFromMaterial(HpDynamicMaterialInstance);
 	HpDynamicMaterialInstance->SetScalarParameterValue("TopProgress",1.0f);
 	
-	StunDynamicMaterialInstance = UKismetMaterialLibrary::CreateDynamicMaterialInstance(GetWorld(), StunMaterial);
-	Boss_StunGauge->SetBrushFromMaterial(StunDynamicMaterialInstance);
-	StunDynamicMaterialInstance->SetScalarParameterValue("Percent",1.0f);
+	BrainCrashDynamicMaterialInstance = UKismetMaterialLibrary::CreateDynamicMaterialInstance(GetWorld(), BrainCrashMaterial);
+	Boss_BrainCrashGauge->SetBrushFromMaterial(BrainCrashDynamicMaterialInstance);
+	BrainCrashDynamicMaterialInstance->SetScalarParameterValue("Percent",1.0f);
 	
 	Boss_Debuff_Icon->SetVisibility(ESlateVisibility::Hidden);
 
@@ -30,7 +31,7 @@ void UBossUIBase::NativeConstruct()
 void UBossUIBase::OnDamaged(const float SetPercent)
 {
 	Percent = SetPercent;
-	UE_LOG(LogTemp, Warning, TEXT("percent : %f"),Percent);
+	//UE_LOG(LogTemp, Warning, TEXT("percent : %f"),Percent);
 	bIsActive = true;
 }
 
@@ -60,8 +61,16 @@ inline void UBossUIBase::NativeTick(const FGeometry& MyGeometry, float InDeltaTi
 	UpdateHp(Percent, InDeltaTime);
 }
 
-void UBossUIBase::UpdateStunGauge(const float Value)
+void UBossUIBase::UpdateBrainCrashGauge(const float Value)
 {
-	StunDynamicMaterialInstance->SetScalarParameterValue("Percent",Value);
+	BrainCrashDynamicMaterialInstance->SetScalarParameterValue("Percent",Value);
+}
+
+void UBossUIBase::OnOwningEnemyUIComponentInitialized(UEnemyUIComponent* EnemyUIComponent) const
+{
+	Super::OnOwningEnemyUIComponentInitialized(EnemyUIComponent);
+
+	EnemyUIComponent->OnCurrentHpChanged.AddDynamic(this,&UBossUIBase::OnDamaged);
+	EnemyUIComponent->OnBrainCrashChanged.AddDynamic(this,&UBossUIBase::UpdateBrainCrashGauge);
 }
 

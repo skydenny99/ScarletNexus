@@ -6,6 +6,7 @@
 #include "Components/Image.h"
 #include "Kismet/KismetMaterialLibrary.h"
 #include "Widgets/BossUIBase.h"
+#include "Components/UI/PlayerUIComponent.h"
 
 void USASUIBase::InitTopGauge(const FColor Color, const float Percent)
 {
@@ -61,6 +62,21 @@ void USASUIBase::UpdateRightGauge(const float Percent)
 void USASUIBase::UpdateBottomGauge(const float Percent)
 {
 	SAS_B_Dynamic->SetScalarParameterValue("Percent",Percent);
+}
+
+void USASUIBase::OnOwningPlayerUIComponentInitialized(UPlayerUIComponent* PlayerUIComponent) const
+{
+	Super::OnOwningPlayerUIComponentInitialized(PlayerUIComponent);
+
+	PlayerUIComponent->OnInitSASSimbol.AddDynamic(this,&USASUIBase::InitSprite);
+	PlayerUIComponent->OnInitTopGauge.AddDynamic(this,&USASUIBase::InitTopGauge);
+	PlayerUIComponent->OnInitLeftGauge.AddDynamic(this,&USASUIBase::InitLeftGauge);
+	PlayerUIComponent->OnInitRightGauge.AddDynamic(this,&USASUIBase::InitRightGauge);
+	PlayerUIComponent->OnInitBottomGauge.AddDynamic(this,&USASUIBase::InitBottomGauge);
+	PlayerUIComponent->OnUpdateSASTopGauge.AddDynamic(this,&USASUIBase::UpdateTopGauge);
+	PlayerUIComponent->OnUpdateSASLeftGauge.AddDynamic(this,&USASUIBase::UpdateLeftGauge);
+	PlayerUIComponent->OnUpdateSASRightGauge.AddDynamic(this,&USASUIBase::UpdateRightGauge);
+	PlayerUIComponent->OnUpdateSASBottomGauge.AddDynamic(this,&USASUIBase::UpdateBottomGauge);
 }
 
 

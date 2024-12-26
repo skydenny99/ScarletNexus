@@ -62,5 +62,8 @@ public:
 	UFUNCTION()
 	void UpdateHealthGauge(const float TopProgress, const float DeltaSec);
 
+	UFUNCTION()
+	void OnOwningEnemyUIComponentInitialized(UEnemyUIComponent* EnemyUIComponent) const override;
+	
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 };

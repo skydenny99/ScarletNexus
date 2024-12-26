@@ -23,4 +23,7 @@ protected:
 public:
 	UFUNCTION(BlueprintCallable)
 	void InitBossName(const FString Name);
+	
+	UFUNCTION()
+	void OnOwningPlayerUIComponentInitialized(UPlayerUIComponent* PlayerUIComponent) const override;
 };

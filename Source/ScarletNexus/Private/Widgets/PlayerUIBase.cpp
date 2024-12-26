@@ -4,6 +4,7 @@
 #include "Widgets/PlayerUIBase.h"
 #include "Kismet/KismetMaterialLibrary.h"
 #include "Components/Image.h"
+#include "Components/UI/PlayerUIComponent.h"
 
 void UPlayerUIBase::NativeConstruct()
 {
@@ -67,6 +68,14 @@ void UPlayerUIBase::UpdatePsych(const float TopProgress, const float DeltaSec)
 	{
 		bIsActive = false;
 	}
+}
+
+void UPlayerUIBase::OnOwningPlayerUIComponentInitialized(UPlayerUIComponent* PlayerUIComponent) const
+{
+	Super::OnOwningPlayerUIComponentInitialized(PlayerUIComponent);
+
+	PlayerUIComponent->OnCurrentHpChanged.AddDynamic(this,&UPlayerUIBase::OnDamaged);
+	PlayerUIComponent->OnPsychPercentChanged.AddDynamic(this,&UPlayerUIBase::SetPsychkinesis);
 }
 
 void UPlayerUIBase::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)

@@ -44,5 +44,8 @@ public:
 	virtual void NativeOnInitialized() override;
 
 	UFUNCTION(BlueprintCallable)
-	void UpdateGauge(const FConsumItemInfo& Item);
+	void UpdateGauge(const FConsumItemInfo Item);
+
+	UFUNCTION()
+	virtual void OnOwningPlayerUIComponentInitialized(UPlayerUIComponent* PlayerUIComponent) const override;
 };

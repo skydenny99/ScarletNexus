@@ -64,5 +64,8 @@ public:
 	UFUNCTION()
 	void UpdatePsych(const float TopProgress,const float DeltaSec);
 
+	UFUNCTION()
+	virtual void OnOwningPlayerUIComponentInitialized(UPlayerUIComponent* PlayerUIComponent) const override;
+
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 };

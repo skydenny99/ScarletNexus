@@ -44,5 +44,8 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void UpdateFellowRightHp(const float RightHp);
+
+	UFUNCTION()
+	void OnOwningPlayerUIComponentInitialized(UPlayerUIComponent* PlayerUIComponent) const override;
 	
 };

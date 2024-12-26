@@ -2,10 +2,9 @@
 
 
 #include "Widgets/ItemUIBase.h"
-
-#include "ToolContextInterfaces.h"
 #include "Components/Image.h"
 #include "Basetype/BaseStructType.h"
+#include "Components/UI/PlayerUIComponent.h"
 #include "Kismet/KismetMaterialLibrary.h"
 
 void UItemUIBase::NativeOnInitialized()
@@ -19,7 +18,7 @@ void UItemUIBase::NativeOnInitialized()
 	GaugeMaterialInstance->SetScalarParameterValue("Progress", 1.0f);
 }
 
-void UItemUIBase::UpdateGauge(const FConsumItemInfo& Item)
+void UItemUIBase::UpdateGauge(const FConsumItemInfo Item)
 {
 	GaugeMaterialInstance->SetVectorParameterValue("Color",Item.Color);
 	GaugeMaterialInstance->SetScalarParameterValue("Percent",Item.Percentage);
@@ -32,3 +31,9 @@ void UItemUIBase::UpdateGauge(const FConsumItemInfo& Item)
 	}
 }
 
+void UItemUIBase::OnOwningPlayerUIComponentInitialized(UPlayerUIComponent* PlayerUIComponent) const
+{
+	Super::OnOwningPlayerUIComponentInitialized(PlayerUIComponent);
+
+	PlayerUIComponent->OnCurrentItemChanged.AddDynamic(this,&UItemUIBase::UpdateGauge);
+}

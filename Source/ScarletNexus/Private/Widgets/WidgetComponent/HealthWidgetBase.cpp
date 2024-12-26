@@ -6,6 +6,7 @@
 #include "AssetRegistry/IAssetRegistry.h"
 #include "Kismet/KismetMaterialLibrary.h"
 #include "Components/Image.h"
+#include "Components/UI/EnemyUIComponent.h"
 
 
 void UHealthWidgetBase::NativeConstruct()
@@ -51,6 +52,15 @@ void UHealthWidgetBase::UpdateHealthGauge(const float TopProgress, const float D
 	{
 		bIsActive = false;
 	}
+}
+
+void UHealthWidgetBase::OnOwningEnemyUIComponentInitialized(UEnemyUIComponent* EnemyUIComponent) const
+{
+	Super::OnOwningEnemyUIComponentInitialized(EnemyUIComponent);
+
+	EnemyUIComponent->OnCurrentHpChanged.AddDynamic(this,&UHealthWidgetBase::SetHealthGauge);
+	EnemyUIComponent->OnBrainCrashChanged.AddDynamic(this,&UHealthWidgetBase::UpdateBrainCrashGauge);
+	EnemyUIComponent->OnDebuffChanged.AddDynamic(this,&UHealthWidgetBase::UpdateDebuff);
 }
 
 void UHealthWidgetBase::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)

@@ -2,7 +2,7 @@
 
 
 #include "Widgets/Background/FellowBGBase.h"
-
+#include "Components/UI/PlayerUIComponent.h"
 #include "Components/TextBlock.h"
 
 void UFellowBGBase::Init(const FString LName, const float LeftFellowHp, const FString RName, const float RightFellowHp)
@@ -24,4 +24,13 @@ void UFellowBGBase::UpdateFellowLeftHp(const float LeftHp)
 void UFellowBGBase::UpdateFellowRightHp(const float RightHp)
 {
 	T_RHealthPoint->SetText(FText::FromString(FString::FromInt(static_cast<int>(RightHp))));
+}
+
+void UFellowBGBase::OnOwningPlayerUIComponentInitialized(UPlayerUIComponent* PlayerUIComponent) const
+{
+	Super::OnOwningPlayerUIComponentInitialized(PlayerUIComponent);
+
+	PlayerUIComponent->OnFellowInit.AddDynamic(this,&UFellowBGBase::Init);
+	PlayerUIComponent->OnUpdateFellowLeftHp.AddDynamic(this,&UFellowBGBase::UpdateFellowLeftHp);
+	PlayerUIComponent->OnUpdateFellowRightHp.AddDynamic(this,&UFellowBGBase::UpdateFellowRightHp);
 }

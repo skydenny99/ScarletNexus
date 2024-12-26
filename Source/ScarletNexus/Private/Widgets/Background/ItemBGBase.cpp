@@ -8,6 +8,7 @@
 #include "Kismet/KismetMaterialLibrary.h"
 #include "Styling/SlateBrush.h"
 #include "PaperSpriteBlueprintLibrary.h"
+#include "Components/UI/PlayerUIComponent.h"
 
 void UItemBGBase::NativeConstruct()
 {
@@ -24,7 +25,7 @@ int UItemBGBase::Side(const int Index,const int Lenght, const bool bIsLeft)
 	return bIsLeft ? (Index-1 + Lenght) % Lenght : (Index+1 + Lenght) % Lenght;
 }
 
-void UItemBGBase::UpdateBefore(const TArray<FConsumItemInfo>& Items, const int32 Middle, const bool bIsLeft)
+void UItemBGBase::UpdateBefore(const TArray<FConsumItemInfo>& Items, int32 Middle,bool bIsLeft)
 {
 	const int Index = Side(Middle,Items.Num(),bIsLeft);
 
@@ -48,7 +49,7 @@ void UItemBGBase::UpdateBefore(const TArray<FConsumItemInfo>& Items, const int32
 	}
 }
 
-void UItemBGBase::UpdateAfter(const TArray<FConsumItemInfo>& Items, const int32 Middle)
+void UItemBGBase::UpdateAfter(const TArray<FConsumItemInfo>& Items, int32 Middle)
 {
 	LeftMaterialInstance = UKismetMaterialLibrary::CreateDynamicMaterialInstance(GetWorld(),Items[Side(Middle,Items.Num(),true)].ItemMaterial);
 	MiddleMaterialInstance = UKismetMaterialLibrary::CreateDynamicMaterialInstance(GetWorld(),Items[Middle].ItemMaterial);
@@ -59,7 +60,7 @@ void UItemBGBase::UpdateAfter(const TArray<FConsumItemInfo>& Items, const int32 
 	Glow->SetOpacity(0.1f);
 }
 
-void UItemBGBase::Init(const TArray<FConsumItemInfo>& Items, const int32 Middle)
+void UItemBGBase::Init(const TArray<FConsumItemInfo>& Items, int32 Middle)
 {
 	const int Index = Side(Middle,Items.Num(),true);
 
@@ -76,4 +77,13 @@ void UItemBGBase::Init(const TArray<FConsumItemInfo>& Items, const int32 Middle)
 	Glow->SetColorAndOpacity(Items[Middle].Color);
 	T_ItemName->SetText(FText::FromName(Items[Middle].Name));
 	Glow->SetOpacity(0.1f);
+}
+
+void UItemBGBase::OnOwningPlayerUIComponentInitialized(UPlayerUIComponent* PlayerUIComponent) const
+{
+	Super::OnOwningPlayerUIComponentInitialized(PlayerUIComponent);
+
+	PlayerUIComponent->OnItemInit.AddDynamic(this,&UItemBGBase::Init);
+	PlayerUIComponent->OnUpdateAfter.AddDynamic(this,&UItemBGBase::UpdateAfter);
+	PlayerUIComponent->OnUpdateBefore.AddDynamic(this,&UItemBGBase::UpdateBefore);
 }

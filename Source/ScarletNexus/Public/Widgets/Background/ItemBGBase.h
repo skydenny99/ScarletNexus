@@ -78,11 +78,14 @@ public:
 	static int32 Side (const int Index,const int Lenght,const bool bIsLeft);
 
 	UFUNCTION(BlueprintCallable)
-	void UpdateBefore(const TArray<FConsumItemInfo>& Items, const int32 Middle, const bool bIsLeft);
+	void UpdateBefore(const TArray<FConsumItemInfo>& Items, int32 Middle,bool bIsLeft);
 
 	UFUNCTION(BlueprintCallable)
-	void UpdateAfter(const TArray<FConsumItemInfo>& Items, const int32 Middle);
+	void UpdateAfter(const TArray<FConsumItemInfo>& Items, int32 Middle);
 
 	UFUNCTION(BlueprintCallable)
-	void Init(const TArray<FConsumItemInfo>& Items, const int32 Middle);
+	void Init(const TArray<FConsumItemInfo>& Items, int32 Middle);
+
+	UFUNCTION()
+	void OnOwningPlayerUIComponentInitialized(UPlayerUIComponent* PlayerUIComponent) const override;
 };

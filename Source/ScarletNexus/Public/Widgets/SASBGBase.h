@@ -56,4 +56,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void OnToggleSwitch();
+
+	UFUNCTION()
+	void OnOwningPlayerUIComponentInitialized(UPlayerUIComponent* PlayerUIComponent) const override;
 };

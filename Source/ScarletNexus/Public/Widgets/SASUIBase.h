@@ -104,5 +104,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void UpdateBottomGauge(const float Percent);
 
+	UFUNCTION()
+	void OnOwningPlayerUIComponentInitialized(UPlayerUIComponent* PlayerUIComponent) const override;
 	//TODO void SwitchSAS();
 };

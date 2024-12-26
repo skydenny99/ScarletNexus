@@ -40,6 +40,9 @@ public:
 	
 	UFUNCTION(BlueprintCallable)
 	void UpdateHp(float HealthPoint);
+
+	UFUNCTION()
+	void OnOwningPlayerUIComponentInitialized(UPlayerUIComponent* PlayerUIComponent) const override;
 };
 
 

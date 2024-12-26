@@ -4,6 +4,7 @@
 #include "Widgets/FellowUIBase.h"
 #include "Components/Image.h"
 #include "Kismet/KismetMaterialLibrary.h"
+#include "Components/UI/PlayerUIComponent.h"
 
 void UFellowUIBase::NativeConstruct()
 {
@@ -67,6 +68,14 @@ void UFellowUIBase::UpdateLeftHp(const float TopProgress, const float DeltaSec)
 	{
 		bIsActive = false;
 	}
+}
+
+void UFellowUIBase::OnOwningPlayerUIComponentInitialized(UPlayerUIComponent* PlayerUIComponent) const
+{
+	Super::OnOwningPlayerUIComponentInitialized(PlayerUIComponent);
+
+	PlayerUIComponent->OnUpdateFellowLeftHpPercent.AddDynamic(this,&UFellowUIBase::OnDamagedLFellow);
+	PlayerUIComponent->OnUpdateFellowRightHpPercent.AddDynamic(this,&UFellowUIBase::OnDamagedRFellow);
 }
 
 void UFellowUIBase::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)

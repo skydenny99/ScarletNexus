@@ -35,8 +35,8 @@ protected:
 
 public:
 	UFUNCTION(BlueprintCallable)
-	void UpdateFace(UMaterial* Face);
+	void UpdateAnnounce(UMaterial* Face, const FString InputText);
 
-	UFUNCTION(BlueprintCallable)
-	void UpdateAnnounce(const FString InputText);
+	UFUNCTION()
+	void OnOwningPlayerUIComponentInitialized(UPlayerUIComponent* PlayerUIComponent) const override;
 };
