@@ -262,7 +262,6 @@ void UComboSystemComponent::ResetWeaponCombo()
 
 void UComboSystemComponent::StartPsychComboTimer()
 {
-	ClearPsychComboTimer();
 	bIsPsychComboAttacking = true;
 	FTimerDelegate timerDelegate;
 	timerDelegate.BindLambda([this]()

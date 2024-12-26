@@ -265,7 +265,6 @@ void ACharacter_Kasane::OnFalling(ACharacter* Character, EMovementMode PrevMovem
 
 void ACharacter_Kasane::PushInput(EBaseDirectionType Direction)
 {
-	GetWorldTimerManager().ClearTimer(DodgeThresholdTimer);
 	switch (Direction)
 	{
 		case EBaseDirectionType::Left:
