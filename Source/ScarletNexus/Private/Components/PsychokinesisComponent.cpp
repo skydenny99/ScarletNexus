@@ -33,7 +33,7 @@ void UPsychokinesisComponent::UpdateNearestPsychTarget()
 
 	APsychokineticPropBase* NearestPsychTarget = nullptr;
 	float CharacterDotProduct = -1;
-	float MinDistanceSquared = INFINITY;
+	float MinDistanceSquared = std::numeric_limits<float>::infinity();
 	for (auto Candidate : PsychTargetCandidates)
 	{
 		if (Candidate->IsValidLowLevel() == false) continue;
