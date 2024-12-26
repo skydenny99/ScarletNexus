@@ -75,6 +75,10 @@ void UPsychokinesisComponent::OnUsePsychProp(APsychokineticPropBase* UsedPsychPr
 	{
 		PsychTargetCandidates.Remove(UsedPsychProp);
 		bBlockUpdate = false;
+		if (UsedPsychProp == PsychTarget)
+		{
+			PsychTarget = nullptr;
+		}
 		UpdateNearestPsychTarget();
 		//Debug::Print("PsychokinesisComponent::OnUsePsychProp");
 	}
