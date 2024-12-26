@@ -62,6 +62,10 @@ void UEnemyAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectM
 		{
 			UBaseFunctionLibrary::AddPlaygameTagToActor(Data.Target.GetAvatarActor(), BaseGameplayTags::Shared_State_Dead);
 			UBaseFunctionLibrary::NativeGetAbilitySystemComponentFromActor(Data.Target.GetAvatarActor())->TryActivateAbilityByTag(BaseGameplayTags::Shared_Ability_Dead);
+
+			// 델리게이트 
+			OnCurrentHpPercentChanged.Broadcast(GetCurrentHp() / GetMaxHp());
+			OnCurrentHpValueChanged.Broadcast(GetCurrentHp());
 		}
 
 		//  Check Death
