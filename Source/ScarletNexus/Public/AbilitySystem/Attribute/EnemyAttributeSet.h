@@ -66,4 +66,7 @@ class SCARLETNEXUS_API UEnemyAttributeSet : public UBaseAttributeSet
 
 
 	
+	
+
+	
 };

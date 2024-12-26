@@ -80,7 +80,7 @@ void AProjectileBase::OnProjectileHit(UPrimitiveComponent* HitComponent, AActor*
 
 	APawn* HitPawn = Cast<APawn>(OtherActor);
 
-	if (HitPawn == nullptr)
+	if (!HitPawn)
 	{
 		Destroy();
 		return;
@@ -90,7 +90,7 @@ void AProjectileBase::OnProjectileHit(UPrimitiveComponent* HitComponent, AActor*
 	FGameplayEventData Data;
 	Data.Instigator = this;
 	Data.Target = HitPawn;
-
+	
 	Debug::Print(GetName() + TEXT(" Projectile Hit Pawn ") + HitPawn->GetName(), FColor::Black);
 	Debug::Print(GetName() + TEXT(" Projectile Hit Pawn ") + HitPawn->GetName(), FColor::Green);
 	

@@ -50,5 +50,8 @@ protected:
 	FORCEINLINE UEnemyCombatComponent* GetEnemyCombatComponent() const { return EnemyCombatComponent; }
 
 	virtual UPawnCombatComponent* GetPawnCombatComponent() const override;
+
+
+	FVector GetTargetVector() const;
 	
 };

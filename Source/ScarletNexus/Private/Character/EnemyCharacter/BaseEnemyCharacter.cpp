@@ -37,3 +37,10 @@ UPawnCombatComponent* ABaseEnemyCharacter::GetPawnCombatComponent() const
 {
 	return EnemyCombatComponent;
 }
+
+FVector ABaseEnemyCharacter::GetTargetVector() const
+{
+	FVector TargetVector = MainBody->GetBoneLocation("Target");
+	return TargetVector;
+}
+

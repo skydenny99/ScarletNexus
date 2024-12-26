@@ -197,11 +197,19 @@ namespace BaseGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(Enemy_Boss_Ability_Attack_Jump, "Enemy.Boss.Ability.Attack.Jump");
 	
 	UE_DEFINE_GAMEPLAY_TAG(Enemy_Boss_Ability_Move_BackRun, "Enemy.Boss.Ability.Move.BackRun");
+
+	
+	UE_DEFINE_GAMEPLAY_TAG(Enemy_Boss_Ability_HitReact_SequenceHit, "Enemy.Boss.Ability.HitReact.SequenceHit");
 	
 	UE_DEFINE_GAMEPLAY_TAG(Enemy_Boss_Ability_JumpAble, "Enemy.Boss.Ability.JumpAble");
 
 	
 	UE_DEFINE_GAMEPLAY_TAG(Enemy_Boss_Weapon_Boss, "Enemy.Boss.Weapon.Boss");
+
+
+	// Boss State
+	UE_DEFINE_GAMEPLAY_TAG(Enemy_Boss_State_SequenceAble, "Enemy.Boss.State.SequenceAble");
+	UE_DEFINE_GAMEPLAY_TAG(Enemy_Boss_State_2Phase, "Enemy.Boss.State.2Phase");
 
 
 

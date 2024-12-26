@@ -23,7 +23,7 @@ class SCARLETNEXUS_API UEnemyGameplayAbility : public UGameplayAbilityBase
 	UFUNCTION(BlueprintPure, Category = "Ability")
 	FGameplayEffectSpecHandle MakeEnemyDamageEffectSpecHandle(TSubclassOf<UGameplayEffect> Effect, const FScalableFloat& DamageFloat);
 	
-	
+	// FAnimInstance
 
 	private:
 	TWeakObjectPtr<ABaseEnemyCharacter> CachedEnemyCharacter;

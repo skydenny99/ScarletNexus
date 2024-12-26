@@ -8,7 +8,7 @@
 
 UBaseAttributeSet::UBaseAttributeSet()
 {
-	Debug::Print(TEXT("Base InitAttribute"));
+	// Debug::Print(TEXT("Base InitAttribute"));
 }
 
 void UBaseAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data)

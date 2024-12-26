@@ -8,6 +8,8 @@
 
 #include "BaseAttributeSet.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPercentChangeDelegate, float, NewPercent);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnValueChangeDelegate, float, NewPercent);
 
 
 /**
@@ -21,6 +23,21 @@ class SCARLETNEXUS_API UBaseAttributeSet : public UAttributeSet
 	UBaseAttributeSet();
 
 	virtual void PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data) override;
+
+	// 델리게이트
+	// HP
+	UPROPERTY(BlueprintAssignable)
+	FOnPercentChangeDelegate OnCurrentHpPercentChanged;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnValueChangeDelegate OnCurrentHpValueChanged;
+
+	// BrainCrush Gauge
+	UPROPERTY(BlueprintAssignable)
+	FOnPercentChangeDelegate OnCurrentBrainCrushGaugePercentChanged;
+	
+	UPROPERTY(BlueprintAssignable)
+	FOnValueChangeDelegate OnCurrentBrainCrushGaugeValueChanged;
 
 	
 	
