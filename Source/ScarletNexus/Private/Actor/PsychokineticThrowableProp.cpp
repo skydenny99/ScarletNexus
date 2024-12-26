@@ -36,6 +36,12 @@ void APsychokineticThrowableProp::OnHit()
 	SetLifeSpan(2.f);
 }
 
+void APsychokineticThrowableProp::OnChargingCancel()
+{
+	ProjectileMovementComponent->SetUpdatedComponent(RootComponent);
+	OnHit();
+}
+
 void APsychokineticThrowableProp::FloatingTick(float DeltaTime)
 {
 	SetActorLocation(UKismetMathLibrary::VInterpTo(GetActorLocation(), GetActorLocation() + FVector::UpVector * (FloatingHeight / ChargeTime), DeltaTime, 1.f));

@@ -10,10 +10,6 @@
 #include "Components/TargetTrackingSpringArmComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 
-void UGA_GroundPsych::OnGiveAbility(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec)
-{
-	Super::OnGiveAbility(ActorInfo, Spec);
-}
 
 bool UGA_GroundPsych::CanActivateAbility(const FGameplayAbilitySpecHandle Handle,
 	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayTagContainer* SourceTags,
@@ -47,7 +43,7 @@ void UGA_GroundPsych::ThrowProjectile()
 	FPsychokinesisAbilityHelper::ActivateThrowPsychAbility(Kasane);
 }
 
-EPsychType UGA_GroundPsych::GetPsychType()
+void UGA_GroundPsych::CancelChargingProjectile()
 {
-	return static_cast<EPsychType>(UKismetMathLibrary::RandomIntegerInRange(0, 5));
+	FPsychokinesisAbilityHelper::OnChargingCancelPsychAbility(Kasane);
 }

@@ -35,6 +35,20 @@ void FPsychokinesisAbilityHelper::OnActivatePsychAbility(const ACharacter_Kasane
 	}
 }
 
+void FPsychokinesisAbilityHelper::OnChargingCancelPsychAbility(const ACharacter_Kasane* Kasane)
+{
+	if (Kasane == nullptr) return;
+	UPsychokinesisComponent* PsychokinesisComponent = Kasane->GetPsychokinesisComponent();
+	if (PsychokinesisComponent)
+	{
+		APsychokineticThrowableProp* ThrowableProp = Cast<APsychokineticThrowableProp>(PsychokinesisComponent->GetPsychTarget());
+		if (ThrowableProp)
+		{
+			ThrowableProp->OnChargingCancel();
+		}
+	}
+}
+
 void FPsychokinesisAbilityHelper::ActivateThrowPsychAbility(const ACharacter_Kasane* Kasane)
 {
 	if (Kasane == nullptr) return;

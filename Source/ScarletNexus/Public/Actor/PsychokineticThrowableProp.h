@@ -40,6 +40,7 @@ public:
 
 	void OnStartGrab();
 	void OnHit();
+	void OnChargingCancel();
 
 	void FloatingTick(float DeltaTime);
 	void Launch();
