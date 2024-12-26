@@ -13,11 +13,18 @@ APsychokineticThrowableProp::APsychokineticThrowableProp()
 	PrimaryActorTick.bCanEverTick = false;
 	ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovementComponent"));
 	ProjectileMovementComponent->InitialSpeed = 0.f;
-	ProjectileMovementComponent->MaxSpeed = 10000.f;
+	ProjectileMovementComponent->MaxSpeed = 7000.f;
 	ProjectileMovementComponent->Velocity = FVector::ZeroVector;
 	ProjectileMovementComponent->bInitialVelocityInLocalSpace = true;
+	ProjectileMovementComponent->bShouldBounce = true;
+	ProjectileMovementComponent->Bounciness = 0.3f;
 }
 
+
+void APsychokineticThrowableProp::OnHit()
+{
+	ProjectileMovementComponent->ProjectileGravityScale = 1.f;
+}
 
 void APsychokineticThrowableProp::FloatingTick(float DeltaTime)
 {
@@ -48,8 +55,10 @@ void APsychokineticThrowableProp::Launch()
 	SetActorRotation(LookAtRot);
 	
 	ProjectileMovementComponent->SetUpdatedComponent(RootComponent);
-	ProjectileMovementComponent->Velocity = (GetActorForwardVector() * 5000.f);
+	ProjectileMovementComponent->Velocity = (GetActorForwardVector() * ProjectileMovementComponent->MaxSpeed);
 	SetLifeSpan(5.f);
+	bIsUsed = true;
+	OnUsePsychProp.ExecuteIfBound(this);
 }
 
 

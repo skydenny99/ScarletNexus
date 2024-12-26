@@ -34,6 +34,7 @@ public:
 	FORCEINLINE void Attached() { bIsAttached = true; }
 	FORCEINLINE bool IsAttached() const { return bIsAttached; }
 	FORCEINLINE void SetTarget(AActor* Target) {CurrentTarget = Target;}
+	void OnHit();
 
 	void FloatingTick(float DeltaTime);
 	void Launch();

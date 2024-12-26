@@ -15,6 +15,10 @@ bool FPsychokinesisAbilityHelper::HasPsychokineticPropInRange(const ACharacter_K
 {
 	if (Kasane == nullptr) return false;
 	const UPsychokinesisComponent* PsychokinesisComponent = Kasane->GetPsychokinesisComponent();
+	if (PsychokinesisComponent)
+	{
+		Debug::Print(FString::Printf(TEXT("Has psycho prop: %s"), *FString(PsychokinesisComponent->GetPsychTarget() != nullptr ? "true" : "false")));
+	}
 	return PsychokinesisComponent ? PsychokinesisComponent->GetPsychTarget() != nullptr : false;
 }
 

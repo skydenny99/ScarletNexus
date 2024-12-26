@@ -14,6 +14,20 @@ struct FMontageArray
 	UPROPERTY(EditAnywhere)
 	TArray<UAnimMontage*> AnimMontages;
 };
+
+USTRUCT(BlueprintType)
+struct FCharacterMontageSet
+{
+	GENERATED_BODY()
+	UPROPERTY(EditAnywhere)
+	UAnimMontage* LeftChargeAnimMontage;
+	
+	UPROPERTY(EditAnywhere)
+	UAnimMontage* RightChargeAnimMontage;
+	
+	UPROPERTY(EditAnywhere)
+	FMontageArray PsychAttackAnimMontages;
+};
 /**
  * 
  */
@@ -23,9 +37,12 @@ class SCARLETNEXUS_API UDataAsset_PsychMontage : public UDataAsset
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditAnywhere)
-	TMap<EPsychType, FMontageArray> GroundAnimMontages;
+	UPROPERTY(EditAnywhere, Category= "PsychObject")
+	TMap<EPsychType, FMontageArray> ObjectGroundAnimMontages;
 	
-	UPROPERTY(EditAnywhere)
-	TArray<UAnimMontage*> AerialAnimMontages;
+	UPROPERTY(EditAnywhere, Category= "PsychObject")
+	TArray<UAnimMontage*> ObjectAerialAnimMontages;
+	
+	UPROPERTY(EditAnywhere, Category= "Character")
+	TMap<EPsychType, FCharacterMontageSet> CharacterGroundAnimMontageSets;
 };

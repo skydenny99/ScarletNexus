@@ -262,6 +262,7 @@ void UComboSystemComponent::ResetWeaponCombo()
 
 void UComboSystemComponent::StartPsychComboTimer()
 {
+	ClearPsychComboTimer();
 	bIsPsychComboAttacking = true;
 	FTimerDelegate timerDelegate;
 	timerDelegate.BindLambda([this]()
@@ -271,9 +272,15 @@ void UComboSystemComponent::StartPsychComboTimer()
 			PsychGroundCombo.CurrentComboCount = 0;
 			PsychAerialCombo.CurrentComboCount = 0;
 			bIsPsychComboAttacking = false;
+			Debug::Print("ResetPsychCombo");
 		}
 	});
 	GetWorld()->GetTimerManager().SetTimer(PsychComboResetTimerHandle, timerDelegate, PsychComboResetLifeTime, false);
+}
+
+void UComboSystemComponent::ClearPsychComboTimer()
+{
+	GetWorld()->GetTimerManager().ClearTimer(PsychComboResetTimerHandle);
 }
 
 void UComboSystemComponent::StopPsychComboTimer()
@@ -281,6 +288,6 @@ void UComboSystemComponent::StopPsychComboTimer()
 	PsychGroundCombo.CurrentComboCount = 0;
 	PsychAerialCombo.CurrentComboCount = 0;
 	bIsPsychComboAttacking = false;
-	GetWorld()->GetTimerManager().ClearTimer(PsychComboResetTimerHandle);
+	ClearPsychComboTimer();
 }
 

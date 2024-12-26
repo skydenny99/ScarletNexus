@@ -6,6 +6,7 @@
 #include "BaseDebugHelper.h"
 #include "Actor/PsychokineticPropBase.h"
 #include "Actor/PsychokineticThrowableProp.h"
+#include "Character/Character_Kasane.h"
 #include "Components/SphereComponent.h"
 #include "DataAsset/DataAsset_PsychMontage.h"
 #include "Kismet/GameplayStatics.h"
@@ -68,18 +69,38 @@ void UPsychokinesisComponent::UpdateNearestPsychTarget()
 	OnPsychTargetUpdated.Broadcast(PsychTarget);
 }
 
+void UPsychokinesisComponent::OnUsePsychProp(APsychokineticPropBase* UsedPsychProp)
+{
+	if (UsedPsychProp)
+	{
+		PsychTargetCandidates.Remove(UsedPsychProp);
+		bBlockUpdate = false;
+		UpdateNearestPsychTarget();
+		//Debug::Print("PsychokinesisComponent::OnUsePsychProp");
+	}
+}
+
 // Called when the game starts
 void UPsychokinesisComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
 	// ...
+	TArray<AActor*> OverlappingActors;
+	DetectionBoundary->GetOverlappingActors(OverlappingActors, APsychokineticPropBase::StaticClass());
+	for (auto Actor : OverlappingActors)
+	{
+		APsychokineticPropBase* Temp = Cast<APsychokineticPropBase>(Actor);
+		if (Temp == nullptr || Temp->IsUsed()) return;
+		PsychTargetCandidates.AddUnique(Temp);
+		Temp->OnUsePsychProp.BindUObject(this, &UPsychokinesisComponent::OnUsePsychProp);
+	}
 	GetWorld()->GetTimerManager().SetTimer(UpdateTimer, this, &UPsychokinesisComponent::UpdateNearestPsychTarget, 0.1f, true);
 }
 
 void UPsychokinesisComponent::PlayGroundPsychMontage(const EPsychType& PsychType, int32 ComboCount)
 {
-	auto GroundMontages = PsychMontageData->GroundAnimMontages.Find(PsychType);
+	auto GroundMontages = PsychMontageData->ObjectGroundAnimMontages.Find(PsychType);
 	PsychSkeletalMesh->GetAnimInstance()->Montage_Play(GroundMontages->AnimMontages[ComboCount]);
 }
 
@@ -87,9 +108,27 @@ void UPsychokinesisComponent::PlayAerialPsychMontage(int32 ComboCount)
 {
 }
 
+void UPsychokinesisComponent::GetProperPsychType(int32 ComboCount, EPsychType& PsychType, UAnimMontage*& ChargeMontage,
+	UAnimMontage*& AttackMontage)
+{
+	ACharacter_Kasane* Kasane = Cast<ACharacter_Kasane>(GetOwner());
+	FVector PsychDirection = PsychTarget->GetActorLocation() - Kasane->GetActorLocation();
+	bool IsRightSide = FVector::DotProduct(PsychDirection, Kasane->GetActorRightVector()) > 0;
+	do
+	{
+		PsychType = static_cast<EPsychType>(UKismetMathLibrary::RandomIntegerInRange(0, 5));
+	}
+	while (PsychType == LastUsedPsychType);
+
+	LastUsedPsychType = PsychType;
+	const FCharacterMontageSet* MontageSet = PsychMontageData->CharacterGroundAnimMontageSets.Find(PsychType);
+	ChargeMontage = IsRightSide ? MontageSet->RightChargeAnimMontage : MontageSet->LeftChargeAnimMontage;
+	AttackMontage = MontageSet->PsychAttackAnimMontages.AnimMontages[ComboCount];
+}
+
 
 void UPsychokinesisComponent::InitComponents(USphereComponent* InDetectionBoundary,
-											 USkeletalMeshComponent* InSkeletalMesh)
+                                             USkeletalMeshComponent* InSkeletalMesh)
 {
 	check(InDetectionBoundary);
 	DetectionBoundary = InDetectionBoundary;
@@ -104,8 +143,9 @@ void UPsychokinesisComponent::OnOverlapBegin(UPrimitiveComponent* OverlappedComp
                                              UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	APsychokineticPropBase* Temp = Cast<APsychokineticPropBase>(OtherActor);
-	if (Temp == nullptr) return;
+	if (Temp == nullptr || Temp->IsUsed()) return;
 	PsychTargetCandidates.AddUnique(Temp);
+	Temp->OnUsePsychProp.BindUObject(this, &UPsychokinesisComponent::OnUsePsychProp);
 }
 
 void UPsychokinesisComponent::OnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
@@ -125,13 +165,20 @@ void UPsychokinesisComponent::UpdatePsychTargetLocation(APsychokineticThrowableP
 {
 	if (Target->IsAttached()) return;
 	FVector DesiredLocation = PsychSkeletalMesh->GetBoneLocation(FName("joint_001"));
-	if (FVector::Distance(DesiredLocation, Target->GetActorLocation()) < 100.f)
+	if (FVector::DistSquared(DesiredLocation, Target->GetActorLocation()) < 100.f)
 	{
-		Target->AttachToComponent(PsychSkeletalMesh, FAttachmentTransformRules::KeepWorldTransform, FName("joint_001"));
-		Target->Attached();
+		AttachPsychTargetToBone(Target);
 	}
 	else
 	{
-		Target->SetActorLocation(UKismetMathLibrary::VInterpTo(Target->GetActorLocation(), DesiredLocation, DeltaTime, 15.f));
+		Target->SetActorLocation(UKismetMathLibrary::VInterpTo(Target->GetActorLocation(), DesiredLocation, DeltaTime, 20.f));
+		//Debug::Print(FString::Printf(TEXT("Desired Location X: %f, Y: %f, Z: %f"), DesiredLocation.X, DesiredLocation.Y, DesiredLocation.Z));
 	}
+}
+
+void UPsychokinesisComponent::AttachPsychTargetToBone(APsychokineticThrowableProp* Target)
+{
+	if (Target->IsAttached()) return;
+	Target->AttachToComponent(PsychSkeletalMesh, FAttachmentTransformRules::KeepWorldTransform, FName("joint_001"));
+	Target->Attached();
 }

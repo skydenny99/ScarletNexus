@@ -12,10 +12,6 @@ APsychokineticPropBase::APsychokineticPropBase()
 	PrimaryActorTick.bCanEverTick = false;
 }
 
-void APsychokineticPropBase::DeactivateControl()
-{
-}
-
 void APsychokineticPropBase::DissolveProp()
 {
 	Debug::Print("DissolveProp");

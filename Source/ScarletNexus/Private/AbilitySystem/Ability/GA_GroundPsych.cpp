@@ -31,6 +31,7 @@ void UGA_GroundPsych::PreActivate(const FGameplayAbilitySpecHandle Handle, const
 	FOnGameplayAbilityEnded::FDelegate* OnGameplayAbilityEndedDelegate, const FGameplayEventData* TriggerEventData)
 {
 	Super::PreActivate(Handle, ActorInfo, ActivationInfo, OnGameplayAbilityEndedDelegate, TriggerEventData);
+	ComboSystem->ClearPsychComboTimer();
 	FPsychokinesisAbilityHelper::OnActivatePsychAbility(Kasane);
 }
 

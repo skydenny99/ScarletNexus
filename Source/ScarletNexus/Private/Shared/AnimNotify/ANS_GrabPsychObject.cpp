@@ -27,3 +27,13 @@ void UANS_GrabPsychObject::NotifyTick(USkeletalMeshComponent* MeshComp, UAnimSeq
 		PsychokinesisComponent->UpdatePsychTargetLocation(ThrowableProp, FrameDeltaTime);
 	}
 }
+
+void UANS_GrabPsychObject::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation,
+	const FAnimNotifyEventReference& EventReference)
+{
+	Super::NotifyEnd(MeshComp, Animation, EventReference);
+	if (PsychokinesisComponent && ThrowableProp)
+	{
+		PsychokinesisComponent->AttachPsychTargetToBone(ThrowableProp);
+	}
+}
