@@ -26,18 +26,18 @@ class SCARLETNEXUS_API UBaseAttributeSet : public UAttributeSet
 
 	// 델리게이트
 	// HP
-	UPROPERTY(BlueprintAssignable)
-	FOnPercentChangeDelegate OnCurrentHpPercentChanged;
+	//UPROPERTY(BlueprintAssignable)
+	//FOnPercentChangeDelegate OnCurrentHpPercentChanged;
 
-	UPROPERTY(BlueprintAssignable)
-	FOnValueChangeDelegate OnCurrentHpValueChanged;
+	//UPROPERTY(BlueprintAssignable)
+	//FOnValueChangeDelegate OnCurrentHpValueChanged;
 
 	// BrainCrush Gauge
-	UPROPERTY(BlueprintAssignable)
-	FOnPercentChangeDelegate OnCurrentBrainCrushGaugePercentChanged;
+	//UPROPERTY(BlueprintAssignable)
+	//FOnPercentChangeDelegate OnCurrentBrainCrushGaugePercentChanged;
 	
-	UPROPERTY(BlueprintAssignable)
-	FOnValueChangeDelegate OnCurrentBrainCrushGaugeValueChanged;
+	//UPROPERTY(BlueprintAssignable)
+	//FOnValueChangeDelegate OnCurrentBrainCrushGaugeValueChanged;
 
 	
 	
