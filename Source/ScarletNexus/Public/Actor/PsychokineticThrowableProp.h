@@ -21,6 +21,9 @@ public:
 
 protected:
 	UPROPERTY(EditDefaultsOnly)
+	UStaticMeshComponent* MeshComponent;
+	
+	UPROPERTY(EditDefaultsOnly)
 	float FloatingHeight = 300.f;
 	
 	UPROPERTY(EditDefaultsOnly)
@@ -34,6 +37,8 @@ public:
 	FORCEINLINE void Attached() { bIsAttached = true; }
 	FORCEINLINE bool IsAttached() const { return bIsAttached; }
 	FORCEINLINE void SetTarget(AActor* Target) {CurrentTarget = Target;}
+
+	void OnStartGrab();
 	void OnHit();
 
 	void FloatingTick(float DeltaTime);

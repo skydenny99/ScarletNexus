@@ -18,12 +18,22 @@ APsychokineticThrowableProp::APsychokineticThrowableProp()
 	ProjectileMovementComponent->bInitialVelocityInLocalSpace = true;
 	ProjectileMovementComponent->bShouldBounce = true;
 	ProjectileMovementComponent->Bounciness = 0.3f;
+
+	MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComponent"));
+	RootComponent = MeshComponent;
 }
 
 
+void APsychokineticThrowableProp::OnStartGrab()
+{
+	MeshComponent->SetCollisionProfileName("PlayerProjectile");
+}
+
 void APsychokineticThrowableProp::OnHit()
 {
-	ProjectileMovementComponent->ProjectileGravityScale = 1.f;
+	ProjectileMovementComponent->ProjectileGravityScale = 2.f;
+	MeshComponent->SetCollisionProfileName("EndProjectile");
+	SetLifeSpan(2.f);
 }
 
 void APsychokineticThrowableProp::FloatingTick(float DeltaTime)

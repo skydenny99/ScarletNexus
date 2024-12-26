@@ -15,6 +15,10 @@ void UANS_GrabPsychObject::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSe
 	{
 		PsychokinesisComponent = Character->GetPsychokinesisComponent();
 		ThrowableProp = Cast<APsychokineticThrowableProp>(PsychokinesisComponent->GetPsychTarget());
+		if (ThrowableProp)
+		{
+			ThrowableProp->OnStartGrab();
+		}
 	}
 }
 
