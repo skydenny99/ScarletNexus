@@ -61,9 +61,16 @@ void FPsychokinesisAbilityHelper::ActivateThrowPsychAbility(const ACharacter_Kas
 
 		AActor* TargetActor = TargetTracking->GetCurrentTarget();
 		ABaseEnemyCharacter* EnemyCharacter = Cast<ABaseEnemyCharacter>(TargetActor);
-		
-		ThrowableProp->SetTarget(EnemyCharacter->GetTargetVector());
-		ThrowableProp->Launch();
+
+		if(TargetActor && EnemyCharacter)
+		{
+			ThrowableProp->SetTarget(EnemyCharacter->GetTargetVector());
+			ThrowableProp->Launch();
+		}
+		else
+		{
+			ThrowableProp->Launch();
+		}
 	}
 }
 

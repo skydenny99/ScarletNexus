@@ -3,7 +3,12 @@
 
 #include "Actor/PsychokineticThrowableProp.h"
 
+#include "AbilitySystemBlueprintLibrary.h"
+#include "AIController.h"
 #include "BaseDebugHelper.h"
+#include "BaseFunctionLibrary.h"
+#include "BaseGameplayTags.h"
+#include "EntitySystem/MovieSceneEntitySystemRunner.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
@@ -21,6 +26,13 @@ APsychokineticThrowableProp::APsychokineticThrowableProp()
 
 	MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComponent"));
 	RootComponent = MeshComponent;
+	
+}
+
+void APsychokineticThrowableProp::BeginPlay()
+{
+	Super::BeginPlay();
+	MeshComponent->OnComponentHit.AddDynamic(this, &APsychokineticThrowableProp::OnMeshHit);
 }
 
 
@@ -31,9 +43,31 @@ void APsychokineticThrowableProp::OnStartGrab()
 
 void APsychokineticThrowableProp::OnHit()
 {
-	ProjectileMovementComponent->ProjectileGravityScale = 2.f;
+	ProjectileMovementComponent->ProjectileGravityScale = 1.f;
 	MeshComponent->SetCollisionProfileName("EndProjectile");
-	SetLifeSpan(2.f);
+	SetLifeSpan(1.f);
+}
+
+void APsychokineticThrowableProp::OnMeshHit(UPrimitiveComponent* HitComponent, AActor* OtherActor,
+	UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit)
+{
+	FGameplayEventData Data;
+	Data.Instigator = this;
+	Data.Target = OtherActor;
+	
+	// Hit.GetComponent()->Get
+	switch (Hit.Component->GetCollisionObjectType())
+	{
+	case ECC_GameTraceChannel3:
+			UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(OtherActor, BaseGameplayTags::Shared_Event_HitReact_KnockDown, Data);
+			Debug::Print(TEXT("Hit!!!!!!!!!!!"));
+			OnHit();
+		
+		break;
+		
+	default:
+		break;
+	}
 }
 
 void APsychokineticThrowableProp::OnChargingCancel()
@@ -59,9 +93,7 @@ void APsychokineticThrowableProp::Launch()
 	FVector TargetLocation = FVector::ZeroVector;
 	if (CurrentTargetLocation.IsSet())
 	{
-		Debug::Print(TEXT("CurrentTargetLocation Set"));
 		TargetLocation = CurrentTargetLocation.GetValue();
-		Debug::Print(FString::Printf(TEXT("1. TargetLocation, %f, %f ,%f"), TargetLocation.X, TargetLocation.Y, TargetLocation.Z ));
 	}
 	else if (CurrentTarget != nullptr)
 	{
@@ -76,7 +108,10 @@ void APsychokineticThrowableProp::Launch()
 	}
 	const FRotator LookAtRot = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), TargetLocation);
 	SetActorRotation(LookAtRot);
-	Debug::Print(FString::Printf(TEXT("2. TargetLocation, %f, %f ,%f"), TargetLocation.X, TargetLocation.Y, TargetLocation.Z ));
+	// Debug::Print(FString::Printf(TEXT("TargetLocation, %f, %f ,%f"), TargetLocation.X, TargetLocation.Y, TargetLocation.Z ));
+
+	
+
 	
 	ProjectileMovementComponent->SetUpdatedComponent(RootComponent);
 	ProjectileMovementComponent->Velocity = (GetActorForwardVector() * ProjectileMovementComponent->MaxSpeed);

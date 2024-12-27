@@ -19,6 +19,8 @@ class SCARLETNEXUS_API APsychokineticThrowableProp : public APsychokineticPropBa
 public:
 	APsychokineticThrowableProp();
 
+	virtual void BeginPlay() override;
+
 protected:
 	UPROPERTY(EditDefaultsOnly)
 	UStaticMeshComponent* MeshComponent;
@@ -39,11 +41,25 @@ public:
 	FORCEINLINE bool IsAttached() const { return bIsAttached; }
 	FORCEINLINE void SetTarget(AActor* Target) {CurrentTarget = Target;}
 	FORCEINLINE void SetTarget(const FVector& TargetVector) {CurrentTargetLocation = TargetVector;}
+
 	
 
 	void OnStartGrab();
+	
+	// void OnComponentHit()override;
+	
 	UFUNCTION(BlueprintCallable)
 	void OnHit();
+
+
+	UFUNCTION()
+	void OnMeshHit(
+		UPrimitiveComponent* HitComponent,
+		AActor* OtherActor,
+		UPrimitiveComponent* OtherComponent,
+		FVector NormalImpulse,
+		const FHitResult& Hit
+	);
 	
 	void OnChargingCancel();
 

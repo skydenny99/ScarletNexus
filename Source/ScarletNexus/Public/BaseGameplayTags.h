@@ -151,6 +151,7 @@ namespace BaseGameplayTags
 
 	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Event_HitReact_Normal);
 	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Event_HitReact_Critical);
+	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Event_HitReact_KnockDown);
 
 
 	// Shared State

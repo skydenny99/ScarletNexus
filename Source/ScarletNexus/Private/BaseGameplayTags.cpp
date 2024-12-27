@@ -145,6 +145,8 @@ namespace BaseGameplayTags
 	
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_HitReact_Normal, "Shared.Event.HitReact.Normal");
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_HitReact_Critical, "Shared.Event.HitReact.Critical");
+	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_HitReact_KnockDown, "Shared.Event.HitReact.KnockDown");
+	
 
 
 
