@@ -42,3 +42,21 @@ enum class EBaseDebuffType : uint8
 	CONFUSE,
 	NONE,
 };
+
+UENUM(BlueprintType)
+enum class EBaseAIDirectionType : uint8
+{
+	Forward   UMETA(DisplayName = "Forward"),
+   Backward  UMETA(DisplayName = "Backward"),
+   Left      UMETA(DisplayName = "Left"),
+   Right     UMETA(DisplayName = "Right"),
+   None      UMETA(DisplayName = "None")
+	
+};
+
+UENUM()
+enum class EProjectileDamagePolicy
+{
+	OnHit,
+	OnBeginOverlap	
+};

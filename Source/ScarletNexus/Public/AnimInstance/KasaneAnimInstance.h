@@ -21,7 +21,7 @@ public:
 	virtual void NativeThreadSafeUpdateAnimation(float DeltaSeconds) override;
 
 protected:
-	UPROPERTY()
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Locomotion")
 	ACharacter_Kasane* OwningKasane;
 	
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Locomotion")
@@ -40,6 +40,7 @@ protected:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Locomotion")
 	FGameplayTag AttackTag;
 
+
 public:
 	FOnDodgeEnd OnDodgeEnd;
 	
@@ -48,4 +49,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, meta = (BlueprintThreadSafe))
 	void DodgeEnd();
+
+	UFUNCTION(BlueprintPure, meta = (BlueprintThreadSafe))
+	USkeletalMeshComponent* GetPsychSkeletalMesh() const;
 };

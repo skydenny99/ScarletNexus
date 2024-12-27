@@ -17,4 +17,17 @@ void UDataAsset_StartupBase::GiveStartupAbilities(UAbilitySystemComponent* ASC, 
 		Spec.Level = Level;
 		ASC->GiveAbility(Spec);
 	}
+
+	if (!StartupGameplayEffects.IsEmpty())
+	{
+		for (const TSubclassOf<UGameplayEffect>& BP_Effect : StartupGameplayEffects)
+		{
+			if (!BP_Effect) continue;
+
+			//BP클래스에서 순수 c++클래스를 추출해서 사용
+			UGameplayEffect* EffectCDO = BP_Effect->GetDefaultObject<UGameplayEffect>();
+			ASC->ApplyGameplayEffectToSelf(EffectCDO, Level, ASC->MakeEffectContext());
+		}
+	}
+	
 }

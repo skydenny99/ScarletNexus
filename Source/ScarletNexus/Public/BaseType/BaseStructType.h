@@ -26,6 +26,13 @@ struct FSASData
 	float Percent;
 };
 
+UENUM(BlueprintType)
+enum class EBaseAbilityActivationPolicy : uint8
+{
+	OnTriggered,
+	OnGiven
+};
+
 
 USTRUCT(BlueprintType)
 struct FConsumItemInfo

@@ -23,8 +23,6 @@ protected:
 	
 	virtual void OnGiveAbility(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec) override;
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
-
-	UFUNCTION(BlueprintCallable)
-	void OnEndAerialAbility();
+	virtual void OnEndAbility(UGameplayAbility* Ability) override;
 
 };

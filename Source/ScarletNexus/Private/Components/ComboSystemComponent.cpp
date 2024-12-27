@@ -3,6 +3,7 @@
 
 #include "Components/ComboSystemComponent.h"
 
+#include "AbilitySystemBlueprintLibrary.h"
 #include "BaseDebugHelper.h"
 #include "Character/Character_Kasane.h"
 #include "BaseFunctionLibrary.h"
@@ -19,11 +20,6 @@ UComboSystemComponent::UComboSystemComponent()
 	PrimaryComponentTick.bCanEverTick = false;
 
 	// ...
-	Kasane = Cast<ACharacter_Kasane>(GetOwner());
-	if (Kasane)
-	{
-		BaseAbilitySystemComponent = Kasane->GetBaseAbilitySystemComponent();
-	}
 }
 
 void UComboSystemComponent::BeginPlay()
@@ -35,6 +31,15 @@ void UComboSystemComponent::BeginPlay()
 	}
 }
 
+
+void UComboSystemComponent::InitKasane(ACharacter_Kasane* InKasane)
+{
+	Kasane = InKasane;
+	if (Kasane)
+	{
+		BaseAbilitySystemComponent = Kasane->GetBaseAbilitySystemComponent();
+	}
+}
 
 void UComboSystemComponent::GrantAttackAbilites(UAbilitySystemComponent* ASC, int32 Level)
 {
@@ -51,7 +56,7 @@ void UComboSystemComponent::GrantAttackAbilites(UAbilitySystemComponent* ASC, in
 	UBaseFunctionLibrary::AddPlaygameTagToActor(Kasane, BaseGameplayTags::Shared_Status_CanAttack);
 }
 
-void UComboSystemComponent::TryActivateAbilityByInputTag(FGameplayTag tag)
+bool UComboSystemComponent::TryActivateAbilityByInputTag(FGameplayTag tag)
 {
 	FGameplayTag AbilityTag = FGameplayTag();
 	UCharacterMovementComponent* Movement = Kasane->GetCharacterMovement();
@@ -94,22 +99,37 @@ void UComboSystemComponent::TryActivateAbilityByInputTag(FGameplayTag tag)
 	
 	if (AbilityTag.IsValid() == false || AbilitySpecs.Contains(AbilityTag) == false)
 	{
-		Debug::Print("Ability not found", FColor::Red);
-		return;
+		Debug::Print("Triggered: Ability not found", FColor::Red);
+		return false;
 	}
 	if (BaseAbilitySystemComponent->TryActivateAbility(AbilitySpecs[AbilityTag].Handle))
 	{
 		LastActivatedGameplayTag = AbilityTag;
+		return true;
 	}
-	else
-	{
-		Debug::Print("Ability try failed (Triggered)", FColor::Red);
-	}
+	
+	Debug::Print("Triggered: Ability try failed", FColor::Red);
+	return false;
+}
+
+void UComboSystemComponent::TryActivateChargeAbility()
+{
+	FGameplayEventData EventData;
+	EventData.Instigator = Kasane;
+	EventData.InstigatorTags.AddTag(ActionElapsedTime >= ChargeCompletionTime ? BaseGameplayTags::Shared_Event_Charge_Confirm : BaseGameplayTags::Shared_Event_Charge_Cancel);
+	
+	Debug::Print(FString::Printf(TEXT("Character Target Name: %s"), *Kasane->GetActorLabel()));
+	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(Kasane, BaseGameplayTags::Shared_Event_Charge, EventData);
+
+	bIsCharging = false;
+	UBaseFunctionLibrary::RemovePlayGameTagFromActor(Kasane, BaseGameplayTags::Player_Status_Charging);
+	bChargeAbilityAlreadyTriggered = true;
+	ActionElapsedTime = 0.f;
 }
 
 bool UComboSystemComponent::TryCancelAttackAbility()
 {
-	if (LastActivatedGameplayTag.IsValid() == false) return false;
+	if (LastActivatedGameplayTag.IsValid() == false || bIsCharging) return false;
 	Debug::Print(FString::Printf(TEXT("Cancel Ability : %s"), *LastActivatedGameplayTag.ToString()), FColor::Red);
 	BaseAbilitySystemComponent->CancelAbilityHandle(AbilitySpecs[LastActivatedGameplayTag].Handle);
 	LastActivatedGameplayTag = FGameplayTag();
@@ -132,24 +152,60 @@ void UComboSystemComponent::UpdateInfoByUnlock()
 void UComboSystemComponent::OnMovementModeChange(ACharacter* Character, EMovementMode PrevMovementMode, uint8 PreviousCustomMode)
 {
 	// Reset All Combo;
-	Debug::Print("Reset Combo Count");
-	ResetGroundCombo();
-	ResetAerialCombo();
+	Debug::Print("Reset Weapon Combo Count");
+	ResetWeaponCombo();
 }
 
 
-void UComboSystemComponent::ProcessInputAction(FGameplayTag ActionTag, ETriggerEvent TriggerEvent, const FInputActionInstance& Instance)
+void UComboSystemComponent::ProcessInputAction(FGameplayTag InputTag, ETriggerEvent TriggerEvent, const FInputActionInstance& Instance)
 {
 	switch (TriggerEvent)
 	{
 	case ETriggerEvent::Triggered:
-		if (ActionTag == LastActivatedGameplayTag)
-			ActionElapsedTime = Instance.GetElapsedTime();
-		if (ShouldBlockInputAction()) return;
-		TryActivateAbilityByInputTag(ActionTag);
+		if (bIsCharging)
+		{
+			if (UBaseFunctionLibrary::NativeActorHasTag(Kasane, BaseGameplayTags::Player_Status_Charging))
+			{
+				ActionElapsedTime = Instance.GetElapsedTime();
+			}
+			else
+			{
+				ActionElapsedTime = 0.f;
+			}
+			if (bIsAutoCompletion && ActionElapsedTime > ChargeCompletionTime)
+			{
+				TryActivateChargeAbility();
+				LastChargeAbilityInputTag = InputTag;
+			}
+		}
+		else
+		{
+			if (LastChargeAbilityInputTag.MatchesTagExact(InputTag)) return;
+			if (TryActivateAbilityByInputTag(InputTag))
+			{
+				LastChargeAbilityInputTag = InputTag;
+			}
+		}
 		break;
 	case ETriggerEvent::Completed:
-			if (ActionTag == BaseGameplayTags::InputTag_Attack_Weapon_Special)
+		if (LastChargeAbilityInputTag.IsValid())
+		{
+			if (LastChargeAbilityInputTag.MatchesTagExact(InputTag))
+			{
+				LastChargeAbilityInputTag = FGameplayTag();
+			}
+			else
+			{
+				return;
+			}
+		}
+		if (bIsCharging)
+		{
+				TryActivateChargeAbility();
+		}
+		else
+		{
+			if (InputTag == BaseGameplayTags::InputTag_Attack_Weapon_Special)
 			{
 				// TODO activate or cancel charging ability
 				FGameplayTag AbilityTag =
@@ -157,7 +213,7 @@ void UComboSystemComponent::ProcessInputAction(FGameplayTag ActionTag, ETriggerE
 						BaseGameplayTags::Player_Ability_Attack_Aerial_Backstep : BaseGameplayTags::Player_Ability_Attack_Ground_Backstep;
 				if (AbilityTag.IsValid() == false || AbilitySpecs.Contains(AbilityTag) == false)
 				{
-					Debug::Print("Ability not found", FColor::Red);
+					Debug::Print("Completed: Ability not found", FColor::Red);
 					return;
 				}
 				if (BaseAbilitySystemComponent->TryActivateAbility(AbilitySpecs[AbilityTag].Handle))
@@ -167,22 +223,17 @@ void UComboSystemComponent::ProcessInputAction(FGameplayTag ActionTag, ETriggerE
 				}
 				else
 				{
-					Debug::Print("Ability try failed (Completed)", FColor::Red);
+					Debug::Print("Completed: Ability try failed", FColor::Red);
 				}
 			}
+		}
+			
 		break;
 	default:
 		break;
 	}
 }
 
-bool UComboSystemComponent::ShouldBlockInputAction()
-{
-	if (UBaseFunctionLibrary::NativeActorHasTag(Kasane, BaseGameplayTags::Player_Status_Charging))
-		return true;
-	
-	return false;
-}
 
 void UComboSystemComponent::IncreaseCombo(FComboCounter& ComboCounter)
 {
@@ -209,5 +260,35 @@ void UComboSystemComponent::ResetWeaponCombo()
 	WeaponAerialCombo.CurrentComboCount = 0;
 	BackstepGroundCombo.CurrentComboCount = 0;
 	BackstepAerialCombo.CurrentComboCount = 0;
+}
+
+void UComboSystemComponent::StartPsychComboTimer()
+{
+	bIsPsychComboAttacking = true;
+	FTimerDelegate timerDelegate;
+	timerDelegate.BindLambda([this]()
+	{
+		if (this)
+		{
+			PsychGroundCombo.CurrentComboCount = 0;
+			PsychAerialCombo.CurrentComboCount = 0;
+			bIsPsychComboAttacking = false;
+			Debug::Print("ResetPsychCombo");
+		}
+	});
+	GetWorld()->GetTimerManager().SetTimer(PsychComboResetTimerHandle, timerDelegate, PsychComboResetLifeTime, false);
+}
+
+void UComboSystemComponent::ClearPsychComboTimer()
+{
+	GetWorld()->GetTimerManager().ClearTimer(PsychComboResetTimerHandle);
+}
+
+void UComboSystemComponent::StopPsychComboTimer()
+{
+	PsychGroundCombo.CurrentComboCount = 0;
+	PsychAerialCombo.CurrentComboCount = 0;
+	bIsPsychComboAttacking = false;
+	ClearPsychComboTimer();
 }
 

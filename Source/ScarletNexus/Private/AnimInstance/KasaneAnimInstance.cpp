@@ -4,6 +4,7 @@
 #include "AnimInstance/KasaneAnimInstance.h"
 #include "Character/Character_Kasane.h"
 #include "Components/ComboSystemComponent.h"
+#include "Components/PsychokinesisComponent.h"
 
 
 void UKasaneAnimInstance::NativeInitializeAnimation()
@@ -15,7 +16,7 @@ void UKasaneAnimInstance::NativeInitializeAnimation()
 void UKasaneAnimInstance::NativeThreadSafeUpdateAnimation(float DeltaSeconds)
 {
 	Super::NativeThreadSafeUpdateAnimation(DeltaSeconds);
-	if (OwningCharacter == nullptr || OwningMovementComponent == nullptr)
+	if (OwningKasane == nullptr || OwningCharacter == nullptr || OwningMovementComponent == nullptr)
 	{
 		return;
 	}
@@ -36,4 +37,13 @@ void UKasaneAnimInstance::Dodge(EBaseDirectionType Direction)
 void UKasaneAnimInstance::DodgeEnd()
 {
 	OnDodgeEnd.ExecuteIfBound();
+}
+
+USkeletalMeshComponent* UKasaneAnimInstance::GetPsychSkeletalMesh() const
+{
+	if (OwningKasane)
+	{
+		return OwningKasane->GetPsychokinesisComponent()->GetPsychSkeletalMesh();
+	}
+	return nullptr;
 }

@@ -4,6 +4,7 @@
 #include "Character/BaseCharacter.h"
 #include "AbilitySystemComponent.h"
 #include "AbilitySystem/BaseAbilitySystemComponent.h"
+#include "AbilitySystem/Attribute/BaseAttributeSet.h"
 #include "DataAsset/DataAsset_StartupBase.h"
 #include "BaseDebugHelper.h"
 
@@ -14,6 +15,8 @@ ABaseCharacter::ABaseCharacter()
 	PrimaryActorTick.bCanEverTick = false;
 	PrimaryActorTick.bStartWithTickEnabled = false;
 
+	// BaseAttributeSet = CreateDefaultSubobject<UBaseAttributeSet>(TEXT("BaseAttributeSet"));
+	
 }
 
 // Called when the game starts or when spawned
@@ -36,4 +39,10 @@ void ABaseCharacter::PossessedBy(AController* NewController)
 	{
 		BaseAbilitySystemComponent->InitAbilityActorInfo(this, this);
 	}
+}
+
+UPawnCombatComponent* ABaseCharacter::GetPawnCombatComponent() const
+{
+	// 부모클래스 재구현 X
+	return nullptr;
 }

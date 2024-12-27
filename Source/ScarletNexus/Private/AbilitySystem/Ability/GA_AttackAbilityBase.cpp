@@ -7,6 +7,7 @@
 #include "BaseFunctionLibrary.h"
 #include "BaseGameplayTags.h"
 #include "Character/Character_Kasane.h"
+#include "Components/ComboSystemComponent.h"
 
 void UGA_AttackAbilityBase::OnGiveAbility(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec)
 {
@@ -15,12 +16,6 @@ void UGA_AttackAbilityBase::OnGiveAbility(const FGameplayAbilityActorInfo* Actor
 	check(Kasane);
 	ComboSystem = Kasane->GetComboSystemComponent();
 	check(ComboSystem);
-	OnGameplayAbilityCancelled.AddLambda([ActorInfo]()
-	{
-		if (ActorInfo->AvatarActor.IsValid() == false) return;
-		UBaseFunctionLibrary::AddPlaygameTagToActor(ActorInfo->AvatarActor.Get(), BaseGameplayTags::Shared_Status_CanAttack);
-		UBaseFunctionLibrary::AddPlaygameTagToActor(ActorInfo->AvatarActor.Get(), BaseGameplayTags::Shared_Status_CanMove);
-	});
 }
 
 bool UGA_AttackAbilityBase::CanActivateAbility(const FGameplayAbilitySpecHandle Handle,
@@ -38,9 +33,21 @@ void UGA_AttackAbilityBase::ActivateAbility(const FGameplayAbilitySpecHandle Han
 	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
 	const FGameplayEventData* TriggerEventData)
 {
+	OnGameplayAbilityEnded.AddUObject(this, &UGA_AttackAbilityBase::OnEndAbility);
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 	UBaseFunctionLibrary::RemovePlayGameTagFromActor(Kasane, BaseGameplayTags::Shared_Status_CanAttack);
 	UBaseFunctionLibrary::RemovePlayGameTagFromActor(Kasane, BaseGameplayTags::Shared_Status_CanMove);
+}
+
+void UGA_AttackAbilityBase::OnEndAbility(UGameplayAbility* Ability)
+{
+	if (ComboSystem)
+	{
+		ComboSystem->ResetActivateAbilityTag();
+	}
+	UBaseFunctionLibrary::AddPlaygameTagToActor(Kasane, BaseGameplayTags::Shared_Status_CanAttack);
+	UBaseFunctionLibrary::AddPlaygameTagToActor(Kasane, BaseGameplayTags::Shared_Status_CanMove);
+	Debug::Print("Ability End");
 }
 
 

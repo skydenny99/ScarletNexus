@@ -20,10 +20,8 @@ namespace BaseGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_Attack_Psych_Special, "InputTag.Attack.Psych.Special");
 
 	//Targeting (LockOn)
-	UE_DEFINE_GAMEPLAY_TAG(InputTag_Targeting_On, "InputTag.Targeting.On");
-	UE_DEFINE_GAMEPLAY_TAG(InputTag_Targeting_Off, "InputTag.Targeting.Off");
-	UE_DEFINE_GAMEPLAY_TAG(InputTag_Targeting_Change_Left, "InputTag.Targeting.Change.Left");
-	UE_DEFINE_GAMEPLAY_TAG(InputTag_Targeting_Change_Right, "InputTag.Targeting.Change.Right");
+	UE_DEFINE_GAMEPLAY_TAG(InputTag_Targeting_Toggle, "InputTag.Targeting.Toggle");
+	UE_DEFINE_GAMEPLAY_TAG(InputTag_Targeting_Change, "InputTag.Targeting.Change");
 
 	//Item
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_Item_Use, "InputTag.Item.Use");
@@ -127,15 +125,138 @@ namespace BaseGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Ability_Elemental_Water, "Shared.Ability.Elemental.Water");
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Ability_Elemental_Oil, "Shared.Ability.Elemental.Oil");
 
+	
+	UE_DEFINE_GAMEPLAY_TAG(Shared_Ability_SpawnWeapon, "Shared.Ability.SpawnWeapon");
+	UE_DEFINE_GAMEPLAY_TAG(Shared_Ability_Dead, "Shared.Ability.Dead");
+
 
 	// Shared - Event
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_Hit_Normal, "Shared.Event.Hit.Normal");
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_Hit_Critical, "Shared.Event.Hit.Critical");
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_Hit_KnockDown, "Shared.Event.Hit.KnockDown");
+	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_Combo, "Shared.Event.Combo");
+	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_Charge_Cancel, "Shared.Event.Charge.Cancel");
+	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_Charge, "Shared.Event.Charge");
+	
+	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_Charge_Confirm, "Shared.Event.Charge.Confirm");
+	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_ThrowProjectile, "Shared.Event.ThrowProjectile");
+
+
+	
+	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_HitReact_Normal, "Shared.Event.HitReact.Normal");
+	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_HitReact_Critical, "Shared.Event.HitReact.Critical");
+
+
+
+	// Shared - State
+	UE_DEFINE_GAMEPLAY_TAG(Shared_Status_CanAttack, "Shared.Status.CanAttack");
+	UE_DEFINE_GAMEPLAY_TAG(Shared_Status_CanMove, "Shared.Status.CanMove");
+	UE_DEFINE_GAMEPLAY_TAG(Shared_State_Down, "Shared.State.Down");
+	UE_DEFINE_GAMEPLAY_TAG(Shared_State_Dead, "Shared.State.Dead");
+	UE_DEFINE_GAMEPLAY_TAG(Shared_State_Invincible, "Shared.State.Invincible");
+
+
+	// Set By Caller
+	UE_DEFINE_GAMEPLAY_TAG(Shared_SetByCaller_BaseDamage, "Shared.SetByCaller.BaseDamage");
+	UE_DEFINE_GAMEPLAY_TAG(Shared_SetByCaller_BasePower, "Shared.SetByCaller.BasePower");
 
 	// Shared - Status
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Status_CanAttack, "Shared.Status.CanAttack");
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Status_CanMove, "Shared.Status.CanMove");
 
 #pragma endregion
+
+
+#pragma region Fellow
+	// Ability
+	UE_DEFINE_GAMEPLAY_TAG(Fellow_Ability_Attack_Normal, "Fellow.Ability.Attack.Normal");
+	UE_DEFINE_GAMEPLAY_TAG(Fellow_Ability_Attack_Special, "Fellow.Ability.Attack.Special");
+
+
+	
+	UE_DEFINE_GAMEPLAY_TAG(Fellow_Ability_Startup_SpawnWeapon, "Fellow.Ability.Startup.SpawnWeapon");
+
+	
+	UE_DEFINE_GAMEPLAY_TAG(Fellow_Ability_Move_Dodge, "Fellow.Ability.Move.Dodge");
+	UE_DEFINE_GAMEPLAY_TAG(Fellow_Ability_Move_Wakeup, "Fellow.Ability.Move.Wakeup");
+
+
+
+	// State
+	UE_DEFINE_GAMEPLAY_TAG(Fellow_State_LockOnTarget, "Fellow.State.LockOnTarget");
+	UE_DEFINE_GAMEPLAY_TAG(Fellow_State_PlayerFellow, "Fellow.State.PlayerFellow");
+	
+	UE_DEFINE_GAMEPLAY_TAG(Fellow_State_EquippingWeapon, "Fellow.State.EquippingWeapon");
+	
+	UE_DEFINE_GAMEPLAY_TAG(Fellow_State_Attacking, "Fellow.State.Attacking");
+
+
+	// Weapon
+	UE_DEFINE_GAMEPLAY_TAG(Fellow_Weapon_Arashi, "Fellow.Weapon.Arashi");
+	UE_DEFINE_GAMEPLAY_TAG(Fellow_Weapon_Hanabi, "Fellow.Weapon.Hanabi");
+
+	
+
+#pragma endregion Fellow
+
+#pragma region Enemy
+	// Boss
+	UE_DEFINE_GAMEPLAY_TAG(Enemy_Boss_Ability_Attack_WaterBall, "Enemy.Boss.Ability.Attack.WaterBall");
+	
+	UE_DEFINE_GAMEPLAY_TAG(Enemy_Boss_Ability_Attack_MeleeAttack, "Enemy.Boss.Ability.Attack.MeleeAttack");
+
+	UE_DEFINE_GAMEPLAY_TAG(Enemy_Boss_Ability_Attack_Jump, "Enemy.Boss.Ability.Attack.Jump");
+	
+	UE_DEFINE_GAMEPLAY_TAG(Enemy_Boss_Ability_Move_BackRun, "Enemy.Boss.Ability.Move.BackRun");
+
+	
+	UE_DEFINE_GAMEPLAY_TAG(Enemy_Boss_Ability_HitReact_SequenceHit, "Enemy.Boss.Ability.HitReact.SequenceHit");
+	
+	UE_DEFINE_GAMEPLAY_TAG(Enemy_Boss_Ability_JumpAble, "Enemy.Boss.Ability.JumpAble");
+
+	
+	UE_DEFINE_GAMEPLAY_TAG(Enemy_Boss_Weapon_Boss, "Enemy.Boss.Weapon.Boss");
+
+
+	// Boss State
+	UE_DEFINE_GAMEPLAY_TAG(Enemy_Boss_State_SequenceAble, "Enemy.Boss.State.SequenceAble");
+	UE_DEFINE_GAMEPLAY_TAG(Enemy_Boss_State_2Phase, "Enemy.Boss.State.2Phase");
+
+
+
+	// CommonEnemy
+	UE_DEFINE_GAMEPLAY_TAG(Enemy_Common_Ability_Attack_Melee, "Enemy.Common.Ability.Attack.Melee");
+	UE_DEFINE_GAMEPLAY_TAG(Enemy_Common_Ability_Attack_Ranged, "Enemy.Common.Ability.Attack.Ranged");
+	
+
+	
+	UE_DEFINE_GAMEPLAY_TAG(Enemy_Common_Ability_Status_Dead, "Enemy.Common.Ability.Status.Dead");
+	UE_DEFINE_GAMEPLAY_TAG(Enemy_Common_Ability_Status_down, "Enemy.Common.Ability.Status.down");
+	UE_DEFINE_GAMEPLAY_TAG(Enemy_Common_Ability_Status_BCChance, "Enemy.Common.Ability.Status.BCChance");
+
+	
+	UE_DEFINE_GAMEPLAY_TAG(Enemy_Common_Ability_Spawn_Core, "Enemy.Common.Ability.Spawn.Core");
+
+
+	// Weapon
+	UE_DEFINE_GAMEPLAY_TAG(Enemy_Common_Weapon_em0400, "Enemy.Common.Weapon.em0400");
+	UE_DEFINE_GAMEPLAY_TAG(Enemy_Common_Weapon_em0500, "Enemy.Common.Weapon.em0500");
+	UE_DEFINE_GAMEPLAY_TAG(Enemy_Common_Weapon_em0700, "Enemy.Common.Weapon.em0700");
+
+	//EnemyEvent
+	UE_DEFINE_GAMEPLAY_TAG(Enemy_Event_SpawnProjectile, "Enemy.Event.SpawnProjectile");
+	UE_DEFINE_GAMEPLAY_TAG(Enemy_Event_SpawnCore, "Enemy.Event.SpawnCore");
+	
+
+	// State
+	UE_DEFINE_GAMEPLAY_TAG(Enemy_State_Dead, "Enemy.State.Dead");
+	UE_DEFINE_GAMEPLAY_TAG(Enemy_State_Down, "Enemy.State.Down");
+	UE_DEFINE_GAMEPLAY_TAG(Enemy_State_BCChance, "Enemy.State.BCChance");
+
+
+	
+		
+#pragma endregion
+
+	
 }

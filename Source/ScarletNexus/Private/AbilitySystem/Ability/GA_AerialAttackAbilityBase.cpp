@@ -26,9 +26,9 @@ void UGA_AerialAttackAbilityBase::ActivateAbility(const FGameplayAbilitySpecHand
 	ComboSystem->ResetGroundCombo();
 }
 
-void UGA_AerialAttackAbilityBase::OnEndAerialAbility()
+void UGA_AerialAttackAbilityBase::OnEndAbility(UGameplayAbility* Ability)
 {
+	Super::OnEndAbility(Ability);
 	MovementComponent->Velocity = FVector::ZeroVector;
 	MovementComponent->GravityScale = OriginGravityScale;
-	Debug::Print("OnEndAerialAbility");
 }

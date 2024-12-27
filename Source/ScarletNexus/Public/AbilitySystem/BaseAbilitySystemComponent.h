@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "AbilitySystemComponent.h"
+#include "GameplayTagContainer.h"
 #include "BaseAbilitySystemComponent.generated.h"
 
 /**
@@ -17,4 +18,8 @@ class SCARLETNEXUS_API UBaseAbilitySystemComponent : public UAbilitySystemCompon
 public:
 	virtual void OnGiveAbility(FGameplayAbilitySpec& AbilitySpec) override;
 	void OnAbilityInputTriggered(const FGameplayTag& InputTag);
+
+	UFUNCTION(BlueprintCallable, Category = "Ability")
+	bool TryActivateAbilityByTag(FGameplayTag Tag);
+	
 };
