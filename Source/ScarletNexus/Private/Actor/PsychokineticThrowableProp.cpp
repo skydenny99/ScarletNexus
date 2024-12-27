@@ -74,7 +74,11 @@ void APsychokineticThrowableProp::OnChargingCancel()
 {
 	CurrentTargetLocation.Reset();
 	ProjectileMovementComponent->SetUpdatedComponent(RootComponent);
-	OnHit();
+	CurrentControlNum++;
+	if (CurrentControlNum >= MaxControlNum)
+	{
+		OnHit();
+	}
 }
 
 void APsychokineticThrowableProp::FloatingTick(float DeltaTime)
@@ -84,6 +88,7 @@ void APsychokineticThrowableProp::FloatingTick(float DeltaTime)
 
 void APsychokineticThrowableProp::Launch()
 {
+	MeshComponent->SetCollisionProfileName("PlayerProjectile");
 	if (bIsAttached)
 	{
 		DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);

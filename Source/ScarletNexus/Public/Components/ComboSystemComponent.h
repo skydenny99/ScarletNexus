@@ -45,7 +45,10 @@ private:
 
 	bool bIsPsychComboAttacking = false;
 	FTimerHandle PsychComboResetTimerHandle;
-	float PsychComboResetLifeTime = 3.f;
+	float PsychComboResetTime = 3.f;
+
+	FTimerHandle ComboDashAttackTimerHandle;
+	float ComboDashResetTime = 1.f;
 
 public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Combo")
@@ -67,6 +70,7 @@ private:
 	bool bChargeAbilityAlreadyTriggered = false;
 	
 	float ActionElapsedTime;
+	float StartActionElapsedTime;
 	float ChargeAttackThreshold = 0.3f;
 	float ChargeCompletionTime = 0.1f;
 
@@ -108,6 +112,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Combo")
 	void ResetWeaponCombo();
 
+	UFUNCTION(BlueprintCallable, Category="Combo")
+	void ResetBackstep();
+
 	void StartCharging()
 	{
 		bIsCharging = true;
@@ -127,6 +134,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category="Combo")
 	void StopPsychComboTimer();
+
+	UFUNCTION(BlueprintCallable, Category="Combo")
+	void StartComboDashAttackTimer();
 	
 	UFUNCTION(BlueprintCallable, Category="Combo", meta=(ExpandBoolAsExecs = "InCombo"))
 	void IsPsychComboAttacking(bool& InCombo) { InCombo = bIsPsychComboAttacking; }

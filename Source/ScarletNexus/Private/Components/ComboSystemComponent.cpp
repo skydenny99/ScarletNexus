@@ -62,17 +62,26 @@ bool UComboSystemComponent::TryActivateAbilityByInputTag(FGameplayTag tag)
 	UCharacterMovementComponent* Movement = Kasane->GetCharacterMovement();
 	if (tag.MatchesTagExact(BaseGameplayTags::InputTag_Attack_Weapon_Normal))
 	{
-		bool bIsDashAttack = UBaseFunctionLibrary::NativeActorHasTag(Kasane, BaseGameplayTags::Player_Status_Move_Dodge);
-		if (Movement->IsFalling() == false) // Ground Weapon Attack
+		if (UBaseFunctionLibrary::NativeActorHasTag(Kasane, BaseGameplayTags::Player_Status_ComboDashAttack))
 		{
-			AbilityTag = bIsDashAttack ? BaseGameplayTags::Player_Ability_Attack_Ground_DashAttack
-			: BaseGameplayTags::Player_Ability_Attack_Ground_Weapon;
+			AbilityTag = Movement->IsFalling() ? BaseGameplayTags::Player_Ability_Attack_Aerial_ComboDashAttack
+			: BaseGameplayTags::Player_Ability_Attack_Ground_ComboDashAttack;
 		}
 		else
 		{
-			AbilityTag = bIsDashAttack ? BaseGameplayTags::Player_Ability_Attack_Aerial_DashAttack
-			: BaseGameplayTags::Player_Ability_Attack_Aerial_Weapon;
+			bool bIsDashAttack = UBaseFunctionLibrary::NativeActorHasTag(Kasane, BaseGameplayTags::Player_Status_Move_Dodge);
+			if (Movement->IsFalling() == false) // Ground Weapon Attack
+			{
+				AbilityTag = bIsDashAttack ? BaseGameplayTags::Player_Ability_Attack_Ground_DashAttack
+				: BaseGameplayTags::Player_Ability_Attack_Ground_Weapon;
+			}
+			else
+			{
+				AbilityTag = bIsDashAttack ? BaseGameplayTags::Player_Ability_Attack_Aerial_DashAttack
+				: BaseGameplayTags::Player_Ability_Attack_Aerial_Weapon;
+			}
 		}
+		
 	}
 	else if (tag.MatchesTagExact(BaseGameplayTags::InputTag_Attack_Weapon_Special))
 	{
@@ -153,7 +162,9 @@ void UComboSystemComponent::OnMovementModeChange(ACharacter* Character, EMovemen
 {
 	// Reset All Combo;
 	Debug::Print("Reset Weapon Combo Count");
-	ResetWeaponCombo();
+	ResetGroundCombo();
+	ResetAerialCombo();
+	StopPsychComboTimer();
 }
 
 
@@ -166,11 +177,13 @@ void UComboSystemComponent::ProcessInputAction(FGameplayTag InputTag, ETriggerEv
 		{
 			if (UBaseFunctionLibrary::NativeActorHasTag(Kasane, BaseGameplayTags::Player_Status_Charging))
 			{
-				ActionElapsedTime = Instance.GetElapsedTime();
+				ActionElapsedTime = Instance.GetElapsedTime() - StartActionElapsedTime;
+				//Debug::Print(FString::Printf(TEXT("Charging %f %f %f"),StartActionElapsedTime, ActionElapsedTime, ChargeCompletionTime), FColor::Blue);
 			}
 			else
 			{
 				ActionElapsedTime = 0.f;
+				StartActionElapsedTime = Instance.GetElapsedTime();
 			}
 			if (bIsAutoCompletion && ActionElapsedTime > ChargeCompletionTime)
 			{
@@ -258,6 +271,10 @@ void UComboSystemComponent::ResetWeaponCombo()
 {
 	WeaponGroundCombo.CurrentComboCount = 0;
 	WeaponAerialCombo.CurrentComboCount = 0;
+}
+
+void UComboSystemComponent::ResetBackstep()
+{
 	BackstepGroundCombo.CurrentComboCount = 0;
 	BackstepAerialCombo.CurrentComboCount = 0;
 }
@@ -271,12 +288,11 @@ void UComboSystemComponent::StartPsychComboTimer()
 		if (this)
 		{
 			PsychGroundCombo.CurrentComboCount = 0;
-			PsychAerialCombo.CurrentComboCount = 0;
 			bIsPsychComboAttacking = false;
 			Debug::Print("ResetPsychCombo");
 		}
 	});
-	GetWorld()->GetTimerManager().SetTimer(PsychComboResetTimerHandle, timerDelegate, PsychComboResetLifeTime, false);
+	GetWorld()->GetTimerManager().SetTimer(PsychComboResetTimerHandle, timerDelegate, PsychComboResetTime, false);
 }
 
 void UComboSystemComponent::ClearPsychComboTimer()
@@ -290,5 +306,22 @@ void UComboSystemComponent::StopPsychComboTimer()
 	PsychAerialCombo.CurrentComboCount = 0;
 	bIsPsychComboAttacking = false;
 	ClearPsychComboTimer();
+}
+
+void UComboSystemComponent::StartComboDashAttackTimer()
+{
+	FTimerDelegate timerDelegate;
+	timerDelegate.BindLambda([this]()
+	{
+		if (this)
+		{
+			if (Kasane)
+			{
+				UBaseFunctionLibrary::RemovePlayGameTagFromActor(Kasane, BaseGameplayTags::Player_Status_ComboDashAttack);
+			}
+		}
+	});
+	UBaseFunctionLibrary::AddPlaygameTagToActor(Kasane, BaseGameplayTags::Player_Status_ComboDashAttack);
+	GetWorld()->GetTimerManager().SetTimer(ComboDashAttackTimerHandle, timerDelegate, ComboDashResetTime, false);
 }
 

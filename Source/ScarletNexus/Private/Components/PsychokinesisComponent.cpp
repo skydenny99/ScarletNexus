@@ -110,6 +110,8 @@ void UPsychokinesisComponent::PlayGroundPsychMontage(const EPsychType& PsychType
 
 void UPsychokinesisComponent::PlayAerialPsychMontage(int32 ComboCount)
 {
+	auto AerialMontage = PsychMontageData->ObjectAerialAnimMontages[ComboCount];
+	PsychSkeletalMesh->GetAnimInstance()->Montage_Play(AerialMontage);
 }
 
 void UPsychokinesisComponent::GetProperPsychType(int32 ComboCount, EPsychType& PsychType, UAnimMontage*& ChargeMontage,

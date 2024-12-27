@@ -33,6 +33,7 @@ void FPsychokinesisAbilityHelper::OnActivatePsychAbility(const ACharacter_Kasane
 		PsychokinesisComponent->SetBlockUpdate(true);
 		ComboSystem->SetupChargeProperty(PsychokinesisComponent->GetPsychTarget()->GetChargeTime(), true);
 		ComboSystem->StartCharging();
+		ComboSystem->ResetWeaponCombo();
 	}
 }
 

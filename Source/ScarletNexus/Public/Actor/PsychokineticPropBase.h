@@ -19,8 +19,6 @@ public:
 	APsychokineticPropBase();
 
 protected:
-	int32 CurrentControlNum = 0;
-	int32 MaxControlNum = 5;
 
 	UPROPERTY(EditDefaultsOnly, meta=(ClampMin="0.15"))
 	float ChargeTime = 1.f;

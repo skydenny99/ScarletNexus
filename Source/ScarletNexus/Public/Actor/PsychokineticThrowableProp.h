@@ -22,11 +22,14 @@ public:
 	virtual void BeginPlay() override;
 
 protected:
+	int32 CurrentControlNum = 0;
+	int32 MaxControlNum = 5;
+	
 	UPROPERTY(EditDefaultsOnly)
 	UStaticMeshComponent* MeshComponent;
 	
 	UPROPERTY(EditDefaultsOnly)
-	float FloatingHeight = 300.f;
+	float FloatingHeight = 150.f;
 	
 	UPROPERTY(EditDefaultsOnly)
 	UProjectileMovementComponent* ProjectileMovementComponent;
