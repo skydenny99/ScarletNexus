@@ -98,7 +98,7 @@ void AProjectileBase::OnProjectileHit(UPrimitiveComponent* HitComponent, AActor*
 	// Data.Target 무적태그 확인
 	
 	//Apply projectile Damage ::TODO
-	HandleApplyProjectile(HitPawn, Data);	
+	HandleApplyProjectile(HitPawn, Data);
 	
 	Destroy();
 	

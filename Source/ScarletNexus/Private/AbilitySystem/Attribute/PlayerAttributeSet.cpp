@@ -13,6 +13,8 @@ UPlayerAttributeSet::UPlayerAttributeSet()
 	InitAttack(1.f);
 	InitDefence(1.f);
 	InitDamageTaken(1.f);
+	InitCurrentPsychGauge(1.f);
+	InitMaxPsychGauge(1.f);	
 	
 }
 

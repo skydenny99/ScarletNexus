@@ -49,7 +49,23 @@ class SCARLETNEXUS_API UPlayerAttributeSet : public UBaseAttributeSet
 	FGameplayAttributeData DamageTaken;
 	ATTRIBUTE_ACCESSORS(UPlayerAttributeSet, DamageTaken)
 
-	// 카사네꺼 확장 가능
+	// 카사네꺼 확장 
+	// 염동력 게이지
+
+	UPROPERTY(BlueprintReadOnly, Category="Status")
+	FGameplayAttributeData CurrentPsychGauge;
+	ATTRIBUTE_ACCESSORS(UPlayerAttributeSet, CurrentPsychGauge)
+
+	UPROPERTY(BlueprintReadOnly, Category = "Status")
+	FGameplayAttributeData MaxPsychGauge;
+	ATTRIBUTE_ACCESSORS(UPlayerAttributeSet, MaxPsychGauge)
+
+	UFUNCTION(BlueprintCallable, Category = "Attributes")
+	float GetCurrentPsychGaugeBP() const { return GetCurrentPsychGauge(); }
+
+	UFUNCTION(BlueprintCallable, Category = "Attributes")
+	void SetCurrentPsychGaugeBP(float NewValue) {SetCurrentPsychGauge(NewValue);}
+
 	
 	
 };

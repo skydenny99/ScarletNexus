@@ -13,6 +13,7 @@
 #include "DataAsset/DataAsset_StartupBase.h"
 #include "BaseDebugHelper.h"
 #include "BaseFunctionLibrary.h"
+#include "AbilitySystem/Attribute/PlayerAttributeSet.h"
 #include "Camera/CameraActor.h"
 #include "Components/ComboSystemComponent.h"
 #include "Components/PsychokinesisComponent.h"
@@ -132,6 +133,11 @@ ACharacter_Kasane::ACharacter_Kasane()
 			WeaponMeshComp->SetRelativeRotation(FRotator(0.f, 0.f, -90.f));
 		}
 	}
+
+	// Attribute
+	BaseAttributeSet = CreateDefaultSubobject<UPlayerAttributeSet>(TEXT("KasaneAttributeSet"));
+
+	
 }
 
 void ACharacter_Kasane::PossessedBy(AController* NewController)
