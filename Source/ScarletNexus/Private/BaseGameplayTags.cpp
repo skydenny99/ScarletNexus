@@ -75,6 +75,8 @@ namespace BaseGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Aerial_Backstep, "Player.Ability.Attack.Aerial.Backstep");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Ground_DashAttack, "Player.Ability.Attack.Ground.DashAttack");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Aerial_DashAttack, "Player.Ability.Attack.Aerial.DashAttack");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Ground_ComboDashAttack, "Player.Ability.Attack.Ground.ComboDashAttack");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Aerial_ComboDashAttack, "Player.Ability.Attack.Aerial.ComboDashAttack");
 
 	// Ability - Move
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Move_Dash, "Player.Ability.Move.Dash");
@@ -98,6 +100,7 @@ namespace BaseGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_Move_Dash, "Player.Status.Move.Dash");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_Move_Dodge, "Player.Status.Move.Dodge");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_Move_Dodge_Instant, "Player.Status.Move.Dodge.Instant");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Status_ComboDashAttack, "Player.Status.ComboDashAttack");
 	
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_Charging, "Player.Status.Charging");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_ChargeReady, "Player.Status.ChargeReady");

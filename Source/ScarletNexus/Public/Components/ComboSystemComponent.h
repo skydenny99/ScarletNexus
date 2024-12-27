@@ -45,7 +45,10 @@ private:
 
 	bool bIsPsychComboAttacking = false;
 	FTimerHandle PsychComboResetTimerHandle;
-	float PsychComboResetLifeTime = 3.f;
+	float PsychComboResetTime = 3.f;
+
+	FTimerHandle ComboDashAttackTimerHandle;
+	float ComboDashResetTime = 1.f;
 
 public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Combo")
@@ -131,6 +134,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category="Combo")
 	void StopPsychComboTimer();
+
+	UFUNCTION(BlueprintCallable, Category="Combo")
+	void StartComboDashAttackTimer();
 	
 	UFUNCTION(BlueprintCallable, Category="Combo", meta=(ExpandBoolAsExecs = "InCombo"))
 	void IsPsychComboAttacking(bool& InCombo) { InCombo = bIsPsychComboAttacking; }
