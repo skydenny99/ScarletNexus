@@ -6,6 +6,7 @@
 #include "Actor/PsychokineticPropBase.h"
 #include "Actor/PsychokineticThrowableProp.h"
 #include "Character/Character_Kasane.h"
+#include "Character/EnemyCharacter/BaseEnemyCharacter.h"
 #include "Components/ComboSystemComponent.h"
 #include "Components/PsychokinesisComponent.h"
 #include "Components/TargetTrackingSpringArmComponent.h"
@@ -57,7 +58,11 @@ void FPsychokinesisAbilityHelper::ActivateThrowPsychAbility(const ACharacter_Kas
 	if (PsychokinesisComponent && TargetTracking)
 	{
 		const auto ThrowableProp = Cast<APsychokineticThrowableProp>(PsychokinesisComponent->GetPsychTarget());
-		ThrowableProp->SetTarget(TargetTracking->GetCurrentTarget()->GetTargetLocation());
+
+		AActor* TargetActor = TargetTracking->GetCurrentTarget();
+		ABaseEnemyCharacter* EnemyCharacter = Cast<ABaseEnemyCharacter>(TargetActor);
+		
+		ThrowableProp->SetTarget(EnemyCharacter->GetTargetVector());
 		ThrowableProp->Launch();
 	}
 }

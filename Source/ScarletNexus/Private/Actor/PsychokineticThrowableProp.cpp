@@ -61,6 +61,7 @@ void APsychokineticThrowableProp::Launch()
 	{
 		Debug::Print(TEXT("CurrentTargetLocation Set"));
 		TargetLocation = CurrentTargetLocation.GetValue();
+		Debug::Print(FString::Printf(TEXT("1. TargetLocation, %f, %f ,%f"), TargetLocation.X, TargetLocation.Y, TargetLocation.Z ));
 	}
 	else if (CurrentTarget != nullptr)
 	{
@@ -75,7 +76,7 @@ void APsychokineticThrowableProp::Launch()
 	}
 	const FRotator LookAtRot = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), TargetLocation);
 	SetActorRotation(LookAtRot);
-	Debug::Print(FString::Printf(TEXT("TargetLocation, %f, %f ,%f"), TargetLocation.X, TargetLocation.Y, TargetLocation.Z ));
+	Debug::Print(FString::Printf(TEXT("2. TargetLocation, %f, %f ,%f"), TargetLocation.X, TargetLocation.Y, TargetLocation.Z ));
 	
 	ProjectileMovementComponent->SetUpdatedComponent(RootComponent);
 	ProjectileMovementComponent->Velocity = (GetActorForwardVector() * ProjectileMovementComponent->MaxSpeed);

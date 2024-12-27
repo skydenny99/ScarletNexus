@@ -45,7 +45,7 @@ ABossEnemyCharacter::ABossEnemyCharacter()
 
 FVector ABossEnemyCharacter::GetTargetVector()
 {
-	FVector TargetVector = (MainBody->GetBoneLocation("Water1") + FVector(0.f, 0.f, 1200.f));
+	FVector TargetVector = (MainBody->GetBoneLocation("Water1"));
 	return TargetVector;
 }
 
