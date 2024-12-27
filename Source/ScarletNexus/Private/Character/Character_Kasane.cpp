@@ -198,6 +198,10 @@ void ACharacter_Kasane::OnInputMoveTriggered(const FInputActionValue& Value)
 	{
 		ComboSystemComponent->TryCancelAttackAbility();
 		ComboSystemComponent->ResetWeaponCombo();
+		if (GetCharacterMovement()->MovementMode != MOVE_Falling)
+		{
+			ComboSystemComponent->ResetBackstep();
+		}
 	}
 }
 

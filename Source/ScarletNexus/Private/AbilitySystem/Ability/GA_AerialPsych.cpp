@@ -14,7 +14,7 @@ bool UGA_AerialPsych::CanActivateAbility(const FGameplayAbilitySpecHandle Handle
 {
 	if (Super::CanActivateAbility(Handle, ActorInfo, SourceTags, TargetTags, OptionalRelevantTags))
 	{
-		return FPsychokinesisAbilityHelper::HasPsychokineticPropInRange(Kasane);
+		return ComboSystem->PsychAerialCombo.CurrentComboCount < ComboSystem->PsychAerialCombo.MaxComboCount && FPsychokinesisAbilityHelper::HasPsychokineticPropInRange(Kasane);
 	}
 	return false;
 }
@@ -24,7 +24,6 @@ void UGA_AerialPsych::PreActivate(const FGameplayAbilitySpecHandle Handle, const
 	FOnGameplayAbilityEnded::FDelegate* OnGameplayAbilityEndedDelegate, const FGameplayEventData* TriggerEventData)
 {
 	Super::PreActivate(Handle, ActorInfo, ActivationInfo, OnGameplayAbilityEndedDelegate, TriggerEventData);
-	ComboSystem->ClearPsychComboTimer();
 	FPsychokinesisAbilityHelper::OnActivatePsychAbility(Kasane);
 }
 
@@ -37,4 +36,9 @@ void UGA_AerialPsych::OnEndAbility(UGameplayAbility* Ability)
 void UGA_AerialPsych::ThrowProjectile()
 {
 	FPsychokinesisAbilityHelper::ActivateThrowPsychAbility(Kasane);
+}
+
+void UGA_AerialPsych::CancelChargingProjectile()
+{
+	FPsychokinesisAbilityHelper::OnChargingCancelPsychAbility(Kasane);
 }

@@ -67,6 +67,7 @@ private:
 	bool bChargeAbilityAlreadyTriggered = false;
 	
 	float ActionElapsedTime;
+	float StartActionElapsedTime;
 	float ChargeAttackThreshold = 0.3f;
 	float ChargeCompletionTime = 0.1f;
 
@@ -107,6 +108,9 @@ public:
 	
 	UFUNCTION(BlueprintCallable, Category="Combo")
 	void ResetWeaponCombo();
+
+	UFUNCTION(BlueprintCallable, Category="Combo")
+	void ResetBackstep();
 
 	void StartCharging()
 	{

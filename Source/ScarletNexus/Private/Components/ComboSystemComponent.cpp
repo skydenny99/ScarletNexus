@@ -151,7 +151,9 @@ void UComboSystemComponent::OnMovementModeChange(ACharacter* Character, EMovemen
 {
 	// Reset All Combo;
 	Debug::Print("Reset Weapon Combo Count");
-	ResetWeaponCombo();
+	ResetGroundCombo();
+	ResetAerialCombo();
+	StopPsychComboTimer();
 }
 
 
@@ -164,11 +166,13 @@ void UComboSystemComponent::ProcessInputAction(FGameplayTag InputTag, ETriggerEv
 		{
 			if (UBaseFunctionLibrary::NativeActorHasTag(Kasane, BaseGameplayTags::Player_Status_Charging))
 			{
-				ActionElapsedTime = Instance.GetElapsedTime();
+				ActionElapsedTime = Instance.GetElapsedTime() - StartActionElapsedTime;
+				//Debug::Print(FString::Printf(TEXT("Charging %f %f %f"),StartActionElapsedTime, ActionElapsedTime, ChargeCompletionTime), FColor::Blue);
 			}
 			else
 			{
 				ActionElapsedTime = 0.f;
+				StartActionElapsedTime = Instance.GetElapsedTime();
 			}
 			if (bIsAutoCompletion && ActionElapsedTime > ChargeCompletionTime)
 			{
@@ -256,6 +260,10 @@ void UComboSystemComponent::ResetWeaponCombo()
 {
 	WeaponGroundCombo.CurrentComboCount = 0;
 	WeaponAerialCombo.CurrentComboCount = 0;
+}
+
+void UComboSystemComponent::ResetBackstep()
+{
 	BackstepGroundCombo.CurrentComboCount = 0;
 	BackstepAerialCombo.CurrentComboCount = 0;
 }
@@ -269,7 +277,6 @@ void UComboSystemComponent::StartPsychComboTimer()
 		if (this)
 		{
 			PsychGroundCombo.CurrentComboCount = 0;
-			PsychAerialCombo.CurrentComboCount = 0;
 			bIsPsychComboAttacking = false;
 			Debug::Print("ResetPsychCombo");
 		}
