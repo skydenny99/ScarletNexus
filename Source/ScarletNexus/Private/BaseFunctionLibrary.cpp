@@ -71,7 +71,7 @@ UPawnCombatComponent* UBaseFunctionLibrary::BP_GetPawnCombatComponentFromActor(A
 
 EBaseAIDirectionType UBaseFunctionLibrary::ComputeAIDirection(AActor* Target, AActor* SelfActor,
 	float& OutAngleDifference)
-{
+ {
 	// 피격자의 Forward 벡터와 공격자 방향 벡터를 정규화
 	const FVector HitForward = SelfActor->GetActorForwardVector();
 	const FVector HitToAttackerNormalized = (Target->GetActorLocation() - SelfActor->GetActorLocation()).GetSafeNormal();

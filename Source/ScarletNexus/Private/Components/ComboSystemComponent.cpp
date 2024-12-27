@@ -117,6 +117,8 @@ void UComboSystemComponent::TryActivateChargeAbility()
 	FGameplayEventData EventData;
 	EventData.Instigator = Kasane;
 	EventData.InstigatorTags.AddTag(ActionElapsedTime >= ChargeCompletionTime ? BaseGameplayTags::Shared_Event_Charge_Confirm : BaseGameplayTags::Shared_Event_Charge_Cancel);
+	
+	Debug::Print(FString::Printf(TEXT("Character Target Name: %s"), *Kasane->GetActorLabel()));
 	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(Kasane, BaseGameplayTags::Shared_Event_Charge, EventData);
 
 	bIsCharging = false;
