@@ -50,9 +50,6 @@ protected:
 public:
 	virtual void NativeConstruct() override;
 
-	UFUNCTION(BlueprintImplementableEvent)
-	void UpdateDebuff(EBaseDebuffType Debuff = EBaseDebuffType::NONE);
-
 	UFUNCTION(BlueprintCallable)
 	void SetHealthGauge(const float SetPercent);
 

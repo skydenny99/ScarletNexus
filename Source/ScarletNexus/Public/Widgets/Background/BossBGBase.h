@@ -25,5 +25,5 @@ public:
 	void InitBossName(const FString Name);
 	
 	UFUNCTION()
-	void OnOwningPlayerUIComponentInitialized(UPlayerUIComponent* PlayerUIComponent) const override;
+	void OnOwningEnemyUIComponentInitialized(UEnemyUIComponent* EnemyUIComponent) const override;
 };

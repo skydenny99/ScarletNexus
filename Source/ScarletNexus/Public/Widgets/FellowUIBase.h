@@ -46,10 +46,10 @@ public:
 	virtual void NativeConstruct() override;
 
 	UFUNCTION(BluePrintCallable)
-	void OnDamagedRFellow(const float SetPercent);
+	void SetPercentRFellow(const float SetPercent);
 
 	UFUNCTION(BluePrintCallable)
-	void OnDamagedLFellow(const float SetPercent);
+	void SetPercentLFellow(const float SetPercent);
 
 	UFUNCTION()
 	void UpdateRightHp(const float TopProgress,const float DeltaSec);

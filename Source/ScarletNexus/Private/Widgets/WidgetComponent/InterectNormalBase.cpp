@@ -5,6 +5,7 @@
 
 #include "Components/Image.h"
 #include "Components/Overlay.h"
+#include "Components/UI/PropUIComponent.h"
 #include "Kismet/KismetMaterialLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
 
@@ -33,4 +34,13 @@ void UInterectNormalBase::UpdateDeny(bool bIsDeny)
 		DenyOverlay->SetVisibility(ESlateVisibility::Collapsed);
 		ButtonFrame_Inner_Full->SetColorAndOpacity(FColor::White);
 	}
+}
+
+void UInterectNormalBase::OnOwningPropUIComponentInitialized(UPropUIComponent* PropUIComponent) const
+{
+	Super::OnOwningPropUIComponentInitialized(PropUIComponent);
+
+	PropUIComponent->OnPropInit.AddDynamic(this,&UInterectNormalBase::InitClickSprite);
+	PropUIComponent->OnDenyed.AddDynamic(this,&UInterectNormalBase::UpdateDeny);
+	PropUIComponent->OnPlayedBlinkAnimation.AddDynamic(this,&UInterectNormalBase::PlayBlinkAnim);
 }

@@ -53,7 +53,7 @@ public:
 	virtual void NativeConstruct() override;
 
 	UFUNCTION(BlueprintCallable)
-	void OnDamaged(const float SetPercent);
+	void SetHpPercent(const float SetPercent);
 
 	UFUNCTION(BlueprintCallable)
 	void SetPsychkinesis(const float SetPercent);

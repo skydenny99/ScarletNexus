@@ -12,9 +12,6 @@
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPercentChangeDelegate, float, NewPercent);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDebuffChangeDelegate, EBaseDebuffType, NewDebuff);
 
-//Boss
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FInitBossNameDelegate,FString,NewName);
-
 /**
  * 
  */
@@ -30,8 +27,4 @@ public:
 
 	UPROPERTY(BlueprintAssignable)
 	FDebuffChangeDelegate OnDebuffChanged;
-
-	//Boss
-	UPROPERTY(BlueprintAssignable)
-	FInitBossNameDelegate OnInitBossName;
 };

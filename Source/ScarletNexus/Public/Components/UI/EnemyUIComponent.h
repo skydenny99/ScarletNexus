@@ -6,6 +6,9 @@
 #include "Components/UI/PawnUIComponent.h"
 #include "EnemyUIComponent.generated.h"
 
+//Boss
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FInitBossNameDelegate,FString,NewName);
+
 /**
  * 
  */
@@ -17,4 +20,8 @@ class SCARLETNEXUS_API UEnemyUIComponent : public UPawnUIComponent
 public:
 	UPROPERTY(BlueprintAssignable)
 	FOnPercentChangeDelegate OnBrainCrashChanged;
+
+	//Boss
+	UPROPERTY(BlueprintAssignable)
+	FInitBossNameDelegate OnInitBossName;
 };

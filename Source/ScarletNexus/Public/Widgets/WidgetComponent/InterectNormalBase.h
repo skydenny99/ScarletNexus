@@ -45,11 +45,13 @@ public:
 	virtual void NativeOnInitialized() override;
 
 	UFUNCTION(BlueprintImplementableEvent)
-	void InitClickSprite(bool bIsLeft);
+	void InitClickSprite(bool bIsNormal);
 
 	UFUNCTION(BlueprintCallable)
 	void PlayBlinkAnim();
 
 	UFUNCTION(BlueprintCallable)
 	void UpdateDeny(bool bIsDeny);
+
+	virtual void OnOwningPropUIComponentInitialized(UPropUIComponent* PropUIComponent) const override;
 };

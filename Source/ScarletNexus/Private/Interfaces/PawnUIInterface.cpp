@@ -13,3 +13,8 @@ UEnemyUIComponent* IPawnUIInterface::GetEnemyUIComponent() const
 {
 	return nullptr;
 }
+
+UPropUIComponent* IPawnUIInterface::GetPropUIComponent() const
+{
+	return nullptr;
+}

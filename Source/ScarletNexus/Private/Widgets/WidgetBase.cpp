@@ -32,6 +32,11 @@ void UWidgetBase::OnOwningEnemyUIComponentInitialized(UEnemyUIComponent* EnemyUI
 	//override
 }
 
+void UWidgetBase::OnOwningPropUIComponentInitialized(UPropUIComponent* PropUIComponent) const
+{
+	//override
+}
+
 void UWidgetBase::InitEnemyCreateWidget(AActor* Enemy)
 {
 	if (IPawnUIInterface* PawnUIInterface = Cast<IPawnUIInterface>(GetOwningPlayerPawn()))
@@ -43,3 +48,10 @@ void UWidgetBase::InitEnemyCreateWidget(AActor* Enemy)
 		}
 	}
 }
+
+/*
+void UWidgetBase::InitPropCreateWidget(AActor* Prop)
+{
+	
+}
+*/

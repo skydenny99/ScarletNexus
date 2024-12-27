@@ -2,7 +2,7 @@
 
 
 #include "Widgets/Background/BossBGBase.h"
-#include "Components/UI/PlayerUIComponent.h"
+#include "Components/UI/EnemyUIComponent.h"
 #include "Components/TextBlock.h"
 
 void UBossBGBase::InitBossName(const FString Name)
@@ -10,9 +10,8 @@ void UBossBGBase::InitBossName(const FString Name)
 	BossName->SetText(FText::FromString(Name));
 }
 
-void UBossBGBase::OnOwningPlayerUIComponentInitialized(UPlayerUIComponent* PlayerUIComponent) const
+void UBossBGBase::OnOwningEnemyUIComponentInitialized(UEnemyUIComponent* EnemyUIComponent) const
 {
-	Super::OnOwningPlayerUIComponentInitialized(PlayerUIComponent);
-
-	PlayerUIComponent->OnInitBossName.AddDynamic(this,&UBossBGBase::InitBossName);
+	Super::OnOwningEnemyUIComponentInitialized(EnemyUIComponent);
+	EnemyUIComponent->OnInitBossName.AddDynamic(this,&UBossBGBase::InitBossName);
 }

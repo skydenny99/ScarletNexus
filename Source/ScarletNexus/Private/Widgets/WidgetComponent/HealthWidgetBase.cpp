@@ -41,9 +41,16 @@ void UHealthWidgetBase::UpdateBrainCrashGauge(const float SetPercent)
 
 void UHealthWidgetBase::UpdateHealthGauge(const float TopProgress, const float DeltaSec)
 {
-	BottomProgress += PrevTopProgress - TopProgress;
-	PrevTopProgress = TopProgress;
-
+	if (PrevTopProgress < TopProgress)
+	{
+		BottomProgress = FMath::Clamp( BottomProgress-TopProgress-PrevTopProgress,0.0f ,1.0f);
+		PrevTopProgress = TopProgress;
+	}
+	else
+	{
+		BottomProgress += PrevTopProgress - TopProgress;
+		PrevTopProgress = TopProgress;
+	}
 	HpMaterialInstance->SetScalarParameterValue("TopProgress", TopProgress);
 	HpMaterialInstance->SetScalarParameterValue("BottomProgress", BottomProgress);
 
@@ -60,7 +67,6 @@ void UHealthWidgetBase::OnOwningEnemyUIComponentInitialized(UEnemyUIComponent* E
 
 	EnemyUIComponent->OnCurrentHpChanged.AddDynamic(this,&UHealthWidgetBase::SetHealthGauge);
 	EnemyUIComponent->OnBrainCrashChanged.AddDynamic(this,&UHealthWidgetBase::UpdateBrainCrashGauge);
-	EnemyUIComponent->OnDebuffChanged.AddDynamic(this,&UHealthWidgetBase::UpdateDebuff);
 }
 
 void UHealthWidgetBase::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)

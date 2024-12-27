@@ -19,54 +19,107 @@ void UFellowUIBase::NativeConstruct()
 	LeftMaterialInstance->SetScalarParameterValue("TopProgress",1.0f);
 
 	AnimSpeed = 0.15f;
-	LeftHpPercent = 1.0f;
-	LPrevTopProgress = 1.0f;
-	LBottomProgress = 0.0f;
+	
 	RightHpPercent = 1.0f;
 	RPrevTopProgress = 1.0f;
 	RBottomProgress = 0.0f;
+	
+	LeftHpPercent = 1.0f;
+	LPrevTopProgress = 1.0f;
+	LBottomProgress = 0.0f;
+	
 	bIsActive = false;
 }
 
-void UFellowUIBase::OnDamagedRFellow(const float SetPercent)
+void UFellowUIBase::SetPercentRFellow(const float SetPercent)
 {
+	if (SetPercent >= RightHpPercent)
+	{
+		RBottomProgress = FMath::Clamp( SetPercent - RPrevTopProgress,0.0f ,1.0f);
+		RightMaterialInstance->SetVectorParameterValue("BottomColor",FColor::Green);
+	}
+	else
+	{
+		RBottomProgress += RPrevTopProgress - SetPercent;
+		RightMaterialInstance->SetVectorParameterValue("BottomColor",FColor::Red);
+	}
+	
 	RightHpPercent = SetPercent;
 	bIsActive = true;
 }
 
-void UFellowUIBase::OnDamagedLFellow(const float SetPercent)
+void UFellowUIBase::SetPercentLFellow(const float SetPercent)
 {
+	if (SetPercent >= LeftHpPercent)
+	{
+		LBottomProgress = FMath::Clamp( SetPercent - LPrevTopProgress,0.0f ,1.0f);
+		LeftMaterialInstance->SetVectorParameterValue("BottomColor",FColor::Green);
+	}
+	else
+	{
+		LBottomProgress += LPrevTopProgress - SetPercent;
+		LeftMaterialInstance->SetVectorParameterValue("BottomColor",FColor::Red);
+	}
+	
 	LeftHpPercent = SetPercent;
 	bIsActive = true;
 }
 
 void UFellowUIBase::UpdateRightHp(const float TopProgress, const float DeltaSec)
 {
-	RBottomProgress += RPrevTopProgress - TopProgress;
-	RPrevTopProgress = TopProgress;
-
-	RightMaterialInstance->SetScalarParameterValue("TopProgress", TopProgress);
-	RightMaterialInstance->SetScalarParameterValue("BottomProgress", RBottomProgress);
-
-	RBottomProgress = FMath::Clamp(RBottomProgress - DeltaSec * AnimSpeed, 0.0f, RBottomProgress);
-	if (RBottomProgress == 0.0f)
+	if (RPrevTopProgress < TopProgress)
 	{
-		bIsActive = false;
+		RightMaterialInstance->SetScalarParameterValue("TopProgress", RPrevTopProgress);
+		RightMaterialInstance->SetScalarParameterValue("BottomProgress", RBottomProgress);
+
+		RPrevTopProgress = FMath::Min(RPrevTopProgress + DeltaSec * AnimSpeed, 1.0f);
+		RBottomProgress = FMath::Max(RBottomProgress - DeltaSec * AnimSpeed, 0.0f);
+		if (RPrevTopProgress == TopProgress)
+		{
+			bIsActive = false;
+		}
+	}
+	else
+	{
+		RPrevTopProgress = TopProgress;
+		
+		RightMaterialInstance->SetScalarParameterValue("TopProgress", TopProgress);
+		RightMaterialInstance->SetScalarParameterValue("BottomProgress", RBottomProgress);
+
+		RBottomProgress = FMath::Clamp(RBottomProgress - DeltaSec * AnimSpeed, 0.0f, RBottomProgress);
+		if (RBottomProgress == 0.0f)
+		{
+			bIsActive = false;
+		}
 	}
 }
 
 void UFellowUIBase::UpdateLeftHp(const float TopProgress, const float DeltaSec)
 {
-	LBottomProgress += LPrevTopProgress - TopProgress;
-	LPrevTopProgress = TopProgress;
-
-	LeftMaterialInstance->SetScalarParameterValue("TopProgress", TopProgress);
-	LeftMaterialInstance->SetScalarParameterValue("BottomProgress", LBottomProgress);
-
-	LBottomProgress = FMath::Clamp(LBottomProgress - DeltaSec * AnimSpeed, 0.0f, LBottomProgress);
-	if (LBottomProgress == 0.0f)
+	if (LPrevTopProgress < TopProgress)
 	{
-		bIsActive = false;
+		LeftMaterialInstance->SetScalarParameterValue("TopProgress", LPrevTopProgress);
+		LeftMaterialInstance->SetScalarParameterValue("BottomProgress", LBottomProgress);
+
+		LPrevTopProgress = FMath::Min(LPrevTopProgress + DeltaSec * AnimSpeed, 1.0f);
+		LBottomProgress = FMath::Max(LBottomProgress - DeltaSec * AnimSpeed, 0.0f);
+		if (LPrevTopProgress == TopProgress)
+		{
+			bIsActive = false;
+		}
+	}
+	else
+	{
+		LPrevTopProgress = TopProgress;
+		
+		LeftMaterialInstance->SetScalarParameterValue("TopProgress", TopProgress);
+		LeftMaterialInstance->SetScalarParameterValue("BottomProgress", LBottomProgress);
+
+		LBottomProgress = FMath::Clamp(LBottomProgress - DeltaSec * AnimSpeed, 0.0f, LBottomProgress);
+		if (LBottomProgress == 0.0f)
+		{
+			bIsActive = false;
+		}
 	}
 }
 
@@ -74,8 +127,8 @@ void UFellowUIBase::OnOwningPlayerUIComponentInitialized(UPlayerUIComponent* Pla
 {
 	Super::OnOwningPlayerUIComponentInitialized(PlayerUIComponent);
 
-	PlayerUIComponent->OnUpdateFellowLeftHpPercent.AddDynamic(this,&UFellowUIBase::OnDamagedLFellow);
-	PlayerUIComponent->OnUpdateFellowRightHpPercent.AddDynamic(this,&UFellowUIBase::OnDamagedRFellow);
+	PlayerUIComponent->OnUpdateFellowLeftHpPercent.AddDynamic(this,&UFellowUIBase::SetPercentLFellow);
+	PlayerUIComponent->OnUpdateFellowRightHpPercent.AddDynamic(this,&UFellowUIBase::SetPercentRFellow);
 }
 
 void UFellowUIBase::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)

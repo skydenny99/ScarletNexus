@@ -2,6 +2,8 @@
 
 
 #include "Widgets/PlayerUIBase.h"
+
+#include "BaseDebugHelper.h"
 #include "Kismet/KismetMaterialLibrary.h"
 #include "Components/Image.h"
 #include "Components/UI/PlayerUIComponent.h"
@@ -28,43 +30,76 @@ void UPlayerUIBase::NativeConstruct()
 	bIsActive = false;
 }
 
-void UPlayerUIBase::OnDamaged(const float SetPercent)
+void UPlayerUIBase::SetHpPercent(const float SetPercent)
 {
+	if (SetPercent >= HpPercent)
+	{
+		HpBottomProgress = FMath::Clamp( SetPercent - HpPrevTopProgress,0.0f ,1.0f);
+		HpMaterialInstance->SetVectorParameterValue("BottomColor",FColor::Green);
+	}
+	else
+	{
+		HpBottomProgress += HpPrevTopProgress - SetPercent;
+		HpMaterialInstance->SetVectorParameterValue("BottomColor",FColor::Red);
+	}
+	
 	HpPercent = SetPercent;
 	bIsActive = true;
 }
 
 void UPlayerUIBase::SetPsychkinesis(const float SetPercent)
 {
+	if (SetPercent >= PsychPercent)
+	{
+		PsychBottomProgress -= SetPercent - PsychPrevTopProgress;
+	}
+	else
+	{
+		PsychBottomProgress += PsychPrevTopProgress - SetPercent;
+	}
+	
 	PsychPercent = SetPercent;
 	bIsActive = true;
 }
 
 void UPlayerUIBase::UpdateHp(const float TopProgress, const float DeltaSec)
 {
-	HpBottomProgress += HpPrevTopProgress - TopProgress ;
-	HpPrevTopProgress = TopProgress;
-
-	HpMaterialInstance->SetScalarParameterValue("TopProgress", TopProgress);
-	HpMaterialInstance->SetScalarParameterValue("BottomProgress", HpBottomProgress);
-
-	HpBottomProgress = FMath::Clamp(HpBottomProgress - DeltaSec * AnimSpeed, 0.0f, HpBottomProgress);
-	if (HpBottomProgress == 0.0f)
+	if (HpPrevTopProgress < TopProgress)
 	{
-		bIsActive = false;
+		HpMaterialInstance->SetScalarParameterValue("TopProgress", HpPrevTopProgress);
+		HpMaterialInstance->SetScalarParameterValue("BottomProgress", HpBottomProgress);
+
+		HpPrevTopProgress = FMath::Min(HpPrevTopProgress + DeltaSec * AnimSpeed, 1.0f);
+		HpBottomProgress = FMath::Max(HpBottomProgress - DeltaSec * AnimSpeed, 0.0f);
+		if (HpPrevTopProgress == TopProgress)
+		{
+			bIsActive = false;
+		}
+	}
+	else
+	{
+		HpPrevTopProgress = TopProgress;
+		
+		HpMaterialInstance->SetScalarParameterValue("TopProgress", TopProgress);
+		HpMaterialInstance->SetScalarParameterValue("BottomProgress", HpBottomProgress);
+
+		HpBottomProgress = FMath::Clamp(HpBottomProgress - DeltaSec * AnimSpeed, 0.0f, HpBottomProgress);
+		if (HpBottomProgress == 0.0f)
+		{
+			bIsActive = false;
+		}
 	}
 }
 
 void UPlayerUIBase::UpdatePsych(const float TopProgress, const float DeltaSec)
 {
-	PsychBottomProgress +=  PsychPrevTopProgress - TopProgress;
 	PsychPrevTopProgress = TopProgress;
-
+	
 	PsychMaterialInstance->SetScalarParameterValue("TopProgress", TopProgress);
 	PsychMaterialInstance->SetScalarParameterValue("BottomProgress", PsychBottomProgress);
 
-	PsychBottomProgress = FMath::Clamp(PsychBottomProgress - DeltaSec * AnimSpeed, 0.0f, PsychBottomProgress);
-	if (HpBottomProgress == 0.0f)
+	PsychBottomProgress = FMath::Max(PsychBottomProgress - DeltaSec * AnimSpeed, 0.0f);
+	if (PsychBottomProgress == 0.0f)
 	{
 		bIsActive = false;
 	}
@@ -74,18 +109,19 @@ void UPlayerUIBase::OnOwningPlayerUIComponentInitialized(UPlayerUIComponent* Pla
 {
 	Super::OnOwningPlayerUIComponentInitialized(PlayerUIComponent);
 
-	PlayerUIComponent->OnCurrentHpChanged.AddDynamic(this,&UPlayerUIBase::OnDamaged);
+	PlayerUIComponent->OnCurrentHpChanged.AddDynamic(this,&UPlayerUIBase::SetHpPercent);
 	PlayerUIComponent->OnPsychPercentChanged.AddDynamic(this,&UPlayerUIBase::SetPsychkinesis);
 }
 
 void UPlayerUIBase::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 {
 	Super::NativeTick(MyGeometry, InDeltaTime);
-
+	
 	if (bIsActive == false && HpBottomProgress == 0.0f && PsychBottomProgress == 0.0f)
 	{
 		return;
 	}
+	
 	UpdateHp(HpPercent,InDeltaTime);
 	UpdatePsych(PsychPercent,InDeltaTime);
 }

@@ -8,6 +8,7 @@
 
 class UPlayerUIComponent;
 class UEnemyUIComponent;
+class UPropUIComponent;
 
 /**
  * 
@@ -28,7 +29,12 @@ protected:
 
 	virtual void OnOwningPlayerUIComponentInitialized(UPlayerUIComponent* PlayerUIComponent) const;
 	virtual void OnOwningEnemyUIComponentInitialized(UEnemyUIComponent* EnemyUIComponent) const;
+	virtual void OnOwningPropUIComponentInitialized(UPropUIComponent* PropUIComponent) const;
 public:
 	UFUNCTION(BlueprintCallable)
 	void InitEnemyCreateWidget(AActor* Enemy);
+
+	/*UFUNCTION(BlueprintCallable)
+	void InitPropCreateWidget(AActor* Prop);*/
 };
+

@@ -37,11 +37,20 @@ void UBossUIBase::OnDamaged(const float SetPercent)
 
 void UBossUIBase::UpdateHp(const float TopProgress, const float DeltaSec)
 {
-	BottomProgress += PrevTopProgress - TopProgress;
-	PrevTopProgress = TopProgress;
-
+	if (PrevTopProgress < TopProgress)
+	{
+		BottomProgress = FMath::Clamp( BottomProgress-TopProgress-PrevTopProgress,0.0f ,1.0f);
+		PrevTopProgress = TopProgress;
+	}
+	else
+	{
+		BottomProgress += PrevTopProgress - TopProgress;
+		PrevTopProgress = TopProgress;
+	}
+	
 	HpDynamicMaterialInstance->SetScalarParameterValue("TopProgress",TopProgress);
 	HpDynamicMaterialInstance->SetScalarParameterValue("BottomProgress",BottomProgress);
+	
 	const float Value = BottomProgress - DeltaSec * AnimationSpeed;
 	BottomProgress = FMath::Clamp(Value,0.0f,BottomProgress);
 	if (BottomProgress == 0.0f)
