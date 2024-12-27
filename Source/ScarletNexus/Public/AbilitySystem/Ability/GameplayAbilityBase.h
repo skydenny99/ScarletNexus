@@ -38,6 +38,11 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Ability", meta=(Display="Apply Gameplay Effect Spec Handle To Target Actor", ExpandEnumAsExecs = "OutSuccessType"))
 	FActiveGameplayEffectHandle BP_ApplyEffectSpecHandleToTarget(AActor* TargetActor, const FGameplayEffectSpecHandle& SpecHandle, EBaseSuccessType& OutSuccessType);
+
+
+	UFUNCTION(BlueprintPure, Category = "Ability")
+	FGameplayEffectSpecHandle MakeKasaneDamageEffectSpecHandle(TSubclassOf<UGameplayEffect> Effect, const FScalableFloat& DamageFloat);
+
 	
 };
 

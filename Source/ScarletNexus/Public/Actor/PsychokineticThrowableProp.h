@@ -31,15 +31,20 @@ protected:
 
 	UPROPERTY()
 	AActor* CurrentTarget;
+	TOptional<FVector> CurrentTargetLocation;
 	bool bIsAttached = false;
 
 public:
 	FORCEINLINE void Attached() { bIsAttached = true; }
 	FORCEINLINE bool IsAttached() const { return bIsAttached; }
 	FORCEINLINE void SetTarget(AActor* Target) {CurrentTarget = Target;}
+	FORCEINLINE void SetTarget(const FVector& TargetVector) {CurrentTargetLocation = TargetVector;}
+	
 
 	void OnStartGrab();
+	UFUNCTION(BlueprintCallable)
 	void OnHit();
+	
 	void OnChargingCancel();
 
 	void FloatingTick(float DeltaTime);

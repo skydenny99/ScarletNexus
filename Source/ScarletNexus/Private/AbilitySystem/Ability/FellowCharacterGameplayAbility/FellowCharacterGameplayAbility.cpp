@@ -32,7 +32,6 @@ FGameplayEffectSpecHandle UFellowCharacterGameplayAbility::MakeFellowDamageEffec
 		ContextHandle
 	);
 	
-
 	SpecHandle.Data->SetSetByCallerMagnitude(BaseGameplayTags::Shared_SetByCaller_BaseDamage,DamageFloat.GetValueAtLevel(GetAbilityLevel()));
 	return SpecHandle;
 	

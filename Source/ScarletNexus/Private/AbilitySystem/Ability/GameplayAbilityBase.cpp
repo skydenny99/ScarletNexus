@@ -7,6 +7,7 @@
 #include "AbilitySystem/BaseAbilitySystemComponent.h"
 #include "Components/Combat/PawnCombatComponent.h"
 #include "BaseDebugHelper.h"
+#include "BaseGameplayTags.h"
 #include "BaseType/BaseEnumType.h"
 
 
@@ -36,4 +37,25 @@ FActiveGameplayEffectHandle UGameplayAbilityBase::BP_ApplyEffectSpecHandleToTarg
     OutSuccessType = ActiveGameplayEffectHandle.WasSuccessfullyApplied() ? EBaseSuccessType::Success : EBaseSuccessType::Failed;
 
     return ActiveGameplayEffectHandle;
+}
+
+FGameplayEffectSpecHandle UGameplayAbilityBase::MakeKasaneDamageEffectSpecHandle(TSubclassOf<UGameplayEffect> Effect,
+    const FScalableFloat& DamageFloat)
+{
+    check(Effect);
+
+    FGameplayEffectContextHandle ContextHandle;
+    ContextHandle.SetAbility(this);
+    ContextHandle.AddSourceObject(GetAvatarActorFromActorInfo());
+    ContextHandle.AddInstigator(GetAvatarActorFromActorInfo(), GetAvatarActorFromActorInfo());
+
+    FGameplayEffectSpecHandle SpecHandle = GetBaseAbilitySystemComponent()->MakeOutgoingSpec(
+        Effect,
+        GetAbilityLevel(),
+        ContextHandle
+    );
+	
+    SpecHandle.Data->SetSetByCallerMagnitude(BaseGameplayTags::Shared_SetByCaller_BaseDamage,DamageFloat.GetValueAtLevel(GetAbilityLevel()));
+    return SpecHandle;
+    
 }

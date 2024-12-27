@@ -47,7 +47,11 @@ void UBTS_OrientToTargetActor::TickNode(UBehaviorTreeComponent& OwnerComp, uint8
 	if (OwningPawn && TargetActor)
 	{
 		const FRotator LookAtRot = UKismetMathLibrary::FindLookAtRotation(OwningPawn->GetActorLocation(), TargetActor->GetActorLocation());
-		const FRotator TargetRot = FMath::RInterpTo(OwningPawn->GetActorRotation(), LookAtRot, DeltaSeconds, RotationInterpSpeed);
+
+		// 2. 현재 회전 값 가져오기
+		FRotator CurrentRot = OwningPawn->GetActorRotation();
+		
+		const FRotator TargetRot = FMath::RInterpTo(CurrentRot, FRotator(CurrentRot.Pitch, LookAtRot.Yaw, LookAtRot.Roll),DeltaSeconds, RotationInterpSpeed);
 
 		OwningPawn->SetActorRotation(TargetRot);
 	}

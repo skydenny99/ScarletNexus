@@ -16,6 +16,7 @@ class SCARLETNEXUS_API ABossEnemyCharacter : public ABaseEnemyCharacter
 
 public:
 	ABossEnemyCharacter();
-	
+
+	virtual FVector GetTargetVector() override;
 	
 };

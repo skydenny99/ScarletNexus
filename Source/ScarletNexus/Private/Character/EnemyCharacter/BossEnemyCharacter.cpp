@@ -42,3 +42,10 @@ ABossEnemyCharacter::ABossEnemyCharacter()
 	BaseAbilitySystemComponent = CreateDefaultSubobject<UBaseAbilitySystemComponent>(TEXT("AbilitySystemComponent"));
 	
 }
+
+FVector ABossEnemyCharacter::GetTargetVector()
+{
+	FVector TargetVector = (MainBody->GetBoneLocation("Water1") + FVector(0.f, 0.f, 1200.f));
+	return TargetVector;
+}
+

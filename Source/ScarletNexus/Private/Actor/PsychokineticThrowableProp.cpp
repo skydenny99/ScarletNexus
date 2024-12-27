@@ -38,6 +38,7 @@ void APsychokineticThrowableProp::OnHit()
 
 void APsychokineticThrowableProp::OnChargingCancel()
 {
+	CurrentTargetLocation.Reset();
 	ProjectileMovementComponent->SetUpdatedComponent(RootComponent);
 	OnHit();
 }
@@ -56,11 +57,16 @@ void APsychokineticThrowableProp::Launch()
 	ProjectileMovementComponent->ProjectileGravityScale = 0.f;
 
 	FVector TargetLocation = FVector::ZeroVector;
-	if (CurrentTarget != nullptr)
+	if (CurrentTargetLocation.IsSet())
 	{
-		TargetLocation = CurrentTarget->GetActorLocation();
+		Debug::Print(TEXT("CurrentTargetLocation Set"));
+		TargetLocation = CurrentTargetLocation.GetValue();
 	}
-	else
+	else if (CurrentTarget != nullptr)
+	{
+		// TargetLocation = CurrentTarget->GetActorLocation();
+	}
+	else 
 	{
 		if (APlayerCameraManager* CameraManager = UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0))
 		{
@@ -69,6 +75,7 @@ void APsychokineticThrowableProp::Launch()
 	}
 	const FRotator LookAtRot = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), TargetLocation);
 	SetActorRotation(LookAtRot);
+	Debug::Print(FString::Printf(TEXT("TargetLocation, %f, %f ,%f"), TargetLocation.X, TargetLocation.Y, TargetLocation.Z ));
 	
 	ProjectileMovementComponent->SetUpdatedComponent(RootComponent);
 	ProjectileMovementComponent->Velocity = (GetActorForwardVector() * ProjectileMovementComponent->MaxSpeed);

@@ -52,6 +52,6 @@ protected:
 	virtual UPawnCombatComponent* GetPawnCombatComponent() const override;
 
 
-	FVector GetTargetVector() const;
+	virtual FVector GetTargetVector() {return FVector::ZeroVector;}
 	
 };
