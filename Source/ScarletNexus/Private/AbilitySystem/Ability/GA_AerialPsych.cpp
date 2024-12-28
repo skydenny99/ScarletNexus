@@ -3,14 +3,25 @@
 
 #include "AbilitySystem/Ability/GA_AerialPsych.h"
 
+#include "AbilitySystemBlueprintLibrary.h"
+#include "BaseGameplayTags.h"
 #include "PsychAbilityHelperLibrary.h"
 #include "Character/Character_Kasane.h"
 #include "Components/ComboSystemComponent.h"
 #include "Components/PsychokinesisComponent.h"
 
+void UGA_AerialPsych::OnGiveAbility(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec)
+{
+	Super::OnGiveAbility(ActorInfo, Spec);
+	if (Kasane)
+	{
+		Kasane->MovementModeChangedDelegate.AddDynamic(this, &UGA_AerialPsych::OnGrounded);
+	}
+}
+
 bool UGA_AerialPsych::CanActivateAbility(const FGameplayAbilitySpecHandle Handle,
-	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayTagContainer* SourceTags,
-	const FGameplayTagContainer* TargetTags, FGameplayTagContainer* OptionalRelevantTags) const
+                                         const FGameplayAbilityActorInfo* ActorInfo, const FGameplayTagContainer* SourceTags,
+                                         const FGameplayTagContainer* TargetTags, FGameplayTagContainer* OptionalRelevantTags) const
 {
 	if (Super::CanActivateAbility(Handle, ActorInfo, SourceTags, TargetTags, OptionalRelevantTags))
 	{
@@ -38,4 +49,12 @@ void UGA_AerialPsych::OnEndAbility(UGameplayAbility* Ability)
 void UGA_AerialPsych::CancelChargingProjectile()
 {
 	UPsychAbilityHelperLibrary::NativeOnChargingCancelPsychAbility(Kasane);
+}
+
+void UGA_AerialPsych::OnGrounded(ACharacter* Character, EMovementMode PrevMovementMode, uint8 PreviousCustomMode)
+{
+	if (PrevMovementMode == MOVE_Falling)
+	{
+		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(Character, BaseGameplayTags::Shared_Event_Grounded, FGameplayEventData());
+	}
 }
