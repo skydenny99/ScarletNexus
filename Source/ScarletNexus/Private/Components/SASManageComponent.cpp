@@ -45,12 +45,14 @@ void USASManageComponent::ToggleSASAbility(FGameplayTag InInputTag)
 		return;
 	}
 	
-	if (AbilitySpecs[AbilityTag].IsActive())
+	if (BaseAbilitySystemComponent->IsAbilityActive(AbilitySpecs[AbilityTag].Handle))
 	{
+		Debug::Print("SAS Ability is activated", FColor::Red);
 		BaseAbilitySystemComponent->CancelAbilityHandle(AbilitySpecs[AbilityTag].Handle);
 	}
 	else
 	{
+		Debug::Print("SAS Ability not is activated", FColor::Red);
 		if (BaseAbilitySystemComponent->TryActivateAbility(AbilitySpecs[AbilityTag].Handle) == false)
 		{
 			Debug::Print("SAS Ability try failed", FColor::Red);

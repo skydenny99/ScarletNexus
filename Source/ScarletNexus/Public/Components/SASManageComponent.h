@@ -32,6 +32,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Ability")
 	UDataAsset_SASAbility* AbilityAsset;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Ability")
 	TArray<FGameplayTag> CurrentSASAbilityTags;
 	TMap<FGameplayTag, FGameplayAbilitySpec> AbilitySpecs;
 	

@@ -43,3 +43,10 @@ bool UBaseAbilitySystemComponent::TryActivateAbilityByTag(FGameplayTag Tag)
 
 	return false;
 }
+
+bool UBaseAbilitySystemComponent::IsAbilityActive(const FGameplayAbilitySpecHandle& InHandle)
+{
+	ABILITYLIST_SCOPE_LOCK();
+	FGameplayAbilitySpec* Spec = FindAbilitySpecFromHandle(InHandle);
+	return Spec ? Spec->IsActive() : false;
+}

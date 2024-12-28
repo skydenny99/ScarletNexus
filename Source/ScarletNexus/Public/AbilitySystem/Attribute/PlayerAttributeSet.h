@@ -60,6 +60,43 @@ class SCARLETNEXUS_API UPlayerAttributeSet : public UBaseAttributeSet
 	FGameplayAttributeData MaxPsychGauge;
 	ATTRIBUTE_ACCESSORS(UPlayerAttributeSet, MaxPsychGauge)
 
+	// Kasane SAS Ability Gauge
+	// Fire SAS
+	UPROPERTY(BlueprintReadOnly, Category = "Status")
+	FGameplayAttributeData CurrentFireGauge;
+	ATTRIBUTE_ACCESSORS(UPlayerAttributeSet, CurrentFireGauge)
+	
+	UPROPERTY(BlueprintReadOnly, Category = "Status")
+	FGameplayAttributeData MaxFireGauge;
+	ATTRIBUTE_ACCESSORS(UPlayerAttributeSet, MaxFireGauge)
+	
+	// Clone SAS
+	UPROPERTY(BlueprintReadOnly, Category = "Status")
+	FGameplayAttributeData CurrentCloneGauge;
+	ATTRIBUTE_ACCESSORS(UPlayerAttributeSet, CurrentCloneGauge)
+	
+	UPROPERTY(BlueprintReadOnly, Category = "Status")
+	FGameplayAttributeData MaxCloneGauge;
+	ATTRIBUTE_ACCESSORS(UPlayerAttributeSet, MaxCloneGauge)
+	
+	// Accel SAS
+	UPROPERTY(BlueprintReadOnly, Category = "Status")
+	FGameplayAttributeData CurrentAccelGauge;
+	ATTRIBUTE_ACCESSORS(UPlayerAttributeSet, CurrentAccelGauge)
+	
+	UPROPERTY(BlueprintReadOnly, Category = "Status")
+	FGameplayAttributeData MaxAccelGauge;
+	ATTRIBUTE_ACCESSORS(UPlayerAttributeSet, MaxAccelGauge)
+	
+	// Stealth SAS
+	UPROPERTY(BlueprintReadOnly, Category = "Status")
+	FGameplayAttributeData CurrentStealthGauge;
+	ATTRIBUTE_ACCESSORS(UPlayerAttributeSet, CurrentStealthGauge)
+	
+	UPROPERTY(BlueprintReadOnly, Category = "Status")
+	FGameplayAttributeData MaxStealthGauge;
+	ATTRIBUTE_ACCESSORS(UPlayerAttributeSet, MaxStealthGauge)
+
 	UFUNCTION(BlueprintCallable, Category = "Attributes")
 	float GetCurrentPsychGaugeBP() const { return GetCurrentPsychGauge(); }
 

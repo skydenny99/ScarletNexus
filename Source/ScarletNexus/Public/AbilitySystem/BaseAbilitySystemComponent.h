@@ -21,5 +21,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Ability")
 	bool TryActivateAbilityByTag(FGameplayTag Tag);
+
+	bool IsAbilityActive(const FGameplayAbilitySpecHandle& InHandle);
 	
 };
