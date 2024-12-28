@@ -9,6 +9,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Character_Kasane.generated.h"
 
+class USASManageComponent;
 class UCameraComponent;
 class UPsychokinesisComponent;
 class USphereComponent;
@@ -47,6 +48,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category="Battle")
 	USphereComponent* JustDodgeBoundary;
 
+	UPROPERTY(EditDefaultsOnly, Category="Battle")
+	USASManageComponent* SASManageComponent;
+
 	UPROPERTY(EditDefaultsOnly, Category="Psych")
 	USphereComponent* PsychBoundary;
 
@@ -65,6 +69,7 @@ protected:
 	void OnInputMoveTriggered(const FInputActionValue& Value);
 	void OnInputLookTriggered(const FInputActionValue& Value);
 	void OnAbilityInputTriggered(FGameplayTag InputTag);
+	void OnSASAbilityInputTriggered(FGameplayTag InputTag);
 	void UpdateMovementElapsedTime(const FInputActionInstance& Instance);
 	void ResetMovementElapsedTime(const FInputActionValue& Value);
 	void OnTargetingInputTriggered(const FInputActionValue& Value);

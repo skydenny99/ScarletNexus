@@ -33,6 +33,7 @@ namespace BaseGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_SAS_Second, "InputTag.SAS.Second");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_SAS_Third, "InputTag.SAS.Third");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_SAS_Fourth, "InputTag.SAS.Fourth");
+	UE_DEFINE_GAMEPLAY_TAG(InputTag_SAS_Cancel, "InputTag.SAS.Cancel");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_SAS_Change, "InputTag.SAS.Change");
 
 	//TagAttack
@@ -146,6 +147,7 @@ namespace BaseGameplayTags
 	// Shared - Status
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Status_CanAttack, "Shared.Status.CanAttack");
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Status_CanMove, "Shared.Status.CanMove");
+	UE_DEFINE_GAMEPLAY_TAG(Shared_Status_Direct, "Shared.Status.Direct");
 
 #pragma endregion
 }

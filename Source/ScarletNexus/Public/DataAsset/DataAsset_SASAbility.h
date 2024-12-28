@@ -3,19 +3,19 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AbilitySystem/Ability/GA_AttackAbilityBase.h"
+#include "AbilitySystem/Ability/GA_SASAbilityBase.h"
 #include "Engine/DataAsset.h"
-#include "DataAsset_AttackAbility.generated.h"
+#include "DataAsset_SASAbility.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class SCARLETNEXUS_API UDataAsset_AttackAbility : public UDataAsset
+class SCARLETNEXUS_API UDataAsset_SASAbility : public UDataAsset
 {
 	GENERATED_BODY()
-
+	
 public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Ability")
-	TArray<TSubclassOf<UGA_AttackAbilityBase>> AttackAbilityList;
+	TArray<TSubclassOf<UGA_SASAbilityBase>> SASAbilityList;
 };
