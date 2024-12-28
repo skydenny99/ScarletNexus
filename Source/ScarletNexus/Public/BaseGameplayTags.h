@@ -176,15 +176,6 @@ namespace BaseGameplayTags
 	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_SetByCaller_BaseDamage);
 	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_SetByCaller_BasePower);
 
-
-
-	
-	
-
-	// Shared - Status
-	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Status_CanAttack);
-	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Status_CanMove);
-
 #pragma endregion
 
 

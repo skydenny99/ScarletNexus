@@ -8,7 +8,7 @@
 
 #include "BaseAttributeSet.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPercentChangeDelegate, float, NewPercent);
+//DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPercentChangeDelegate, float, NewPercent);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnValueChangeDelegate, float, NewValue);
 
 
