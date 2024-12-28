@@ -3,10 +3,10 @@
 
 #include "AbilitySystem/Ability/GA_AerialPsych.h"
 
+#include "PsychAbilityHelperLibrary.h"
 #include "Character/Character_Kasane.h"
 #include "Components/ComboSystemComponent.h"
 #include "Components/PsychokinesisComponent.h"
-#include "Utility/PsychokinesisAbilityHelper.h"
 
 bool UGA_AerialPsych::CanActivateAbility(const FGameplayAbilitySpecHandle Handle,
 	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayTagContainer* SourceTags,
@@ -14,7 +14,8 @@ bool UGA_AerialPsych::CanActivateAbility(const FGameplayAbilitySpecHandle Handle
 {
 	if (Super::CanActivateAbility(Handle, ActorInfo, SourceTags, TargetTags, OptionalRelevantTags))
 	{
-		return ComboSystem->PsychAerialCombo.CurrentComboCount < ComboSystem->PsychAerialCombo.MaxComboCount && FPsychokinesisAbilityHelper::HasPsychokineticPropInRange(Kasane);
+		return ComboSystem->PsychAerialCombo.CurrentComboCount < ComboSystem->PsychAerialCombo.MaxComboCount
+		&& UPsychAbilityHelperLibrary::NativeHasPsychokineticPropInRange(Kasane);
 	}
 	return false;
 }
@@ -24,7 +25,7 @@ void UGA_AerialPsych::PreActivate(const FGameplayAbilitySpecHandle Handle, const
 	FOnGameplayAbilityEnded::FDelegate* OnGameplayAbilityEndedDelegate, const FGameplayEventData* TriggerEventData)
 {
 	Super::PreActivate(Handle, ActorInfo, ActivationInfo, OnGameplayAbilityEndedDelegate, TriggerEventData);
-	FPsychokinesisAbilityHelper::OnActivatePsychAbility(Kasane);
+	UPsychAbilityHelperLibrary::NativeOnActivatePsychAbility(Kasane);
 }
 
 void UGA_AerialPsych::OnEndAbility(UGameplayAbility* Ability)
@@ -33,12 +34,8 @@ void UGA_AerialPsych::OnEndAbility(UGameplayAbility* Ability)
 	Kasane->GetPsychokinesisComponent()->SetBlockUpdate(false);
 }
 
-void UGA_AerialPsych::ThrowProjectile()
-{
-	FPsychokinesisAbilityHelper::ActivateThrowPsychAbility(Kasane);
-}
 
 void UGA_AerialPsych::CancelChargingProjectile()
 {
-	FPsychokinesisAbilityHelper::OnChargingCancelPsychAbility(Kasane);
+	UPsychAbilityHelperLibrary::NativeOnChargingCancelPsychAbility(Kasane);
 }

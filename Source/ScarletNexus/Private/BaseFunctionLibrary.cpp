@@ -33,14 +33,14 @@ void UBaseFunctionLibrary::RemovePlayGameTagFromActor(AActor* Actor, FGameplayTa
 bool UBaseFunctionLibrary::NativeActorHasTag(AActor* Actor, FGameplayTag Tag)
 {
 	UBaseAbilitySystemComponent* ASC = NativeGetAbilitySystemComponentFromActor(Actor);
-
+	if (ASC == nullptr) return false;
 	return ASC->HasMatchingGameplayTag(Tag);
 }
 
 bool UBaseFunctionLibrary::NativeActorHasAnyTags(AActor* Actor, FGameplayTagContainer Tags)
 {
 	UBaseAbilitySystemComponent* ASC = NativeGetAbilitySystemComponentFromActor(Actor);
-
+	if (ASC == nullptr) return false;
 	return ASC->HasAnyMatchingGameplayTags(Tags);
 }
 

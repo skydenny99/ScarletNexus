@@ -44,6 +44,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category="Battle")
 	UComboSystemComponent* ComboSystemComponent;
 
+	UPROPERTY(EditDefaultsOnly, Category="Battle")
+	USphereComponent* JustDodgeBoundary;
+
 	UPROPERTY(EditDefaultsOnly, Category="Psych")
 	USphereComponent* PsychBoundary;
 

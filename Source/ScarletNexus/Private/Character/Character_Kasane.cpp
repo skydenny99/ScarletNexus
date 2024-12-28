@@ -120,6 +120,10 @@ ACharacter_Kasane::ACharacter_Kasane()
 		PsychObject->SetAnimInstanceClass(PsychObjectAnimAsset.Class);
 	}
 	PsychokinesisComponent->InitComponents(PsychBoundary, PsychObject);
+
+	JustDodgeBoundary = CreateDefaultSubobject<USphereComponent>(TEXT("JustDodgeBoundary"));
+	JustDodgeBoundary->SetupAttachment(MainBody, FName("Waist"));
+	JustDodgeBoundary->InitSphereRadius(500.f);
 	
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh> WeaponMesh(TEXT("/Game/Resources/Weapons/WP0200/WP200_Base.WP200_Base"));
 	if (WeaponMesh.Succeeded())
@@ -147,7 +151,7 @@ void ACharacter_Kasane::PossessedBy(AController* NewController)
 
 	if (ComboSystemComponent)
 	{
-		ComboSystemComponent->InitKasane(this);
+		ComboSystemComponent->InitReferences(this, JustDodgeBoundary);
 		ComboSystemComponent->GrantAttackAbilites(BaseAbilitySystemComponent);
 	}
 }

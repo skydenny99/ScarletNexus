@@ -7,6 +7,7 @@
 #include "InputAction.h"
 #include "AbilitySystem/Ability/GameplayAbilityBase.h"
 #include "Components/ActorComponent.h"
+#include "Components/SphereComponent.h"
 #include "ComboSystemComponent.generated.h"
 
 
@@ -79,10 +80,12 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Ability", meta=(AllowPrivateAccess=true))
 	UDataAsset_AttackAbility* AbilityAsset;
-	
+
+	UPROPERTY()
+	USphereComponent* JustDodgeBoundary;
 
 public:
-	void InitKasane(ACharacter_Kasane* InKasane);
+	void InitReferences(ACharacter_Kasane* InKasane, USphereComponent* InJustDodgeBoundary);
 	void GrantAttackAbilites(UAbilitySystemComponent* ASC, int32 Level = 1);
 	void UpdateInfoByUnlock();
 
@@ -95,6 +98,7 @@ public:
 	
 
 	void ProcessInputAction(FGameplayTag InputTag, ETriggerEvent TriggerEvent, const FInputActionInstance& Instance);
+	bool CheckJustDodge();
 
 	UFUNCTION(BlueprintCallable, Category="Combo")
 	void IncreaseCombo(UPARAM(ref) FComboCounter& ComboCounter);

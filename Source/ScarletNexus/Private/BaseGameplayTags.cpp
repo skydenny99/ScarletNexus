@@ -86,8 +86,10 @@ namespace BaseGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_BrainCrush, "Player.Ability.BrainCrush");
 
 	// Ability - JustDodge
-	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_JustDodge_Weapon, "Player.Ability.JustDodge.Weapon");
-	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_JustDodge_Psych, "Player.Ability.JustDodge.Psych");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_JustDodge_Ground_Weapon, "Player.Ability.JustDodge.Ground.Weapon");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_JustDodge_Ground_Psych, "Player.Ability.JustDodge.Ground.Psych");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_JustDodge_Aerial_Weapon, "Player.Ability.JustDodge.Aerial.Weapon");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_JustDodge_Aerial_Psych, "Player.Ability.JustDodge.Aerial.Psych");
 
 	// Status
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_SAS_Accel, "Player.Status.SAS.Accel");
@@ -137,6 +139,7 @@ namespace BaseGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_Charge_Cancel, "Shared.Event.Charge.Cancel");
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_Charge_Confirm, "Shared.Event.Charge.Confirm");
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_ThrowProjectile, "Shared.Event.ThrowProjectile");
+	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_Grounded, "Shared.Event.Grounded");
 
 	
 

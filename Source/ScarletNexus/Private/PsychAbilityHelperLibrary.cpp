@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Utility/PsychokinesisAbilityHelper.h"
+#include "PsychAbilityHelperLibrary.h"
 
 #include "Actor/PsychokineticPropBase.h"
 #include "Actor/PsychokineticThrowableProp.h"
@@ -10,19 +10,25 @@
 #include "Components/PsychokinesisComponent.h"
 #include "Components/TargetTrackingSpringArmComponent.h"
 
+void UPsychAbilityHelperLibrary::NativeSetPsychObject(const ACharacter_Kasane* Kasane, AActor* PsychObject)
+{
+	if (Kasane == nullptr) return;
+	UPsychokinesisComponent* PsychokinesisComponent = Kasane->GetPsychokinesisComponent();
+	if (PsychokinesisComponent)
+	{
+		PsychokinesisComponent->SetBlockUpdate(true);
+		PsychokinesisComponent->SetPsychTargetInForce(PsychObject);
+	}
+}
 
-bool FPsychokinesisAbilityHelper::HasPsychokineticPropInRange(const ACharacter_Kasane* Kasane)
+bool UPsychAbilityHelperLibrary::NativeHasPsychokineticPropInRange(const ACharacter_Kasane* Kasane)
 {
 	if (Kasane == nullptr) return false;
 	const UPsychokinesisComponent* PsychokinesisComponent = Kasane->GetPsychokinesisComponent();
-	if (PsychokinesisComponent)
-	{
-		Debug::Print(FString::Printf(TEXT("Has psycho prop: %s"), *FString(PsychokinesisComponent->GetPsychTarget() != nullptr ? "true" : "false")));
-	}
 	return PsychokinesisComponent ? PsychokinesisComponent->GetPsychTarget() != nullptr : false;
 }
 
-void FPsychokinesisAbilityHelper::OnActivatePsychAbility(const ACharacter_Kasane* Kasane)
+void UPsychAbilityHelperLibrary::NativeOnActivatePsychAbility(const ACharacter_Kasane* Kasane)
 {
 	if (Kasane == nullptr) return;
 	UPsychokinesisComponent* PsychokinesisComponent = Kasane->GetPsychokinesisComponent();
@@ -36,7 +42,7 @@ void FPsychokinesisAbilityHelper::OnActivatePsychAbility(const ACharacter_Kasane
 	}
 }
 
-void FPsychokinesisAbilityHelper::OnChargingCancelPsychAbility(const ACharacter_Kasane* Kasane)
+void UPsychAbilityHelperLibrary::NativeOnChargingCancelPsychAbility(const ACharacter_Kasane* Kasane)
 {
 	if (Kasane == nullptr) return;
 	UPsychokinesisComponent* PsychokinesisComponent = Kasane->GetPsychokinesisComponent();
@@ -50,7 +56,7 @@ void FPsychokinesisAbilityHelper::OnChargingCancelPsychAbility(const ACharacter_
 	}
 }
 
-void FPsychokinesisAbilityHelper::ActivateThrowPsychAbility(const ACharacter_Kasane* Kasane)
+void UPsychAbilityHelperLibrary::ActivateThrowPsychAbility(const ACharacter_Kasane* Kasane)
 {
 	if (Kasane == nullptr) return;
 	UPsychokinesisComponent* PsychokinesisComponent = Kasane->GetPsychokinesisComponent();
@@ -58,12 +64,24 @@ void FPsychokinesisAbilityHelper::ActivateThrowPsychAbility(const ACharacter_Kas
 	if (PsychokinesisComponent && TargetTracking)
 	{
 		const auto ThrowableProp = Cast<APsychokineticThrowableProp>(PsychokinesisComponent->GetPsychTarget());
-		ThrowableProp->SetTarget(TargetTracking->GetCurrentTarget());
-		ThrowableProp->Launch();
+		if (ThrowableProp)
+		{
+			ThrowableProp->SetTarget(TargetTracking->GetCurrentTarget());
+			ThrowableProp->Launch();
+		}
 	}
 }
 
-
-void FPsychokinesisAbilityHelper::ActivateSpecialPsychAbility()
+void UPsychAbilityHelperLibrary::ActivateSpecialPsychAbility()
 {
+}
+
+void UPsychAbilityHelperLibrary::SetBlockUpdateTarget(const ACharacter_Kasane* Kasane, bool InBlock)
+{
+	if (Kasane == nullptr) return;
+	UPsychokinesisComponent* PsychokinesisComponent = Kasane->GetPsychokinesisComponent();
+	if (PsychokinesisComponent)
+	{
+		PsychokinesisComponent->SetBlockUpdate(InBlock);
+	}
 }

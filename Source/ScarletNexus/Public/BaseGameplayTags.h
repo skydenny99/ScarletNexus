@@ -88,8 +88,10 @@ namespace BaseGameplayTags
 	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Ability_BrainCrush);
 
 	// Ability - JustDodge
-	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Ability_JustDodge_Weapon);
-	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Ability_JustDodge_Psych);
+	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Ability_JustDodge_Ground_Weapon);
+	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Ability_JustDodge_Ground_Psych);
+	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Ability_JustDodge_Aerial_Weapon);
+	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Ability_JustDodge_Aerial_Psych);
 
 
 	// Status
@@ -141,6 +143,7 @@ namespace BaseGameplayTags
 	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Event_Charge_Cancel);
 	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Event_Charge_Confirm);
 	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Event_ThrowProjectile);
+	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Event_Grounded);
 	
 
 	// Shared - Status

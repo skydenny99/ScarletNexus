@@ -21,9 +21,6 @@ protected:
 	virtual void OnEndAbility(UGameplayAbility* Ability) override;
 	
 	UFUNCTION(BlueprintCallable)
-	void ThrowProjectile();
-	
-	UFUNCTION(BlueprintCallable)
 	void CancelChargingProjectile();
 
 	UFUNCTION(BlueprintPure)
