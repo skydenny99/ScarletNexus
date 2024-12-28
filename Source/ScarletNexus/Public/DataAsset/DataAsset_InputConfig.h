@@ -47,5 +47,11 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (Categories = "InputTag"))
 	TArray<FInputActionConfig> AttackInputActions;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (Categories = "InputTag"))
+	TArray<FInputActionConfig> SASAbilityInputActions;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UInputAction* SASCancelInputAction;
+
 	UInputAction* GetInputActionByTag(const FGameplayTag& InInputTag) const;
 };

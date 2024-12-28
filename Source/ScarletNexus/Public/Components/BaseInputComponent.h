@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "BaseGameplayTags.h"
 #include "EnhancedInputComponent.h"
 #include "DataAsset/DataAsset_InputConfig.h"
 #include "DataAsset/DataAsset_DirectionInputConfig.h"
@@ -25,6 +26,9 @@ public:
 
 	template<class UserObject, typename CallbackFunc>
 	void BindAbilityInputAction(const UDataAsset_InputConfig* InInputConfig, UserObject* ContextObject, CallbackFunc InputTriggeredFunc);
+	
+	template<class UserObject, typename CallbackFunc>
+	void BindSASAbilityInputAction(const UDataAsset_InputConfig* InInputConfig, UserObject* ContextObject, CallbackFunc InputTriggeredFunc);
 
 	template<class UserObject, typename CallbackFunc>
 	void BindDirectionInput(const UDataAsset_DirectionInputConfig* InInputConfig, UserObject* ContextObject, CallbackFunc InputTriggeredFunc);
@@ -53,6 +57,20 @@ inline void UBaseInputComponent::BindAbilityInputAction(const UDataAsset_InputCo
 		if (Config.IsValid() == false) continue;
 		BindAction(Config.InputAction, ETriggerEvent::Triggered, ContextObject, InputTriggeredFunc, Config.InputTag);
 	}
+}
+
+template <class UserObject, typename CallbackFunc>
+void UBaseInputComponent::BindSASAbilityInputAction(const UDataAsset_InputConfig* InInputConfig,
+	UserObject* ContextObject, CallbackFunc InputTriggeredFunc)
+{
+	check(InInputConfig);
+
+	for (const FInputActionConfig& Config : InInputConfig->SASAbilityInputActions)
+	{
+		if (Config.IsValid() == false) continue;
+		BindAction(Config.InputAction, ETriggerEvent::Triggered, ContextObject, InputTriggeredFunc, Config.InputTag);
+	}
+	BindAction(InInputConfig->SASCancelInputAction, ETriggerEvent::Triggered, ContextObject, InputTriggeredFunc, BaseGameplayTags::InputTag_SAS_Cancel.GetTag());
 }
 
 template <class UserObject, typename CallbackFunc>

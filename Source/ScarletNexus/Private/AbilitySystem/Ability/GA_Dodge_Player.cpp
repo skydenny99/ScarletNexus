@@ -147,12 +147,7 @@ void UGA_Dodge_Player::PlayDodgeAnimation(EBaseDirectionType Direction)
 
 void UGA_Dodge_Player::OnEndDodge()
 {
-	FVector Velocity = DodgeMovementComponent->Velocity;
-	Velocity /= 3.f;
-	Velocity.Z = 0;
-	DodgeMovementComponent->Velocity = Velocity;
-	DodgeMovementComponent->GravityScale = 3;
-	UBaseFunctionLibrary::RemovePlayGameTagFromActor(DodgeCharacter, BaseGameplayTags::Player_Status_Move_Dodge);
+	OnCancelDodge();
 	K2_EndAbility();
 }
 
@@ -164,6 +159,11 @@ void UGA_Dodge_Player::OnCancelDodge()
 	DodgeMovementComponent->Velocity = Velocity;
 	DodgeMovementComponent->GravityScale = 3;
 	UBaseFunctionLibrary::RemovePlayGameTagFromActor(DodgeCharacter, BaseGameplayTags::Player_Status_Move_Dodge);
+	if (UBaseFunctionLibrary::NativeActorHasTag(DodgeCharacter, BaseGameplayTags::Player_Status_Move_Dodge_Instant))
+	{
+		UGameplayStatics::SetGlobalTimeDilation(DodgeCharacter, 1.f);
+		UBaseFunctionLibrary::RemovePlayGameTagFromActor(DodgeCharacter, BaseGameplayTags::Player_Status_Move_Dodge_Instant);
+	}
 }
 
 void UGA_Dodge_Player::ResetDodgeCount(ACharacter* Character, EMovementMode PrevMovementMode, uint8 PreviousCustomMode)
