@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AbilitySystem/Ability/GameplayAbilityBase.h"
+#include "AbilitySystem/Ability/GA_AttackAbilityBase.h"
 #include "Engine/DataAsset.h"
 #include "DataAsset_AttackAbility.generated.h"
 
@@ -17,5 +17,5 @@ class SCARLETNEXUS_API UDataAsset_AttackAbility : public UDataAsset
 
 public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Ability")
-	TArray<TSubclassOf<UGameplayAbilityBase>> AttackAbilityList;
+	TArray<TSubclassOf<UGA_AttackAbilityBase>> AttackAbilityList;
 };

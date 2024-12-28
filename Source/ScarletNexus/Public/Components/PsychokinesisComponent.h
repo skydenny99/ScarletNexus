@@ -75,6 +75,8 @@ public:
 	void AttachPsychTargetToBone(APsychokineticThrowableProp* Target);
 	FOnPsychTargetUpdated OnPsychTargetUpdated;
 
+	void SetPsychTargetInForce(AActor* InActor);
+
 	UFUNCTION(BlueprintPure)
 	APsychokineticPropBase* GetPsychTarget() const {return PsychTarget;}
 
@@ -89,6 +91,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void PlayAerialPsychMontage(int32 ComboCount);
+
+	UFUNCTION(BlueprintCallable)
+	void PlayJustDodgePsychMontage();
 
 	USkeletalMeshComponent* GetPsychSkeletalMesh() const { return PsychSkeletalMesh; }
 	

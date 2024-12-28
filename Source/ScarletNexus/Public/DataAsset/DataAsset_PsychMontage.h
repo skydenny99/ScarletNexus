@@ -42,6 +42,9 @@ public:
 	
 	UPROPERTY(EditAnywhere, Category= "PsychObject")
 	TArray<UAnimMontage*> ObjectAerialAnimMontages;
+
+	UPROPERTY(EditAnywhere, Category= "PsychObject")
+	UAnimMontage* ObjectJustDodgeMontage;
 	
 	UPROPERTY(EditAnywhere, Category= "Character")
 	TMap<EPsychType, FCharacterMontageSet> CharacterGroundAnimMontageSets;

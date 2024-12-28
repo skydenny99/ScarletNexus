@@ -7,6 +7,7 @@
 #include "InputAction.h"
 #include "AbilitySystem/Ability/GameplayAbilityBase.h"
 #include "Components/ActorComponent.h"
+#include "Components/SphereComponent.h"
 #include "ComboSystemComponent.generated.h"
 
 
@@ -45,7 +46,10 @@ private:
 
 	bool bIsPsychComboAttacking = false;
 	FTimerHandle PsychComboResetTimerHandle;
-	float PsychComboResetLifeTime = 3.f;
+	float PsychComboResetTime = 3.f;
+
+	FTimerHandle ComboDashAttackTimerHandle;
+	float ComboDashResetTime = 1.f;
 
 public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Combo")
@@ -67,6 +71,7 @@ private:
 	bool bChargeAbilityAlreadyTriggered = false;
 	
 	float ActionElapsedTime;
+	float StartActionElapsedTime;
 	float ChargeAttackThreshold = 0.3f;
 	float ChargeCompletionTime = 0.1f;
 
@@ -75,10 +80,12 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Ability", meta=(AllowPrivateAccess=true))
 	UDataAsset_AttackAbility* AbilityAsset;
-	
+
+	UPROPERTY()
+	USphereComponent* JustDodgeBoundary;
 
 public:
-	void InitKasane(ACharacter_Kasane* InKasane);
+	void InitReferences(ACharacter_Kasane* InKasane, USphereComponent* InJustDodgeBoundary);
 	void GrantAttackAbilites(UAbilitySystemComponent* ASC, int32 Level = 1);
 	void UpdateInfoByUnlock();
 
@@ -91,6 +98,7 @@ public:
 	
 
 	void ProcessInputAction(FGameplayTag InputTag, ETriggerEvent TriggerEvent, const FInputActionInstance& Instance);
+	bool CheckJustDodge();
 
 	UFUNCTION(BlueprintCallable, Category="Combo")
 	void IncreaseCombo(UPARAM(ref) FComboCounter& ComboCounter);
@@ -107,6 +115,9 @@ public:
 	
 	UFUNCTION(BlueprintCallable, Category="Combo")
 	void ResetWeaponCombo();
+
+	UFUNCTION(BlueprintCallable, Category="Combo")
+	void ResetBackstep();
 
 	void StartCharging()
 	{
@@ -127,6 +138,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category="Combo")
 	void StopPsychComboTimer();
+
+	UFUNCTION(BlueprintCallable, Category="Combo")
+	void StartComboDashAttackTimer();
 	
 	UFUNCTION(BlueprintCallable, Category="Combo", meta=(ExpandBoolAsExecs = "InCombo"))
 	void IsPsychComboAttacking(bool& InCombo) { InCombo = bIsPsychComboAttacking; }

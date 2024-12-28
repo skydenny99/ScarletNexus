@@ -110,10 +110,17 @@ void UPsychokinesisComponent::PlayGroundPsychMontage(const EPsychType& PsychType
 
 void UPsychokinesisComponent::PlayAerialPsychMontage(int32 ComboCount)
 {
+	auto AerialMontage = PsychMontageData->ObjectAerialAnimMontages[ComboCount];
+	PsychSkeletalMesh->GetAnimInstance()->Montage_Play(AerialMontage);
+}
+
+void UPsychokinesisComponent::PlayJustDodgePsychMontage()
+{
+	PsychSkeletalMesh->GetAnimInstance()->Montage_Play(PsychMontageData->ObjectJustDodgeMontage);
 }
 
 void UPsychokinesisComponent::GetProperPsychType(int32 ComboCount, EPsychType& PsychType, UAnimMontage*& ChargeMontage,
-	UAnimMontage*& AttackMontage)
+                                                 UAnimMontage*& AttackMontage)
 {
 	ACharacter_Kasane* Kasane = Cast<ACharacter_Kasane>(GetOwner());
 	FVector PsychDirection = PsychTarget->GetActorLocation() - Kasane->GetActorLocation();
@@ -185,4 +192,12 @@ void UPsychokinesisComponent::AttachPsychTargetToBone(APsychokineticThrowablePro
 	if (Target->IsAttached()) return;
 	Target->AttachToComponent(PsychSkeletalMesh, FAttachmentTransformRules::KeepWorldTransform, FName("joint_001"));
 	Target->Attached();
+}
+
+void UPsychokinesisComponent::SetPsychTargetInForce(AActor* InActor)
+{
+	APsychokineticPropBase* Temp = Cast<APsychokineticPropBase>(InActor);
+	if (Temp == nullptr) return;
+	Temp->OnUsePsychProp.BindUObject(this, &UPsychokinesisComponent::OnUsePsychProp);
+	PsychTarget = Temp;
 }

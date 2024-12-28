@@ -17,6 +17,7 @@
 #include "Camera/CameraActor.h"
 #include "Components/ComboSystemComponent.h"
 #include "Components/PsychokinesisComponent.h"
+#include "Components/SASManageComponent.h"
 #include "Components/SphereComponent.h"
 #include "Components/TargetTrackingSpringArmComponent.h"
 #include "Components/UnlockSystemComponent.h"
@@ -121,6 +122,12 @@ ACharacter_Kasane::ACharacter_Kasane()
 		PsychObject->SetAnimInstanceClass(PsychObjectAnimAsset.Class);
 	}
 	PsychokinesisComponent->InitComponents(PsychBoundary, PsychObject);
+
+	JustDodgeBoundary = CreateDefaultSubobject<USphereComponent>(TEXT("JustDodgeBoundary"));
+	JustDodgeBoundary->SetupAttachment(MainBody, FName("Waist"));
+	JustDodgeBoundary->InitSphereRadius(500.f);
+
+	SASManageComponent = CreateDefaultSubobject<USASManageComponent>(TEXT("SASManager"));
 	
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh> WeaponMesh(TEXT("/Game/Resources/Weapons/WP0200/WP200_Base.WP200_Base"));
 	if (WeaponMesh.Succeeded())
@@ -153,8 +160,14 @@ void ACharacter_Kasane::PossessedBy(AController* NewController)
 
 	if (ComboSystemComponent)
 	{
-		ComboSystemComponent->InitKasane(this);
+		ComboSystemComponent->InitReferences(this, JustDodgeBoundary);
 		ComboSystemComponent->GrantAttackAbilites(BaseAbilitySystemComponent);
+	}
+
+	if (SASManageComponent)
+	{
+		SASManageComponent->InitReferences(this);
+		SASManageComponent->GrantSASAbilites();
 	}
 }
 
@@ -180,6 +193,7 @@ void ACharacter_Kasane::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	InputComp->BindNativeInputAction(InputConfig, BaseGameplayTags::InputTag_Look, ETriggerEvent::Triggered, this, &ACharacter_Kasane::OnInputLookTriggered);
 	InputComp->BindNativeInputAction(InputConfig, BaseGameplayTags::InputTag_Targeting_Toggle, ETriggerEvent::Triggered, this, &ACharacter_Kasane::OnTargetingInputTriggered);
 	InputComp->BindAbilityInputAction(InputConfig, this, &ACharacter_Kasane::OnAbilityInputTriggered);
+	InputComp->BindSASAbilityInputAction(InputConfig, this, &ACharacter_Kasane::OnSASAbilityInputTriggered);
 	InputComp->BindDirectionInput(DirectionInputConfig, this, &ACharacter_Kasane::PushInput);
 	InputComp->BindActionInstanceWithTag(InputConfig, this);
 }
@@ -204,6 +218,10 @@ void ACharacter_Kasane::OnInputMoveTriggered(const FInputActionValue& Value)
 	{
 		ComboSystemComponent->TryCancelAttackAbility();
 		ComboSystemComponent->ResetWeaponCombo();
+		if (GetCharacterMovement()->MovementMode != MOVE_Falling)
+		{
+			ComboSystemComponent->ResetBackstep();
+		}
 	}
 }
 
@@ -235,8 +253,13 @@ void ACharacter_Kasane::OnTargetingInputTriggered(const FInputActionValue& Value
 void ACharacter_Kasane::OnAbilityInputTriggered(FGameplayTag InputTag)
 {
 	if (UBaseFunctionLibrary::NativeActorHasTag(this, BaseGameplayTags::Shared_Status_CanAttack) == false) return;
-	//ComboSystemComponent->TryCancelAttackAbility();
 	BaseAbilitySystemComponent->OnAbilityInputTriggered(InputTag);
+}
+
+void ACharacter_Kasane::OnSASAbilityInputTriggered(FGameplayTag InputTag)
+{
+	if (UBaseFunctionLibrary::NativeActorHasTag(this, BaseGameplayTags::Shared_Status_CanAttack) == false) return;
+	SASManageComponent->OnSASInputTriggered(InputTag);
 }
 
 void ACharacter_Kasane::UpdateMovementElapsedTime(const FInputActionInstance& Instance)
