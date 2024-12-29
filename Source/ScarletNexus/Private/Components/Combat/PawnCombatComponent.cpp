@@ -24,7 +24,45 @@ void UPawnCombatComponent::RegisterSpawnedWeapon(FGameplayTag WeaponTag, AWeapon
 		CurrentEquippedWeaponTag = WeaponTag;
 	}
 
+	
+	
 	const FString WeaponString = FString::Printf(TEXT("%s has been registerd using the tag: %s"),*Weapon->GetName(), *WeaponTag.ToString());
+	Debug::Print(WeaponString);
+	
+}
+
+void UPawnCombatComponent::RegisterKasaneSpawnedWeapon(FGameplayTag WeaponTag, AWeaponBase* Weapon,
+	bool bRegisterAsEquippedWeapon)
+{
+	// 무기가 6개 이상 등록되지 않도록 제한
+	const int32 MaxWeapons = 6;
+	if (CharacterCarriedWeaponMap.Num() >= MaxWeapons)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Cannot register more than %d weapons."), MaxWeapons);
+		return;
+	}
+
+	checkf(!CharacterCarriedWeaponMap.Contains(WeaponTag), TEXT("%s has already been carried as a weapon"), *WeaponTag.ToString());
+	check(Weapon);
+	CharacterCarriedWeaponMap.Emplace(WeaponTag, Weapon);
+
+	Weapon->OnWeaponHitTarget.BindUObject(this, &ThisClass::OnHitTargetActor);
+	Weapon->OnWeaponPulledFromTarget.BindUObject(this, &ThisClass::OnWeaponPulledFromTargetActor);
+
+	// 장착한 무기로 등록
+	if (bRegisterAsEquippedWeapon)
+	{
+		if (CurrentEquippedWeaponTags.Num() >= MaxWeapons)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Cannot equip more than %d weapons."), MaxWeapons);
+		}
+		else
+		{
+			CurrentEquippedWeaponTags.AddUnique(WeaponTag);
+		}
+	}
+
+	const FString WeaponString = FString::Printf(TEXT("%s has been registered using the tag: %s"), *Weapon->GetName(), *WeaponTag.ToString());
 	Debug::Print(WeaponString);
 	
 }
@@ -70,4 +108,39 @@ void UPawnCombatComponent::ToggleWeaponCollision(bool bUse)
 	}
 
 
+}
+
+AWeaponBase* UPawnCombatComponent::GetWeaponByTag(const FGameplayTag& WeaponTag) const
+{
+	if (CharacterCarriedWeaponMap.Contains(WeaponTag))
+	{
+		return CharacterCarriedWeaponMap[WeaponTag];
+	}
+	return nullptr;
+}
+
+
+void UPawnCombatComponent::ToggleKasaneWeaponCollision(bool bUse)
+{
+	// 현재 장착된 모든 무기를 순회
+	for (const FGameplayTag& WeaponTag : CurrentEquippedWeaponTags)
+	{
+		if (AWeaponBase* Weapon = GetWeaponByTag(WeaponTag))
+		{
+			if (bUse)
+			{
+				Weapon->GetWeaponCollisionBox()->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+				Debug::Print(Weapon->GetName() + TEXT(" Collision enabled"), FColor::Green);
+			}
+			else
+			{
+				Weapon->GetWeaponCollisionBox()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+				Debug::Print(Weapon->GetName() + TEXT(" Collision disabled"), FColor::Red);
+
+				// 충돌 비활성화 시 겹쳐진 액터 정보 초기화
+				OverlappedActors.Empty();
+			}
+		}
+	}
+	
 }
