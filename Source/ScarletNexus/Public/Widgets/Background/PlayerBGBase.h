@@ -32,10 +32,10 @@ protected:
 public:
 	virtual void NativeOnInitialized() override;
 	
-	UFUNCTION(BlueprintImplementableEvent)
+	UFUNCTION(BlueprintImplementableEvent,BlueprintCallable)
 	void UpdateDebuff(EBaseDebuffType Debuff = EBaseDebuffType::NONE);
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 	void Init(const FString& Name, const float HpMax);
 	
 	UFUNCTION(BlueprintCallable)

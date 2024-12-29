@@ -56,7 +56,7 @@ public:
 	//virtual void NativeOnInitialized() override;
 	virtual void NativeConstruct() override;
 
-	UFUNCTION(BlueprintImplementableEvent)
+	UFUNCTION(BlueprintImplementableEvent,BlueprintCallable)
 	void UpdateDebuff(EBaseDebuffType DebuffType = EBaseDebuffType::NONE);
 
 	UFUNCTION(BlueprintCallable)

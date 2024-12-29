@@ -37,7 +37,10 @@ protected:
 
 public:
 	UFUNCTION(BlueprintCallable)
-	void Init(const FString LName, const float LeftFellowHp, const FString RName, const float RightFellowHp);
+	void InitLeft(const FString LName, const float LeftFellowHp);
+
+	UFUNCTION(BlueprintCallable)
+	void InitRight(const FString RName, const float RightFellowHp);
 	
 	UFUNCTION(BlueprintCallable)
 	void UpdateFellowLeftHp(const float LeftHp);
