@@ -49,7 +49,7 @@ public:
 	
 	// 카사네 무기 콜리전 토글
 	UFUNCTION(BlueprintCallable, Category = "Combat")
-	void ToggleKasaneWeaponCollision(bool bUse);
+	void ToggleKasaneWeaponCollision(bool bUse, int32 KasaneHitCount);
 
 	
 	//HitDetection
@@ -59,14 +59,24 @@ public:
 
 	// 카사네 무기 배열
 	TArray<FGameplayTag> CurrentEquippedWeaponTags;
+
+	// 타격 적중 횟수 
+	UPROPERTY(BlueprintReadWrite, Category=	"Combat")
+	int32 KasaneHitnumber = 4;
+
+	UPROPERTY(BlueprintReadWrite, Category="Combat")
+	TMap<AActor*, int32> KasaneHitActorCounts;
 	
 private:
 	//캐릭터 무기 태그 맵
 	TMap<FGameplayTag, AWeaponBase*> CharacterCarriedWeaponMap;
 	
 protected:
+	UPROPERTY(BlueprintReadWrite, Category="Combat")
 	TArray<AActor*> OverlappedActors;
+
 	
+
 };
 
 

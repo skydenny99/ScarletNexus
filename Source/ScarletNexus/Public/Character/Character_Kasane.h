@@ -9,6 +9,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Character_Kasane.generated.h"
 
+
 class USASManageComponent;
 class UCameraComponent;
 class UPsychokinesisComponent;
@@ -18,6 +19,7 @@ class UComboSystemComponent;
 struct FInputActionInstance;
 class UDataAsset_DirectionInputConfig;
 class UDataAsset_InputConfig;
+class UKasaneCombatComponent;
 struct FInputActionValue;
 struct FGameplayTag;
 
@@ -74,6 +76,12 @@ protected:
 	void ResetMovementElapsedTime(const FInputActionValue& Value);
 	void OnTargetingInputTriggered(const FInputActionValue& Value);
 
+
+	// Combat Component
+	UPROPERTY(VisibleAnyWhere, BlueprintReadOnly, category = "Combat", meta = (AllowPrivateAccess = "true"))
+	UKasaneCombatComponent* KasaneCombatComponent;
+	
+	
 	
 public:
 	void OnAttackInputTriggered(FGameplayTag InputTag, const FInputActionInstance& Instance);
@@ -117,6 +125,10 @@ public:
 	void ChangeCamera(bool bUseMain = true);
 	FORCEINLINE UCameraComponent* GetMainCamera() const { return MainCamera; }
 	FORCEINLINE AActor* GetComboDirectCameraActor() const { return ComboDirectCameraActor->GetChildActor(); }
+
+
+	virtual UPawnCombatComponent* GetPawnCombatComponent() const override;
+	
 	
 };
 

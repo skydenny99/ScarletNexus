@@ -110,6 +110,15 @@ namespace BaseGameplayTags
 
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_Move_Aerial, "Player.Status.Move.Aerial");
 
+
+	// Weapon
+	UE_DEFINE_GAMEPLAY_TAG(Player_Weapon_Kasane_Wp0, "Player.Weapon.Kasane.Wp0");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Weapon_Kasane_Wp1, "Player.Weapon.Kasane.Wp1");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Weapon_Kasane_Wp2, "Player.Weapon.Kasane.Wp2");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Weapon_Kasane_Wp3, "Player.Weapon.Kasane.Wp3");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Weapon_Kasane_Wp4, "Player.Weapon.Kasane.Wp4");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Weapon_Kasane_Wp5, "Player.Weapon.Kasane.Wp5");
+
 #pragma endregion
 
 #pragma region Unlock

@@ -21,6 +21,7 @@
 #include "Components/SphereComponent.h"
 #include "Components/TargetTrackingSpringArmComponent.h"
 #include "Components/UnlockSystemComponent.h"
+#include "Components/Combat/KasaneCombatComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/RootMotionSource.h"
 
@@ -143,6 +144,10 @@ ACharacter_Kasane::ACharacter_Kasane()
 
 	// Attribute
 	BaseAttributeSet = CreateDefaultSubobject<UPlayerAttributeSet>(TEXT("KasaneAttributeSet"));
+
+	// Cpmbat
+	KasaneCombatComponent = CreateDefaultSubobject<UKasaneCombatComponent>(TEXT("KasaneCombatComponent"));
+	
 
 	
 }
@@ -322,6 +327,11 @@ uint8 ACharacter_Kasane::GetDirectionByHistory()
 void ACharacter_Kasane::ActivateDash(bool bIsDashing)
 {
 	GetCharacterMovement()->MaxWalkSpeed = bIsDashing ? 1200.f : 800.f;
+}
+
+UPawnCombatComponent* ACharacter_Kasane::GetPawnCombatComponent() const
+{
+	return  KasaneCombatComponent;	
 }
 
 void ACharacter_Kasane::ClearInputHistory()

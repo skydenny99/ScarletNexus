@@ -23,8 +23,6 @@ void UPawnCombatComponent::RegisterSpawnedWeapon(FGameplayTag WeaponTag, AWeapon
 	{
 		CurrentEquippedWeaponTag = WeaponTag;
 	}
-
-	
 	
 	const FString WeaponString = FString::Printf(TEXT("%s has been registerd using the tag: %s"),*Weapon->GetName(), *WeaponTag.ToString());
 	Debug::Print(WeaponString);
@@ -58,12 +56,14 @@ void UPawnCombatComponent::RegisterKasaneSpawnedWeapon(FGameplayTag WeaponTag, A
 		}
 		else
 		{
+			const FString WeaponString = FString::Printf(TEXT("%s has been registered using the tag: %s"), *Weapon->GetName(), *WeaponTag.ToString());
+			Debug::Print(WeaponString);
 			CurrentEquippedWeaponTags.AddUnique(WeaponTag);
 		}
 	}
 
-	const FString WeaponString = FString::Printf(TEXT("%s has been registered using the tag: %s"), *Weapon->GetName(), *WeaponTag.ToString());
-	Debug::Print(WeaponString);
+	// const FString WeaponString = FString::Printf(TEXT("%s has been registered using the tag: %s"), *Weapon->GetName(), *WeaponTag.ToString());
+	// Debug::Print(WeaponString);
 	
 }
 
@@ -112,16 +112,24 @@ void UPawnCombatComponent::ToggleWeaponCollision(bool bUse)
 
 AWeaponBase* UPawnCombatComponent::GetWeaponByTag(const FGameplayTag& WeaponTag) const
 {
+	// CharacterCarriedWeaponMap에서 WeaponTag가 있는지 확인
 	if (CharacterCarriedWeaponMap.Contains(WeaponTag))
 	{
+		// WeaponTag에 연결된 AWeaponBase* 반환
 		return CharacterCarriedWeaponMap[WeaponTag];
 	}
+
+
+	// 태그에 해당하는 무기가 없으면 nullptr 반환
 	return nullptr;
 }
 
 
-void UPawnCombatComponent::ToggleKasaneWeaponCollision(bool bUse)
+void UPawnCombatComponent::ToggleKasaneWeaponCollision(bool bUse, int32 KasaneHitCount)
 {
+	//타격 횟수 세팅
+	KasaneHitnumber = KasaneHitCount;
+	
 	// 현재 장착된 모든 무기를 순회
 	for (const FGameplayTag& WeaponTag : CurrentEquippedWeaponTags)
 	{
@@ -130,6 +138,7 @@ void UPawnCombatComponent::ToggleKasaneWeaponCollision(bool bUse)
 			if (bUse)
 			{
 				Weapon->GetWeaponCollisionBox()->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+				
 				Debug::Print(Weapon->GetName() + TEXT(" Collision enabled"), FColor::Green);
 			}
 			else
@@ -138,7 +147,9 @@ void UPawnCombatComponent::ToggleKasaneWeaponCollision(bool bUse)
 				Debug::Print(Weapon->GetName() + TEXT(" Collision disabled"), FColor::Red);
 
 				// 충돌 비활성화 시 겹쳐진 액터 정보 초기화
-				OverlappedActors.Empty();
+				// OverlappedActors.Empty();
+				KasaneHitActorCounts.Empty();
+				
 			}
 		}
 	}
