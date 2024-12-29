@@ -26,6 +26,7 @@
 
 ACharacter_Kasane::ACharacter_Kasane()
 {
+	IsAffectedByAccelAbility = false;
 	USkeletalMeshComponent* MainBody = GetMesh();
 	MainBody->SetRelativeLocationAndRotation(FVector(0.f, 0.f, -100.f), FRotator(0.f, -90.f, 0.f));
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh> MainBodyMesh(TEXT("/Game/Resources/Characters/CH0200/CH200_Base.CH200_Base"));
