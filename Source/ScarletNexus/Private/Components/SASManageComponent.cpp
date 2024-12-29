@@ -64,7 +64,7 @@ void USASManageComponent::CancelAllSASAbilities()
 {
 	for (auto Pair : AbilitySpecs)
 	{
-		if (Pair.Value.IsActive())
+		if (BaseAbilitySystemComponent->IsAbilityActive(AbilitySpecs[Pair.Key].Handle))
 		{
 			BaseAbilitySystemComponent->CancelAbilityHandle(Pair.Value.Handle);
 		}
