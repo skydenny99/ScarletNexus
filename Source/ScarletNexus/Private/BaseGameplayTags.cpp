@@ -65,10 +65,12 @@ namespace BaseGameplayTags
 
 	// Ability - Attack
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Ground_Weapon, "Player.Ability.Attack.Ground.Weapon");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Ground_Weapon_Fire, "Player.Ability.Attack.Ground.Weapon.Fire");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Ground_Psych, "Player.Ability.Attack.Ground.Psych");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Ground_Charge, "Player.Ability.Attack.Ground.Charge");
 
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Aerial_Weapon, "Player.Ability.Attack.Aerial.Weapon");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Aerial_Weapon_Fire, "Player.Ability.Attack.Aerial.Weapon.Fire");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Aerial_Psych, "Player.Ability.Attack.Aerial.Psych");
 
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Special_Psych, "Player.Ability.Attack.Special.Psych");

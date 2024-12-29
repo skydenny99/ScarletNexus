@@ -67,10 +67,12 @@ namespace BaseGameplayTags
 
 	// Ability - Attack
 	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Ability_Attack_Ground_Weapon);
+	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Ability_Attack_Ground_Weapon_Fire);
 	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Ability_Attack_Ground_Psych);
 	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Ability_Attack_Ground_Charge);
 
 	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Ability_Attack_Aerial_Weapon);
+	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Ability_Attack_Aerial_Weapon_Fire);
 	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Ability_Attack_Aerial_Psych);
 
 	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Ability_Attack_Special_Psych);

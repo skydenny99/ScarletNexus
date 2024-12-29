@@ -78,18 +78,24 @@ bool UComboSystemComponent::TryActivateAbilityByInputTag(FGameplayTag tag)
 			: BaseGameplayTags::Player_Ability_Attack_Ground_ComboDashAttack;
 			goto Execute;
 		}
-		
 
-		bool bIsDashAttack = UBaseFunctionLibrary::NativeActorHasTag(Kasane, BaseGameplayTags::Player_Status_Move_Dodge);
-		if (Movement->IsFalling() == false) // Ground Weapon Attack
+		if (UBaseFunctionLibrary::NativeActorHasTag(Kasane, BaseGameplayTags::Player_Status_Move_Dodge))
 		{
-			AbilityTag = bIsDashAttack ? BaseGameplayTags::Player_Ability_Attack_Ground_DashAttack
-			: BaseGameplayTags::Player_Ability_Attack_Ground_Weapon;
+			AbilityTag = Movement->IsFalling() ? BaseGameplayTags::Player_Ability_Attack_Aerial_DashAttack
+			: BaseGameplayTags::Player_Ability_Attack_Ground_DashAttack;
+			goto Execute;
+		}
+
+
+		if (UBaseFunctionLibrary::NativeActorHasTag(Kasane, BaseGameplayTags::Player_Status_SAS_Elemental_Fire))
+		{
+			AbilityTag = Movement->IsFalling() ? BaseGameplayTags::Player_Ability_Attack_Aerial_Weapon_Fire
+			: BaseGameplayTags::Player_Ability_Attack_Ground_Weapon_Fire;
 		}
 		else
 		{
-			AbilityTag = bIsDashAttack ? BaseGameplayTags::Player_Ability_Attack_Aerial_DashAttack
-			: BaseGameplayTags::Player_Ability_Attack_Aerial_Weapon;
+			AbilityTag = Movement->IsFalling() ? BaseGameplayTags::Player_Ability_Attack_Aerial_Weapon
+			: BaseGameplayTags::Player_Ability_Attack_Ground_Weapon;
 		}
 		
 	}
