@@ -9,6 +9,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Character_Kasane.generated.h"
 
+class UInventoryComponent;
 class UNiagaraSystem;
 class UNiagaraComponent;
 class USASManageComponent;
@@ -58,6 +59,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category="Psych")
 	UPsychokinesisComponent* PsychokinesisComponent;
+
+	UPROPERTY(EditDefaultsOnly, Category="Inventory")
+	UInventoryComponent* InventoryComponent;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	UDataAsset_InputConfig* InputConfig;
@@ -123,6 +127,9 @@ public:
 	
 	UFUNCTION(BlueprintPure)
 	FORCEINLINE UPsychokinesisComponent* GetPsychokinesisComponent() const { return PsychokinesisComponent; };
+
+	UFUNCTION(BlueprintPure)
+	FORCEINLINE UInventoryComponent* GetInventoryComponent() const { return InventoryComponent; };
 	
 	UFUNCTION(BlueprintPure)
 	FORCEINLINE UTargetTrackingSpringArmComponent* GetTargetTrackingComponent() const { return CameraBoom; }
