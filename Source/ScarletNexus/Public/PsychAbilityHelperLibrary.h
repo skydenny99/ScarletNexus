@@ -23,7 +23,7 @@ public:
 	static void NativeOnChargingCancelPsychAbility(const ACharacter_Kasane* Kasane);
 
 	UFUNCTION(BlueprintCallable, Category = "FunctionLibrary")
-	static void ActivateThrowPsychAbility(const ACharacter_Kasane* Kasane);
+	static void ActivateThrowPsychAbility(ACharacter_Kasane* Kasane);
 	static void ActivateSpecialPsychAbility();
 
 	UFUNCTION(BlueprintCallable, Category = "FunctionLibrary")

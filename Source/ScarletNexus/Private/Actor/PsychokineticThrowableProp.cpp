@@ -86,13 +86,30 @@ void APsychokineticThrowableProp::FloatingTick(float DeltaTime)
 	SetActorLocation(UKismetMathLibrary::VInterpTo(GetActorLocation(), GetActorLocation() + FVector::UpVector * (FloatingHeight / ChargeTime), DeltaTime, 1.f));
 }
 
-void APsychokineticThrowableProp::Launch()
+void APsychokineticThrowableProp::Launch(bool NeedToClone, bool DoubleClone)
 {
+	CachedLaunchedLocation = GetActorLocation();
+	CachedLaunchedRotation = GetActorRotation();
 	MeshComponent->SetCollisionProfileName("PlayerProjectile");
 	if (bIsAttached)
 	{
 		DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
 	}
+
+	// if SAS: clone activated - Launch Clone
+	if (bCanClonable && NeedToClone)
+	{
+		FTimerHandle TempTimerHandle;
+		GetWorldTimerManager().SetTimer(TempTimerHandle, this, &APsychokineticThrowableProp::CloneLaunch, 0.15f);
+		if (DoubleClone)
+		{
+			FTimerHandle TempTimerHandle2;
+			GetWorldTimerManager().SetTimer(TempTimerHandle2, this, &APsychokineticThrowableProp::CloneLaunch, 0.3f);
+		}
+		
+	}
+
+	
 	ProjectileMovementComponent->ProjectileGravityScale = 0.f;
 
 	FVector TargetLocation = FVector::ZeroVector;
@@ -102,7 +119,7 @@ void APsychokineticThrowableProp::Launch()
 	}
 	else if (CurrentTarget != nullptr)
 	{
-		// TargetLocation = CurrentTarget->GetActorLocation();
+		TargetLocation = CurrentTarget->GetActorLocation();
 	}
 	else 
 	{
@@ -123,6 +140,27 @@ void APsychokineticThrowableProp::Launch()
 	SetLifeSpan(5.f);
 	bIsUsed = true;
 	OnUsePsychProp.ExecuteIfBound(this);
+}
+
+void APsychokineticThrowableProp::CloneLaunch()
+{
+	if (IsValidChecked(this) == false) return;
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.Template = this;
+	APsychokineticThrowableProp* ClonedProp = GetWorld()->SpawnActor<APsychokineticThrowableProp>(GetClass(), SpawnParams);
+	ClonedProp->SetActorLocation(CachedLaunchedLocation);
+	ClonedProp->SetActorRotation(CachedLaunchedRotation);
+	ClonedProp->bIsAttached = false;
+	ClonedProp->bCanClonable = false;
+	if (CurrentTargetLocation.IsSet())
+	{
+		ClonedProp->SetTarget(CurrentTargetLocation.GetValue());
+	}
+	else if (CurrentTarget != nullptr)
+	{
+		ClonedProp->SetTarget(CurrentTarget);
+	}
+	ClonedProp->Launch(false);
 }
 
 

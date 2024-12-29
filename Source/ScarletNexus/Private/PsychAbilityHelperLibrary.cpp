@@ -3,6 +3,8 @@
 
 #include "PsychAbilityHelperLibrary.h"
 
+#include "BaseFunctionLibrary.h"
+#include "BaseGameplayTags.h"
 #include "Actor/PsychokineticPropBase.h"
 #include "Actor/PsychokineticThrowableProp.h"
 #include "Character/Character_Kasane.h"
@@ -57,7 +59,7 @@ void UPsychAbilityHelperLibrary::NativeOnChargingCancelPsychAbility(const AChara
 	}
 }
 
-void UPsychAbilityHelperLibrary::ActivateThrowPsychAbility(const ACharacter_Kasane* Kasane)
+void UPsychAbilityHelperLibrary::ActivateThrowPsychAbility(ACharacter_Kasane* Kasane)
 {
 	if (Kasane == nullptr) return;
 	UPsychokinesisComponent* PsychokinesisComponent = Kasane->GetPsychokinesisComponent();
@@ -67,17 +69,15 @@ void UPsychAbilityHelperLibrary::ActivateThrowPsychAbility(const ACharacter_Kasa
 		const auto ThrowableProp = Cast<APsychokineticThrowableProp>(PsychokinesisComponent->GetPsychTarget());
 
 		AActor* TargetActor = TargetTracking->GetCurrentTarget();
-		ABaseEnemyCharacter* EnemyCharacter = Cast<ABaseEnemyCharacter>(TargetActor);
-
-		if(TargetActor && EnemyCharacter)
+		ThrowableProp->SetTarget(TargetActor);
+		if(ABaseEnemyCharacter* EnemyCharacter = Cast<ABaseEnemyCharacter>(TargetActor))
 		{
 			ThrowableProp->SetTarget(EnemyCharacter->GetTargetVector());
-			ThrowableProp->Launch();
 		}
-		else
-		{
-			ThrowableProp->Launch();
-		}
+		ThrowableProp->Launch(
+			UBaseFunctionLibrary::NativeActorHasTag(Kasane, BaseGameplayTags::Player_Status_SAS_Clone),
+			true
+			);
 	}
 }
 
