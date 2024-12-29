@@ -9,6 +9,8 @@
 #include "Kismet/GameplayStatics.h"
 #include "Character_Kasane.generated.h"
 
+class UNiagaraSystem;
+class UNiagaraComponent;
 class USASManageComponent;
 class UCameraComponent;
 class UPsychokinesisComponent;
@@ -97,6 +99,17 @@ private:
 	uint8 DirectionHistory = static_cast<uint8>(EBaseDirectionType::Max);
 	void PushInput(EBaseDirectionType Direction);
 	void ClearInputHistory();
+
+	// SAS variables
+	UPROPERTY()
+	USkeletalMeshComponent* LeftCloneComponent = nullptr;
+	UPROPERTY()
+	USkeletalMeshComponent* RightCloneComponent = nullptr;
+	UPROPERTY()
+	UNiagaraComponent* AfterimageEffectComponent = nullptr;
+	UPROPERTY(EditDefaultsOnly, Category = "SAS")
+	UNiagaraSystem* AfterImageEffectSystem = nullptr;
+	
 public:
 	FORCEINLINE uint8 GetDirectionByHistory();
 
@@ -117,20 +130,13 @@ public:
 	void ChangeCamera(bool bUseMain = true);
 	FORCEINLINE UCameraComponent* GetMainCamera() const { return MainCamera; }
 	FORCEINLINE AActor* GetComboDirectCameraActor() const { return ComboDirectCameraActor->GetChildActor(); }
+
+
+	// SAS functions
+	UFUNCTION(BlueprintCallable)
+	void ActivateAfterimage(bool InIsActive);
 	
+	UFUNCTION(BlueprintCallable)
+	void ActivateCloneSkeletalMesh(bool InIsActive, int32 InCount = 2);
 };
 
-inline void ACharacter_Kasane::ChangeCamera(bool bUseMain)
-{
-	auto PC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
-	if (bUseMain)
-		PC->SetViewTargetWithBlend(this, 1.f);
-	else
-		PC->SetViewTargetWithBlend(ComboDirectCameraActor->GetChildActor(), 1.f);
-}
-
-inline void ACharacter_Kasane::BeginPlay()
-{
-	Super::BeginPlay();
-	ComboDirectCameraActor->CreateChildActor();
-}

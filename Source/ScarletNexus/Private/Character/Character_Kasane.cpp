@@ -11,8 +11,8 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "DataAsset/DataAsset_StartupBase.h"
-#include "BaseDebugHelper.h"
 #include "BaseFunctionLibrary.h"
+#include "NiagaraComponent.h"
 #include "AbilitySystem/Attribute/PlayerAttributeSet.h"
 #include "Camera/CameraActor.h"
 #include "Components/ComboSystemComponent.h"
@@ -22,7 +22,7 @@
 #include "Components/TargetTrackingSpringArmComponent.h"
 #include "Components/UnlockSystemComponent.h"
 #include "Kismet/GameplayStatics.h"
-#include "GameFramework/RootMotionSource.h"
+#include "NiagaraFunctionLibrary.h"
 
 ACharacter_Kasane::ACharacter_Kasane()
 {
@@ -128,22 +128,45 @@ ACharacter_Kasane::ACharacter_Kasane()
 	JustDodgeBoundary->InitSphereRadius(500.f);
 
 	SASManageComponent = CreateDefaultSubobject<USASManageComponent>(TEXT("SASManager"));
-	
-	static ConstructorHelpers::FObjectFinder<USkeletalMesh> WeaponMesh(TEXT("/Game/Resources/Weapons/WP0200/WP200_Base.WP200_Base"));
-	if (WeaponMesh.Succeeded())
-	{
-		for (int i = 1; i <=6; i++)
-		{
-			USkeletalMeshComponent* WeaponMeshComp = CreateDefaultSubobject<USkeletalMeshComponent>(FName(FString::Printf(TEXT("Weapon0%d"), i)));
-			WeaponMeshComp->SetSkeletalMesh(WeaponMesh.Object);
-			WeaponMeshComp->SetupAttachment(MainBody, FName(FString::Printf(TEXT("Weapon0%d"), i)));
-			WeaponMeshComp->SetRelativeRotation(FRotator(0.f, 0.f, -90.f));
-		}
-	}
 
 	// Attribute
 	BaseAttributeSet = CreateDefaultSubobject<UPlayerAttributeSet>(TEXT("KasaneAttributeSet"));
 
+	
+	// SAS - Clone
+	LeftCloneComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("LeftClone"));
+	RightCloneComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("RightClone"));
+	if (MainBodyMesh.Succeeded())
+	{
+		LeftCloneComponent->SetSkeletalMesh(MainBodyMesh.Object);
+		LeftCloneComponent->SetupAttachment(MainBody);
+		LeftCloneComponent->SetLeaderPoseComponent(MainBody);
+		LeftCloneComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		LeftCloneComponent->SetRelativeLocation(FVector(-100.f, 0.f, 0.f));
+		
+		RightCloneComponent->SetSkeletalMesh(MainBodyMesh.Object);
+		RightCloneComponent->SetupAttachment(MainBody);
+		RightCloneComponent->SetLeaderPoseComponent(MainBody);
+		RightCloneComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		RightCloneComponent->SetRelativeLocation(FVector(100.f, 0.f, 0.f));
+	}
+
+	
+	static ConstructorHelpers::FObjectFinder<USkeletalMesh> WeaponMesh(TEXT("/Game/Resources/Weapons/WP0200/WP200_Base.WP200_Base"));
+	if (WeaponMesh.Succeeded())
+	{
+		const TArray TempBodies({MainBody, LeftCloneComponent, RightCloneComponent});
+		for (auto TempBody : TempBodies)
+		{
+			for (int i = 1; i <=6; i++)
+			{
+				USkeletalMeshComponent* WeaponMeshComp = CreateDefaultSubobject<USkeletalMeshComponent>(FName(FString::Printf(TEXT("%s_Weapon0%d"), *TempBody->GetName(), i)));
+				WeaponMeshComp->SetSkeletalMesh(WeaponMesh.Object);
+				WeaponMeshComp->SetupAttachment(TempBody, FName(FString::Printf(TEXT("Weapon0%d"), i)));
+				WeaponMeshComp->SetRelativeRotation(FRotator(0.f, 0.f, -90.f));
+			}
+		}
+	}
 	
 }
 
@@ -327,4 +350,64 @@ void ACharacter_Kasane::ActivateDash(bool bIsDashing)
 void ACharacter_Kasane::ClearInputHistory()
 {
 	DirectionHistory = static_cast<uint8>(EBaseDirectionType::Max);
+}
+
+void ACharacter_Kasane::ChangeCamera(bool bUseMain)
+{
+	auto PC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	if (bUseMain)
+		PC->SetViewTargetWithBlend(this, 1.f);
+	else
+		PC->SetViewTargetWithBlend(ComboDirectCameraActor->GetChildActor(), 1.f);
+}
+
+void ACharacter_Kasane::ActivateAfterimage(bool InIsActive)
+{
+	if (AfterImageEffectSystem == nullptr) return;
+	if (InIsActive)
+	{
+		AfterimageEffectComponent = UNiagaraFunctionLibrary::SpawnSystemAttached(
+			AfterImageEffectSystem,
+			GetMesh(),
+			NAME_None,
+			FVector(0.f,0.f,0.f),
+			FRotator(0.f,0.f,0.f),
+			EAttachLocation::Type::SnapToTarget,
+			false);
+	}
+	else
+	{
+		if (AfterimageEffectComponent)
+		{
+			AfterimageEffectComponent->DestroyComponent();
+		}
+	}
+}
+
+void ACharacter_Kasane::ActivateCloneSkeletalMesh(bool InIsActive, int32 InCount)
+{
+	bool NeedToActivateLeftClone = true;
+	bool NeedToActivateRightClone = true;
+	if (InIsActive)
+	{
+		switch (InCount)
+		{
+			case 2:
+				NeedToActivateLeftClone = false;
+			case 1:
+				NeedToActivateRightClone = false;
+				break;
+			default:
+				break;
+		}
+	}
+	LeftCloneComponent->SetHiddenInGame(NeedToActivateLeftClone, true);
+	RightCloneComponent->SetHiddenInGame(NeedToActivateRightClone, true);
+}
+
+void ACharacter_Kasane::BeginPlay()
+{
+	Super::BeginPlay();
+	ComboDirectCameraActor->CreateChildActor();
+	ActivateCloneSkeletalMesh(false);
 }

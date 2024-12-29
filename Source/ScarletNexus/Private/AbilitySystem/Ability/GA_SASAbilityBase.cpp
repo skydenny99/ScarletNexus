@@ -11,6 +11,7 @@ void UGA_SASAbilityBase::OnGiveAbility(const FGameplayAbilityActorInfo* ActorInf
 	Super::OnGiveAbility(ActorInfo, Spec);
 	Kasane = Cast<ACharacter_Kasane>(ActorInfo->AvatarActor);
 	check(Kasane);
+	InitOnGiveAbility();
 }
 
 void UGA_SASAbilityBase::PreActivate(const FGameplayAbilitySpecHandle Handle,
