@@ -103,7 +103,8 @@ bool UComboSystemComponent::TryActivateAbilityByInputTag(FGameplayTag tag)
 	{
 		if (Movement->IsFalling() == false && ActionElapsedTime > ChargeAttackThreshold)
 		{
-			AbilityTag = BaseGameplayTags::Player_Ability_Attack_Ground_Charge;
+			AbilityTag = UBaseFunctionLibrary::NativeActorHasTag(Kasane, BaseGameplayTags::Player_Status_SAS_Elemental_Fire) ?
+				BaseGameplayTags::Player_Ability_Attack_Ground_Charge_Fire : BaseGameplayTags::Player_Ability_Attack_Ground_Charge;
 		}
 	}
 	else if (tag.MatchesTagExact(BaseGameplayTags::InputTag_Attack_Psych_Normal))
@@ -213,6 +214,7 @@ void UComboSystemComponent::ProcessInputAction(FGameplayTag InputTag, ETriggerEv
 		}
 		else
 		{
+			ActionElapsedTime = Instance.GetElapsedTime();
 			if (LastChargeAbilityInputTag.MatchesTagExact(InputTag)) return;
 			if (TryActivateAbilityByInputTag(InputTag))
 			{

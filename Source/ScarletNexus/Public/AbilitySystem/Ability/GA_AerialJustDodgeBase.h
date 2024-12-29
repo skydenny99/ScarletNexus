@@ -20,7 +20,4 @@ protected:
 
 	UFUNCTION()
 	void OnGrounded(ACharacter* Character, EMovementMode PrevMovementMode, uint8 PreviousCustomMode);
-
-	UFUNCTION(BlueprintPure)
-	UAnimInstance* GetKasaneAnimInstance() const {return Kasane->GetMesh()->GetAnimInstance();}
 };

@@ -25,7 +25,4 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void CancelChargingProjectile();
 
-	UFUNCTION(BlueprintPure)
-	UAnimInstance* GetKasaneAnimInstance() const {return Kasane->GetMesh()->GetAnimInstance();}
-
 };

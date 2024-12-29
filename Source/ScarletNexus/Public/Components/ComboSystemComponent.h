@@ -72,7 +72,7 @@ private:
 	
 	float ActionElapsedTime;
 	float StartActionElapsedTime;
-	float ChargeAttackThreshold = 0.3f;
+	float ChargeAttackThreshold = 0.15f;
 	float ChargeCompletionTime = 0.1f;
 
 	FGameplayTag LastChargeAbilityInputTag;

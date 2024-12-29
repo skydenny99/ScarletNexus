@@ -6,7 +6,6 @@
 #include "BaseDebugHelper.h"
 #include "BaseFunctionLibrary.h"
 #include "BaseGameplayTags.h"
-#include "Character/Character_Kasane.h"
 #include "Components/ComboSystemComponent.h"
 
 void UGA_AttackAbilityBase::OnGiveAbility(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec)
