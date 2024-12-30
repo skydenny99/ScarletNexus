@@ -23,6 +23,7 @@
 #include "Components/UnlockSystemComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "NiagaraFunctionLibrary.h"
+#include "Components/InventoryComponent.h"
 
 ACharacter_Kasane::ACharacter_Kasane()
 {
@@ -129,6 +130,7 @@ ACharacter_Kasane::ACharacter_Kasane()
 	JustDodgeBoundary->InitSphereRadius(500.f);
 
 	SASManageComponent = CreateDefaultSubobject<USASManageComponent>(TEXT("SASManager"));
+	InventoryComponent = CreateDefaultSubobject<UInventoryComponent>(TEXT("InventoryComponent"));
 
 	// Attribute
 	BaseAttributeSet = CreateDefaultSubobject<UPlayerAttributeSet>(TEXT("KasaneAttributeSet"));
@@ -216,6 +218,7 @@ void ACharacter_Kasane::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	InputComp->BindNativeInputAction(InputConfig, BaseGameplayTags::InputTag_Move, ETriggerEvent::Completed, this, &ACharacter_Kasane::ResetMovementElapsedTime);
 	InputComp->BindNativeInputAction(InputConfig, BaseGameplayTags::InputTag_Look, ETriggerEvent::Triggered, this, &ACharacter_Kasane::OnInputLookTriggered);
 	InputComp->BindNativeInputAction(InputConfig, BaseGameplayTags::InputTag_Targeting_Toggle, ETriggerEvent::Triggered, this, &ACharacter_Kasane::OnTargetingInputTriggered);
+	InputComp->BindNativeInputAction(InputConfig, BaseGameplayTags::InputTag_Item_Change, ETriggerEvent::Triggered, this, &ACharacter_Kasane::OnChangeItemInputTriggered);
 	InputComp->BindAbilityInputAction(InputConfig, this, &ACharacter_Kasane::OnAbilityInputTriggered);
 	InputComp->BindSASAbilityInputAction(InputConfig, this, &ACharacter_Kasane::OnSASAbilityInputTriggered);
 	InputComp->BindDirectionInput(DirectionInputConfig, this, &ACharacter_Kasane::PushInput);
@@ -404,6 +407,20 @@ void ACharacter_Kasane::ActivateCloneSkeletalMesh(bool InIsActive, int32 InCount
 	}
 	LeftCloneComponent->SetHiddenInGame(NeedToActivateLeftClone, true);
 	RightCloneComponent->SetHiddenInGame(NeedToActivateRightClone, true);
+}
+
+void ACharacter_Kasane::OnChangeItemInputTriggered(const FInputActionValue& Value)
+{
+	if (InventoryComponent == nullptr) return;
+	float Axis = Value.Get<float>();
+	if (Axis > 0.f)
+	{
+		InventoryComponent->ChangeIndex(false);
+	}
+	else
+	{
+		InventoryComponent->ChangeIndex(true);
+	}
 }
 
 void ACharacter_Kasane::BeginPlay()

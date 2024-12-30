@@ -8,20 +8,30 @@
 #include "InventoryComponent.generated.h"
 
 USTRUCT(BlueprintType)
-struct FUsableItemInfo
+struct FUsableItemInfo : public FTableRowBase
 {
 	GENERATED_BODY()
 	UPROPERTY(EditDefaultsOnly)
 	FName ItemName;
 
 	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<UGameplayEffect> ItemGameplayEffectClass;
+	FName ItemDisplayName;
+
+	UPROPERTY(EditDefaultsOnly)
+	float Level = 1.f;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UGameplayEffect> GE_ItemEffect;
+	
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UGameplayEffect> GE_ItemCooldown;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FColor Color;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FGameplayTag CooldownTag;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float Cooldown;
 	
 	UPROPERTY(EditDefaultsOnly)
 	UMaterialInstance* ItemMaterial;
@@ -49,6 +59,7 @@ class SCARLETNEXUS_API UInventoryComponent : public UActorComponent
 	GENERATED_BODY()
 
 protected:
+	UPROPERTY(EditDefaultsOnly)
 	UDataTable* ItemDataTable;
 
 	UPROPERTY(EditDefaultsOnly)
@@ -63,12 +74,17 @@ public:
 	TArray<FInventoryItemInfo> GetInventoryItems() const {return Inventory;}
 
 	FUsableItemInfo GetItemInfo(const FName& ItemName) const;
+	bool CanUseItem();
 	bool HasItem(const FName& ItemName, FInventoryItemInfo& FoundItemInfo) const;
 	void ChangeIndex(bool InIsLeft);
+	FUsableItemInfo GetCurrentSelectedItemInfo() const;
 
 	UFUNCTION(BlueprintCallable, category="Inventory")
 	void UseCurrentSelectedItem(AActor* Target);
 
 	UFUNCTION(BlueprintCallable, Category="Inventory")
 	void UseItemByName(AActor* Target, const FName& ItemName);
+
+	UFUNCTION(BlueprintCallable, Category="Inventory")
+	float GetItemCooldown(AActor* Target, const FName& ItemName) const;
 };

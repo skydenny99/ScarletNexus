@@ -25,8 +25,7 @@ namespace BaseGameplayTags
 
 	//Item
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_Item_Use, "InputTag.Item.Use");
-	UE_DEFINE_GAMEPLAY_TAG(InputTag_Item_Change_Left, "InputTag.Item.Change.Left");
-	UE_DEFINE_GAMEPLAY_TAG(InputTag_Item_Change_Right, "InputTag.Item.Change.Right");
+	UE_DEFINE_GAMEPLAY_TAG(InputTag_Item_Change, "InputTag.Item.Change");
 
 	//SAS
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_SAS_First, "InputTag.SAS.First");
@@ -112,6 +111,10 @@ namespace BaseGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_ChargeReady, "Player.Status.ChargeReady");
 
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_Move_Aerial, "Player.Status.Move.Aerial");
+
+	// Cooldown
+	UE_DEFINE_GAMEPLAY_TAG(Player_Cooldown_Item_Heal, "Player.Cooldown.Item.Heal");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Cooldown_Item_SAS_Recover, "Player.Cooldown.Item.SAS_Recover");
 
 #pragma endregion
 
