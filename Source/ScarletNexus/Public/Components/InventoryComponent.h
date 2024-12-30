@@ -7,7 +7,7 @@
 #include "Components/ActorComponent.h"
 #include "InventoryComponent.generated.h"
 
-USTRUCT()
+USTRUCT(BlueprintType)
 struct FUsableItemInfo
 {
 	GENERATED_BODY()
@@ -16,6 +16,15 @@ struct FUsableItemInfo
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UGameplayEffect> ItemGameplayEffectClass;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FColor Color;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float Cooldown;
+	
+	UPROPERTY(EditDefaultsOnly)
+	UMaterialInstance* ItemMaterial;
 	
 };
 
@@ -50,6 +59,8 @@ protected:
 public:	
 	// Sets default values for this component's properties
 	UInventoryComponent();
+
+	TArray<FInventoryItemInfo> GetInventoryItems() const {return Inventory;}
 
 	FUsableItemInfo GetItemInfo(const FName& ItemName) const;
 	bool HasItem(const FName& ItemName, FInventoryItemInfo& FoundItemInfo) const;
