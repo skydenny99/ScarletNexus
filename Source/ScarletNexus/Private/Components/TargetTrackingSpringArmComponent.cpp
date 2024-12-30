@@ -65,10 +65,21 @@ FRotator UTargetTrackingSpringArmComponent::GetDesiredRotation() const
 		DesiredRot = PawnViewRotation;
 	}
 	
-	if (bUpdateCameraTracking == false || TargetActor == nullptr)
+	if (bUpdateCameraTracking == false)
 		return DesiredRot;
-	
-	FVector TargetLocation = TargetActor->GetActorLocation();
+	if (bOverrideTrackingTarget)
+	{
+		if (OverrideTargetActor == nullptr)
+			return DesiredRot;
+	}
+	else
+	{
+		if (TargetActor == nullptr)
+			return DesiredRot;
+	}
+
+	AActor* Target = bOverrideTrackingTarget ? OverrideTargetActor : TargetActor;
+	FVector TargetLocation = Target->GetActorLocation();
 	FVector2D TargetScreenLocation = FVector2D::ZeroVector;
 	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	bool bProjectResult = PlayerController->ProjectWorldLocationToScreen(TargetLocation, TargetScreenLocation);
@@ -94,16 +105,24 @@ FRotator UTargetTrackingSpringArmComponent::GetDesiredRotation() const
 void UTargetTrackingSpringArmComponent::TickComponent(float DeltaTime, enum ELevelTick TickType,
 	FActorComponentTickFunction* ThisTickFunction)
 {
-	if (ResetTimer > ResetThreshold)
+	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	if (bOverrideTrackingTarget)
 	{
-		bUpdateCameraTracking = bIsTargetTracking;
+		bUpdateCameraTracking = true;
 	}
 	else
 	{
-		bUpdateCameraTracking = false;
-		ResetTimer += DeltaTime;
+		if (ResetTimer > ResetThreshold)
+		{
+			bUpdateCameraTracking = bIsTargetTracking;
+		}
+		else
+		{
+			bUpdateCameraTracking = false;
+			ResetTimer += DeltaTime;
+		}
 	}
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	
 }
 
 AActor* UTargetTrackingSpringArmComponent::GetCurrentTarget()

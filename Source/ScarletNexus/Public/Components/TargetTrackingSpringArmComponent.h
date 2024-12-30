@@ -51,6 +51,10 @@ class SCARLETNEXUS_API UTargetTrackingSpringArmComponent : public USpringArmComp
 	float ResetTimer = 0.f;
 	bool bUpdateCameraTracking = false;
 
+	bool bOverrideTrackingTarget = false;
+	FTrackingBoundary OverrideTrackingBoundary {0.4, 0.4, 0.3, 0.5};
+	UPROPERTY()
+	AActor* OverrideTargetActor = nullptr;
 	
 	
 
@@ -68,6 +72,9 @@ public:
 	FORCEINLINE void StartResetTimer() { ResetTimer = 0.f; }
 	AActor* GetTestTarget() const {return FoundTargets.IsEmpty() ? nullptr : FoundTargets.Last();}
 	AActor* GetCurrentTarget();
+
+	FORCEINLINE void ActivateOverrideTracking(bool InActivate) { bOverrideTrackingTarget = InActivate; }
+	FORCEINLINE void SetOverrideTargetActor(AActor* InTargetActor) { OverrideTargetActor = InTargetActor; }
 };
 
 
