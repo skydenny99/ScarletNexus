@@ -77,7 +77,7 @@ protected:
 	UImage* B_Gauge;
 
 public:
-	UFUNCTION(BlueprintImplementableEvent)
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	void InitSprite(const TArray<FSASData>& Data);
 
 	UFUNCTION(BlueprintCallable)

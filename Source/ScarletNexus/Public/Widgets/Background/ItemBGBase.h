@@ -6,6 +6,7 @@
 #include "Widgets/WidgetBase.h"
 #include "ItemBGBase.generated.h"
 
+struct FInventoryItemInfo;
 class UPaperSprite;
 class UTextBlock;
 class UImage;
@@ -71,6 +72,14 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	UImage* Glow;
 
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* LeftQuantity;
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* MiddleQuantity;
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* RightQuantity;
 public:
 	virtual void NativeConstruct() override;
 	
@@ -78,13 +87,16 @@ public:
 	static int32 Side (const int Index,const int Lenght,const bool bIsLeft);
 
 	UFUNCTION(BlueprintCallable)
-	void UpdateBefore(const TArray<FConsumItemInfo>& Items, int32 Middle,bool bIsLeft);
+	void UpdateBefore(const TArray<FConsumItemInfo>& Items, int32 Middle, int32 Quantity ,bool bIsLeft);
 
+	//UFUNCTION(BlueprintCallable)
+	//void UpdateBefore(const TArray<FConsumItemInfo>& Items, int32 Middle, const TArray<FInventoryItemInfo>& ItemInfo, int32 Quantity ,bool bIsLeft);
+	
 	UFUNCTION(BlueprintCallable)
 	void UpdateAfter(const TArray<FConsumItemInfo>& Items, int32 Middle);
 
 	UFUNCTION(BlueprintCallable)
-	void Init(const TArray<FConsumItemInfo>& Items, int32 Middle);
+	void Init(const TArray<FConsumItemInfo>& Items, int32 Middle, int32 Quantity);
 
 	UFUNCTION()
 	void OnOwningPlayerUIComponentInitialized(UPlayerUIComponent* PlayerUIComponent) const override;

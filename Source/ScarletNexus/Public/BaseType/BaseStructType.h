@@ -9,7 +9,7 @@ class UPaperSprite;
 struct FColor;
 
 USTRUCT(BlueprintType)
-struct FSASData
+struct FSASData : public FTableRowBase
 {
 	GENERATED_BODY()
 
@@ -43,6 +43,9 @@ struct FConsumItemInfo
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FName Name;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FName DisplayName;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FColor Color;
 	

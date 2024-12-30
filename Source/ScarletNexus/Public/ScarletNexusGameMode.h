@@ -43,21 +43,21 @@ class SCARLETNEXUS_API AScarletNexusGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
 public:
-	AScarletNexusGameMode();
+	//AScarletNexusGameMode();
 	
 protected:	
-	UPROPERTY(EditAnywhere)
+	/*UPROPERTY(EditAnywhere)
 	TSubclassOf<class UUserWidget> HUD_Class;
 
 	UPROPERTY(BlueprintReadOnly)
-	UUserWidget* HUD;
+	UUserWidget* HUD;*/
 	
 public:
-	UFUNCTION()
-	virtual void BeginPlay() override;
+	/*UFUNCTION()
+	virtual void BeginPlay() override;*/
 	
 	UFUNCTION(BlueprintCallable)
-	void BP_BindHealthPercentWithAttributeChangeDelegate(AActor* InActor, const FGameplayAttribute InCurrentAttribute, const FGameplayAttribute InMaxAttribute, FOnPercentValueChanged OnPercentValueChanged);
+	void BP_BindPercentWithAttributeChangeDelegate(AActor* InActor, const FGameplayAttribute InCurrentAttribute, const FGameplayAttribute InMaxAttribute, FOnPercentValueChanged OnPercentValueChanged);
 
 	UFUNCTION(BlueprintCallable)
 	void BP_BindHealthPointWithAttributChangeDelegate(AActor* InActor, const FGameplayAttribute InCurrentAttribute, FOnfloatValueChanged OnFloatValueChanged);
@@ -67,32 +67,31 @@ public:
 	void BP_BindDebuffWithAttributeChanageDelegate(AActor* InActor, const FGameplayAttribute InCurrentAttribute, FOnDebuffChanged OnDebuffChanged);
 
 	UFUNCTION(BlueprintCallable)
-	void BP_BindInitNameHpWithAttributChangeDelegate(AActor* InActor, const FGameplayAttribute InCurrentAttribute, const FGameplayAttribute InMaxAttribute, FOnNameHpChanged OnNameHpChanged);
+	void BP_BindInitNameHpWithAttributeChangeDelegate(AActor* InActor, const FGameplayAttribute InCurrentAttribute, const FGameplayAttribute InMaxAttribute, FOnNameHpChanged OnNameHpChanged);
 
 	//Item
 	UFUNCTION(BlueprintCallable)
-	void BP_BindItemChangeWithAttributChangeDelegate(AActor* InActor, const FGameplayAttribute InCurrentAttribute, const FGameplayAttribute InMaxAttribute, FItemChangeDelegate OnItemChanged);
+	void BP_BindItemChangeWithAttributeChangeDelegate(AActor* InActor, const FGameplayAttribute InCurrentAttribute, const FGameplayAttribute InMaxAttribute, FItemChangeDelegate OnItemChanged);
 
 	UFUNCTION(BlueprintCallable)
-	void BP_BindUpdateAfterWithAttributChangeDelegate(AActor* InActor, const FGameplayAttribute InCurrentAttribute, const FGameplayAttribute InMaxAttribute, FUpdateAfterDelegate OnUpdateAfterItemChanged);
+	void BP_BindUpdateAfterWithAttributeChangeDelegate(AActor* InActor, const FGameplayAttribute InCurrentAttribute, const FGameplayAttribute InMaxAttribute, FUpdateAfterDelegate OnUpdateAfterItemChanged);
 
 	UFUNCTION(BlueprintCallable)
-	void BP_BindUpdateBeforeWithAttributChangeDelegate(AActor* InActor, const FGameplayAttribute InCurrentAttribute, const FGameplayAttribute InMaxAttribute, FUpdateBeforeDelegate OnUpdateBeforeItemChanged);
+	void BP_BindUpdateBeforeWithAttributeChangeDelegate(AActor* InActor, const FGameplayAttribute InCurrentAttribute, const FGameplayAttribute InMaxAttribute, FUpdateBeforeDelegate OnUpdateBeforeItemChanged);
 
 	//Fellow
 	UFUNCTION(BlueprintCallable)
-	void BP_BindFellowRightInitWithAttributChangeDelegate(AActor* InActor, const FGameplayAttribute InCurrentAttribute, const FGameplayAttribute InMaxAttribute, FFellowRightInitDelegate OnRightInitChanged);
+	void BP_BindFellowRightInitWithAttributeChangeDelegate(AActor* InActor, const FGameplayAttribute InCurrentAttribute, const FGameplayAttribute InMaxAttribute, FFellowRightInitDelegate OnRightInitChanged);
 
 	UFUNCTION(BlueprintCallable)
-	void BP_BindFellowLeftInitWithAttributChangeDelegate(AActor* InActor, const FGameplayAttribute InCurrentAttribute, const FGameplayAttribute InMaxAttribute, FFellowLeftInitDelegate OnLeftInitChanged);
+	void BP_BindFellowLeftInitWithAttributeChangeDelegate(AActor* InActor, const FGameplayAttribute InCurrentAttribute, const FGameplayAttribute InMaxAttribute, FFellowLeftInitDelegate OnLeftInitChanged);
 
 	//SAS BG
 	UFUNCTION(BlueprintCallable)
-	void BP_BindSASBGKeyDownWithAttributChangeDelegate(AActor* InActor, const FGameplayAttribute InCurrentAttribute,  FOnKeyDownDelegate OnKeyDown);
+	void BP_BindSASBGKeyDownWithAttributeChangeDelegate(AActor* InActor, const FGameplayAttribute InCurrentAttribute,  FOnKeyDownDelegate OnKeyDown);
 	*/
 
-
-
-
-	
+	//SAS Gauge
+	//UFUNCTION(BlueprintCallable)
+	//void BP_BindSASTopGaugeWithAttributeChangeDelegate(AActor* InActor, const FGameplayAttribute InCurrentAttribute, const FGameplayAttribute InMaxAttribute, FOnPercentValueChanged OnPercentValueChanged);
 };

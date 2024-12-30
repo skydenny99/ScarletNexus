@@ -10,6 +10,7 @@
 #include "Blueprint/UserWidget.h"
 #include "Character/Character_Kasane.h"
 
+/*
 AScarletNexusGameMode::AScarletNexusGameMode()
 {
 	static ConstructorHelpers::FClassFinder<UUserWidget> UMG_HUD(TEXT("WidgetBlueprint'/Game/UI/UI/UMG_HUD.UMG_HUD_C'"));
@@ -26,8 +27,9 @@ void AScarletNexusGameMode::BeginPlay()
 	HUD = CreateWidget(GetWorld()->GetFirstPlayerController(), HUD_Class);
 	HUD->AddToViewport();
 }
+*/
 
-void AScarletNexusGameMode::BP_BindHealthPercentWithAttributeChangeDelegate(AActor* InActor,
+void AScarletNexusGameMode::BP_BindPercentWithAttributeChangeDelegate(AActor* InActor,
                                                                        const FGameplayAttribute InCurrentAttribute, const FGameplayAttribute InMaxAttribute,
                                                                        FOnPercentValueChanged OnPercentValueChanged)
 {
@@ -60,6 +62,25 @@ void AScarletNexusGameMode::BP_BindHealthPointWithAttributChangeDelegate(AActor*
 		OnFloatValueChanged.ExecuteIfBound(ChangeData.NewValue);
 	});
 }
+
+/*
+void AScarletNexusGameMode::BP_BindSASTopGaugeWithAttributeChangeDelegate(AActor* InActor,
+	const FGameplayAttribute InCurrentAttribute, const FGameplayAttribute InMaxAttribute,
+	FOnPercentValueChanged OnPercentValueChanged)
+{
+	auto ASC = UBaseFunctionLibrary::NativeGetAbilitySystemComponentFromActor(InActor);
+	ASC->GetGameplayAttributeValueChangeDelegate(InCurrentAttribute).AddLambda([InActor, InMaxAttribute, OnPercentValueChanged](const FOnAttributeChangeData& ChangeData)
+	{
+		bool IsFound = false;
+		float MaxValue = UAbilitySystemBlueprintLibrary::GetFloatAttribute(InActor, InMaxAttribute, IsFound);
+		if (IsFound)
+		{
+			//Debug::Print(FString::Printf(TEXT("%s Gauage: %f"),*ChangeData.Attribute.GetName(), ChangeData.NewValue / MaxValue));
+			OnPercentValueChanged.ExecuteIfBound(ChangeData.NewValue / MaxValue);
+		}
+	});
+}
+*/
 
 /*void AScarletNexusGameMode::BP_BindDebuffWithAttributeChanageDelegate(AActor* InActor,
 		const FGameplayAttribute InCurrentAttribute, FOnDebuffChanged OnDebuffChanged)
