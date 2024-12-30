@@ -21,7 +21,7 @@ bool UGA_GroundPsych::CanActivateAbility(const FGameplayAbilitySpecHandle Handle
 {
 	if (Super::CanActivateAbility(Handle, ActorInfo, SourceTags, TargetTags, OptionalRelevantTags))
 	{
-		return CheckCost(Handle, ActorInfo) && UPsychAbilityHelperLibrary::NativeHasPsychokineticPropInRange(Kasane);
+		return CheckCost(Handle, ActorInfo) && UPsychAbilityHelperLibrary::NativeHasPsychokineticThrowablePropInRange(Kasane);
 	}
 	return false;
 }
@@ -32,7 +32,7 @@ void UGA_GroundPsych::PreActivate(const FGameplayAbilitySpecHandle Handle, const
 {
 	Super::PreActivate(Handle, ActorInfo, ActivationInfo, OnGameplayAbilityEndedDelegate, TriggerEventData);
 	ComboSystem->ClearPsychComboTimer();
-	UPsychAbilityHelperLibrary::NativeOnActivatePsychAbility(Kasane);
+	UPsychAbilityHelperLibrary::NativeOnActivateNormalPsychAbility(Kasane);
 }
 
 void UGA_GroundPsych::ActivateAbility(const FGameplayAbilitySpecHandle Handle,

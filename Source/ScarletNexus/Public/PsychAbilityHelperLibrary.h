@@ -19,8 +19,10 @@ class SCARLETNEXUS_API UPsychAbilityHelperLibrary : public UBlueprintFunctionLib
 
 public:
 	static void NativeSetPsychObject(const ACharacter_Kasane* Kasane, AActor* PsychObject);
-	static bool NativeHasPsychokineticPropInRange(const ACharacter_Kasane* Kasane);
-	static void NativeOnActivatePsychAbility(const ACharacter_Kasane* Kasane);
+	static bool NativeHasPsychokineticThrowablePropInRange(const ACharacter_Kasane* Kasane);
+	static bool NativeHasPsychokineticSpecialPropInRange(const ACharacter_Kasane* Kasane);
+	static void NativeOnActivateNormalPsychAbility(const ACharacter_Kasane* Kasane);
+	static void NativeOnActivateSpecialPsychAbility(const ACharacter_Kasane* Kasane);
 	static void NativeOnChargingCancelPsychAbility(const ACharacter_Kasane* Kasane);
 
 	UFUNCTION(BlueprintCallable, Category = "FunctionLibrary")
