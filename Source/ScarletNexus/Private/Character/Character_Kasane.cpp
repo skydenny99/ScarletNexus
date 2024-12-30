@@ -52,12 +52,12 @@ ACharacter_Kasane::ACharacter_Kasane()
 		OutlineBody->SetLeaderPoseComponent(MainBody);
 	}
 
-	UCapsuleComponent* MainCapsule = GetCapsuleComponent();
+	MainCapsule = GetCapsuleComponent();
 	const float CapsuleRadius = 42.f;
 	const float CapsuleHalfHeight = 96.f;
 	MainCapsule->InitCapsuleSize(CapsuleRadius, CapsuleHalfHeight);
 
-	UCapsuleComponent* HitboxCapsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Hitbox"));
+	HitboxCapsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Hitbox"));
 	HitboxCapsule->InitCapsuleSize(CapsuleRadius, CapsuleHalfHeight);
 	HitboxCapsule->SetupAttachment(MainBody, FName("Waist"));
 	HitboxCapsule->SetRelativeRotation(FRotator(0.f, 0.f, 90.f));

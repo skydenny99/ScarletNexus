@@ -64,6 +64,13 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	UDataAsset_DirectionInputConfig* DirectionInputConfig;
+
+	UPROPERTY(VisibleAnywhere, Category = "Collision")
+	UCapsuleComponent* MainCapsule;
+	
+	UPROPERTY(VisibleAnywhere, Category = "Collision")
+	UCapsuleComponent* HitboxCapsule;
+	
 	virtual void PossessedBy(AController* NewController) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	virtual void BeginPlay() override;
