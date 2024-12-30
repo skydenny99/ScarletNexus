@@ -36,9 +36,23 @@ void APsychokineticThrowableProp::BeginPlay()
 }
 
 
-void APsychokineticThrowableProp::OnStartGrab()
+void APsychokineticThrowableProp::OnStartGrab(bool NeedToClone, bool DoubleClone)
 {
 	MeshComponent->SetCollisionProfileName("PlayerProjectile");
+	CachedLaunchedLocation = GetActorLocation();
+	CachedLaunchedRotation = GetActorRotation();
+	// if SAS: clone activated - Launch Clone
+	if (bCanClonable && NeedToClone)
+	{
+		FTimerHandle TempTimerHandle;
+		GetWorldTimerManager().SetTimer(TempTimerHandle, this, &APsychokineticThrowableProp::CloneLaunch, 0.5f);
+		if (DoubleClone)
+		{
+			FTimerHandle TempTimerHandle2;
+			GetWorldTimerManager().SetTimer(TempTimerHandle2, this, &APsychokineticThrowableProp::CloneLaunch, 0.8f);
+		}
+		
+	}
 }
 
 void APsychokineticThrowableProp::OnHit()
@@ -86,29 +100,13 @@ void APsychokineticThrowableProp::FloatingTick(float DeltaTime)
 	SetActorLocation(UKismetMathLibrary::VInterpTo(GetActorLocation(), GetActorLocation() + FVector::UpVector * (FloatingHeight / ChargeTime), DeltaTime, 1.f));
 }
 
-void APsychokineticThrowableProp::Launch(bool NeedToClone, bool DoubleClone)
+void APsychokineticThrowableProp::Launch()
 {
-	CachedLaunchedLocation = GetActorLocation();
-	CachedLaunchedRotation = GetActorRotation();
 	MeshComponent->SetCollisionProfileName("PlayerProjectile");
 	if (bIsAttached)
 	{
 		DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
 	}
-
-	// if SAS: clone activated - Launch Clone
-	if (bCanClonable && NeedToClone)
-	{
-		FTimerHandle TempTimerHandle;
-		GetWorldTimerManager().SetTimer(TempTimerHandle, this, &APsychokineticThrowableProp::CloneLaunch, 0.15f);
-		if (DoubleClone)
-		{
-			FTimerHandle TempTimerHandle2;
-			GetWorldTimerManager().SetTimer(TempTimerHandle2, this, &APsychokineticThrowableProp::CloneLaunch, 0.3f);
-		}
-		
-	}
-
 	
 	ProjectileMovementComponent->ProjectileGravityScale = 0.f;
 
@@ -150,7 +148,7 @@ void APsychokineticThrowableProp::CloneLaunch()
 	APsychokineticThrowableProp* ClonedProp = GetWorld()->SpawnActor<APsychokineticThrowableProp>(GetClass(), SpawnParams);
 	ClonedProp->SetActorLocation(CachedLaunchedLocation);
 	ClonedProp->SetActorRotation(CachedLaunchedRotation);
-	ClonedProp->bIsAttached = false;
+	ClonedProp->bIsAttached = true;
 	ClonedProp->bCanClonable = false;
 	if (CurrentTargetLocation.IsSet())
 	{
@@ -160,7 +158,7 @@ void APsychokineticThrowableProp::CloneLaunch()
 	{
 		ClonedProp->SetTarget(CurrentTarget);
 	}
-	ClonedProp->Launch(false);
+	ClonedProp->Launch();
 }
 
 

@@ -3,6 +3,8 @@
 
 #include "Shared/AnimNotify/ANS_GrabPsychObject.h"
 
+#include "BaseFunctionLibrary.h"
+#include "BaseGameplayTags.h"
 #include "Actor/PsychokineticThrowableProp.h"
 #include "Character/Character_Kasane.h"
 #include "Components/PsychokinesisComponent.h"
@@ -17,7 +19,9 @@ void UANS_GrabPsychObject::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSe
 		ThrowableProp = Cast<APsychokineticThrowableProp>(PsychokinesisComponent->GetPsychThrowableTarget());
 		if (ThrowableProp)
 		{
-			ThrowableProp->OnStartGrab();
+			ThrowableProp->OnStartGrab(
+			UBaseFunctionLibrary::NativeActorHasTag(Character, BaseGameplayTags::Player_Status_SAS_Clone),
+			true);
 		}
 	}
 }

@@ -56,7 +56,7 @@ public:
 
 	
 
-	void OnStartGrab();
+	void OnStartGrab(bool NeedToClone, bool DoubleClone);
 	
 	// void OnComponentHit()override;
 	
@@ -76,7 +76,7 @@ public:
 	void OnChargingCancel();
 
 	void FloatingTick(float DeltaTime);
-	void Launch(bool NeedToClone, bool DoubleClone = false);
+	void Launch();
 	void CloneLaunch();
 	
 };

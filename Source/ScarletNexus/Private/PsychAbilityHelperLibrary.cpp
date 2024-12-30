@@ -96,10 +96,7 @@ void UPsychAbilityHelperLibrary::ActivateThrowPsychAbility(ACharacter_Kasane* Ka
 		{
 			ThrowableProp->SetTarget(EnemyCharacter->GetTargetVector());
 		}
-		ThrowableProp->Launch(
-			UBaseFunctionLibrary::NativeActorHasTag(Kasane, BaseGameplayTags::Player_Status_SAS_Clone),
-			true
-			);
+		ThrowableProp->Launch();
 	}
 }
 
