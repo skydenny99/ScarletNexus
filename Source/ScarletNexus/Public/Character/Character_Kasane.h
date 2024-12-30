@@ -145,5 +145,8 @@ public:
 	
 	UFUNCTION(BlueprintCallable)
 	void ActivateCloneSkeletalMesh(bool InIsActive, int32 InCount = 2);
+
+	// Item Functions
+	void OnChangeItemInputTriggered(const FInputActionValue& Value);
 };
 
