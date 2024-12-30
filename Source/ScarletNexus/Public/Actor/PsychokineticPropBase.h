@@ -24,13 +24,14 @@ protected:
 	float ChargeTime = 1.f;
 
 	UPROPERTY(EditDefaultsOnly)
-	int32 PsychCost = 10;
+	float PsychCost = 10;
 	bool bIsUsed = false;
 	
 public:
 	FOnUsePsychProp OnUsePsychProp;
 	
 	void DissolveProp();
+	FORCEINLINE float GetPsychCost() const { return PsychCost; }
 	FORCEINLINE float GetChargeTime() const { return ChargeTime; }
 	FORCEINLINE bool IsUsed() const { return bIsUsed; }
 };

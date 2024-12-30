@@ -5,6 +5,7 @@
 
 #include "BaseFunctionLibrary.h"
 #include "BaseGameplayTags.h"
+#include "AbilitySystem/Attribute/PlayerAttributeSet.h"
 #include "Actor/PsychokineticPropBase.h"
 #include "Actor/PsychokineticThrowableProp.h"
 #include "Character/Character_Kasane.h"
@@ -16,8 +17,7 @@
 void UPsychAbilityHelperLibrary::NativeSetPsychObject(const ACharacter_Kasane* Kasane, AActor* PsychObject)
 {
 	if (Kasane == nullptr) return;
-	UPsychokinesisComponent* PsychokinesisComponent = Kasane->GetPsychokinesisComponent();
-	if (PsychokinesisComponent)
+	if (UPsychokinesisComponent* PsychokinesisComponent = Kasane->GetPsychokinesisComponent())
 	{
 		PsychokinesisComponent->SetBlockUpdate(true);
 		PsychokinesisComponent->SetPsychTargetInForce(PsychObject);
@@ -48,8 +48,7 @@ void UPsychAbilityHelperLibrary::NativeOnActivatePsychAbility(const ACharacter_K
 void UPsychAbilityHelperLibrary::NativeOnChargingCancelPsychAbility(const ACharacter_Kasane* Kasane)
 {
 	if (Kasane == nullptr) return;
-	UPsychokinesisComponent* PsychokinesisComponent = Kasane->GetPsychokinesisComponent();
-	if (PsychokinesisComponent)
+	if (UPsychokinesisComponent* PsychokinesisComponent = Kasane->GetPsychokinesisComponent())
 	{
 		APsychokineticThrowableProp* ThrowableProp = Cast<APsychokineticThrowableProp>(PsychokinesisComponent->GetPsychTarget());
 		if (ThrowableProp)
@@ -88,9 +87,39 @@ void UPsychAbilityHelperLibrary::ActivateSpecialPsychAbility()
 void UPsychAbilityHelperLibrary::SetBlockUpdateTarget(const ACharacter_Kasane* Kasane, bool InBlock)
 {
 	if (Kasane == nullptr) return;
-	UPsychokinesisComponent* PsychokinesisComponent = Kasane->GetPsychokinesisComponent();
-	if (PsychokinesisComponent)
+	if (UPsychokinesisComponent* PsychokinesisComponent = Kasane->GetPsychokinesisComponent())
 	{
 		PsychokinesisComponent->SetBlockUpdate(InBlock);
+	}
+}
+
+UGameplayEffect* UPsychAbilityHelperLibrary::CreatePsychCostGameplayEffect(const ACharacter_Kasane* Kasane)
+{
+	if (Kasane == nullptr) return nullptr;
+	if (UPsychokinesisComponent* PsychokinesisComponent = Kasane->GetPsychokinesisComponent())
+	{
+		if (PsychokinesisComponent->GetPsychTarget() == nullptr) return nullptr;
+		UGameplayEffect* CostGameplayEffect = NewObject<UGameplayEffect>(GetTransientPackage(), FName("PsychCost"));
+		CostGameplayEffect->DurationPolicy = EGameplayEffectDurationType::Instant;
+
+		int32 Idx = CostGameplayEffect->Modifiers.Num();
+		CostGameplayEffect->Modifiers.SetNum(Idx + 1);
+
+		FGameplayModifierInfo& InfoCost = CostGameplayEffect->Modifiers[Idx];
+		InfoCost.ModifierMagnitude = FScalableFloat(-PsychokinesisComponent->GetPsychTarget()->GetPsychCost());
+		InfoCost.ModifierOp = EGameplayModOp::Additive;
+		InfoCost.Attribute = UPlayerAttributeSet::GetCurrentPsychGaugeAttribute();
+		return CostGameplayEffect;
+	}
+	return nullptr;
+}
+
+void UPsychAbilityHelperLibrary::ApplyPsychCostGameplayEffect(const ACharacter_Kasane* Kasane)
+{
+	UGameplayEffect* CostGameplayEffect = CreatePsychCostGameplayEffect(Kasane);
+	if (CostGameplayEffect)
+	{
+		auto ASC = Kasane->GetBaseAbilitySystemComponent();
+		ASC->ApplyGameplayEffectToSelf(CostGameplayEffect, 1.f, ASC->MakeEffectContext());
 	}
 }

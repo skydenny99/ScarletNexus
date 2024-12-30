@@ -7,6 +7,7 @@
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "PsychAbilityHelperLibrary.generated.h"
 
+class UGameplayEffect;
 class ACharacter_Kasane;
 /**
  * 
@@ -28,4 +29,8 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "FunctionLibrary")
 	static void SetBlockUpdateTarget(const ACharacter_Kasane* Kasane, bool InBlock);
+
+	static UGameplayEffect* CreatePsychCostGameplayEffect(const ACharacter_Kasane* Kasane);
+	UFUNCTION(BlueprintCallable, Category = "FunctionLibrary")
+	static void ApplyPsychCostGameplayEffect(const ACharacter_Kasane* Kasane);
 };

@@ -55,6 +55,12 @@ void UPlayerAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffect
 		Debug::Print(DebugString, FColor::Green);
 	}
 
+	if (Data.EvaluatedData.Attribute == GetCurrentPsychGaugeAttribute())
+	{
+		const float NewCurrentFireGauge = FMath::Clamp(GetCurrentPsychGauge(), 0.0f, GetMaxPsychGauge());
+		SetCurrentPsychGauge(NewCurrentFireGauge);
+	}
+
 
 	if (Data.EvaluatedData.Attribute == GetCurrentFireGaugeAttribute())
 	{

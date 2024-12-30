@@ -45,6 +45,12 @@ void UGA_AerialPsych::OnEndAbility(UGameplayAbility* Ability)
 	Kasane->GetPsychokinesisComponent()->SetBlockUpdate(false);
 }
 
+UGameplayEffect* UGA_AerialPsych::GetCostGameplayEffect() const
+{
+	UGameplayEffect* CostGameplayEffect = UPsychAbilityHelperLibrary::CreatePsychCostGameplayEffect(Kasane);
+	return CostGameplayEffect == nullptr ? Super::GetCostGameplayEffect() : CostGameplayEffect;
+}
+
 
 void UGA_AerialPsych::CancelChargingProjectile()
 {
