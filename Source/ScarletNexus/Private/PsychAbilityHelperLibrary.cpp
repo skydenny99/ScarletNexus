@@ -108,7 +108,7 @@ void UPsychAbilityHelperLibrary::SetPropDamageHandle(UGameplayAbility* Ability, 
 
 	if (UPsychokinesisComponent* PsychokinesisComponent = Kasane->GetPsychokinesisComponent())
 	{
-		APsychokineticThrowableProp* ThrowableProp = Cast<APsychokineticThrowableProp>(PsychokinesisComponent->GetPsychTarget());
+		APsychokineticThrowableProp* ThrowableProp = Cast<APsychokineticThrowableProp>(PsychokinesisComponent->GetPsychThrowableTarget());
 		if (ThrowableProp)
 		{
 			
