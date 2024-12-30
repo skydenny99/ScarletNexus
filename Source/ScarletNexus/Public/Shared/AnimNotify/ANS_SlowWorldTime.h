@@ -17,6 +17,9 @@ class SCARLETNEXUS_API UANS_SlowWorldTime : public UAnimNotifyState
 	
 public:
 	UPROPERTY(EditAnywhere, Category = "Time")
+	FName DilationName = FName("SlowMotion");
+	
+	UPROPERTY(EditAnywhere, Category = "Time")
 	float TargetTimeDilation = 0.3f;
 	
 	virtual void NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, float TotalDuration, const FAnimNotifyEventReference& EventReference) override;

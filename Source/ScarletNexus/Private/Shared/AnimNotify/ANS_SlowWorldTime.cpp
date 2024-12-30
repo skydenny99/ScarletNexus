@@ -14,7 +14,7 @@ void UANS_SlowWorldTime::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSequ
 	auto TimeSubSystem = MeshComp->GetWorld()->GetSubsystem<UTimeControlSubsystem>();
 	if (TimeSubSystem)
 	{
-		TimeSubSystem->SetupWorldTimeDilation(FName("SlowMotion"), TargetTimeDilation);
+		TimeSubSystem->SetupWorldTimeDilation(DilationName, TargetTimeDilation);
 //		UGameplayStatics::SetGlobalTimeDilation(MeshComp->GetOwner(), TargetTimeDilation);
 	}
 }
@@ -25,7 +25,7 @@ void UANS_SlowWorldTime::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequen
 	Super::NotifyEnd(MeshComp, Animation, EventReference);
 	if (auto TimeSubSystem = MeshComp->GetWorld()->GetSubsystem<UTimeControlSubsystem>())
 	{
-		TimeSubSystem->ReleaseWorldTimeDilation(FName("SlowMotion"));
+		TimeSubSystem->ReleaseWorldTimeDilation(DilationName);
 	// UGameplayStatics::SetGlobalTimeDilation(MeshComp->GetOwner(), 1.f);
 	}
 }
