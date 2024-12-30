@@ -11,8 +11,8 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "DataAsset/DataAsset_StartupBase.h"
-#include "BaseDebugHelper.h"
 #include "BaseFunctionLibrary.h"
+#include "NiagaraComponent.h"
 #include "AbilitySystem/Attribute/PlayerAttributeSet.h"
 #include "Camera/CameraActor.h"
 #include "Components/ComboSystemComponent.h"
@@ -23,10 +23,12 @@
 #include "Components/UnlockSystemComponent.h"
 #include "Components/Combat/KasaneCombatComponent.h"
 #include "Kismet/GameplayStatics.h"
-#include "GameFramework/RootMotionSource.h"
+#include "NiagaraFunctionLibrary.h"
+#include "Components/InventoryComponent.h"
 
 ACharacter_Kasane::ACharacter_Kasane()
 {
+	IsAffectedByAccelAbility = false;
 	USkeletalMeshComponent* MainBody = GetMesh();
 	MainBody->SetRelativeLocationAndRotation(FVector(0.f, 0.f, -100.f), FRotator(0.f, -90.f, 0.f));
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh> MainBodyMesh(TEXT("/Game/Resources/Characters/CH0200/CH200_Base.CH200_Base"));
@@ -129,18 +131,7 @@ ACharacter_Kasane::ACharacter_Kasane()
 	JustDodgeBoundary->InitSphereRadius(500.f);
 
 	SASManageComponent = CreateDefaultSubobject<USASManageComponent>(TEXT("SASManager"));
-	
-	static ConstructorHelpers::FObjectFinder<USkeletalMesh> WeaponMesh(TEXT("/Game/Resources/Weapons/WP0200/WP200_Base.WP200_Base"));
-	if (WeaponMesh.Succeeded())
-	{
-		for (int i = 1; i <=6; i++)
-		{
-			USkeletalMeshComponent* WeaponMeshComp = CreateDefaultSubobject<USkeletalMeshComponent>(FName(FString::Printf(TEXT("Weapon0%d"), i)));
-			WeaponMeshComp->SetSkeletalMesh(WeaponMesh.Object);
-			WeaponMeshComp->SetupAttachment(MainBody, FName(FString::Printf(TEXT("Weapon0%d"), i)));
-			WeaponMeshComp->SetRelativeRotation(FRotator(0.f, 0.f, -90.f));
-		}
-	}
+	InventoryComponent = CreateDefaultSubobject<UInventoryComponent>(TEXT("InventoryComponent"));
 
 	// Attribute
 	BaseAttributeSet = CreateDefaultSubobject<UPlayerAttributeSet>(TEXT("KasaneAttributeSet"));
@@ -149,6 +140,41 @@ ACharacter_Kasane::ACharacter_Kasane()
 	KasaneCombatComponent = CreateDefaultSubobject<UKasaneCombatComponent>(TEXT("KasaneCombatComponent"));
 	
 
+	
+	// SAS - Clone
+	LeftCloneComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("LeftClone"));
+	RightCloneComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("RightClone"));
+	if (MainBodyMesh.Succeeded())
+	{
+		LeftCloneComponent->SetSkeletalMesh(MainBodyMesh.Object);
+		LeftCloneComponent->SetupAttachment(MainBody);
+		LeftCloneComponent->SetLeaderPoseComponent(MainBody);
+		LeftCloneComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		LeftCloneComponent->SetRelativeLocation(FVector(-100.f, 0.f, 0.f));
+		
+		RightCloneComponent->SetSkeletalMesh(MainBodyMesh.Object);
+		RightCloneComponent->SetupAttachment(MainBody);
+		RightCloneComponent->SetLeaderPoseComponent(MainBody);
+		RightCloneComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		RightCloneComponent->SetRelativeLocation(FVector(100.f, 0.f, 0.f));
+	}
+
+	
+	static ConstructorHelpers::FObjectFinder<USkeletalMesh> WeaponMesh(TEXT("/Game/Resources/Weapons/WP0200/WP200_Base.WP200_Base"));
+	if (WeaponMesh.Succeeded())
+	{
+		const TArray TempBodies({MainBody, LeftCloneComponent, RightCloneComponent});
+		for (auto TempBody : TempBodies)
+		{
+			for (int i = 1; i <=6; i++)
+			{
+				USkeletalMeshComponent* WeaponMeshComp = CreateDefaultSubobject<USkeletalMeshComponent>(FName(FString::Printf(TEXT("%s_Weapon0%d"), *TempBody->GetName(), i)));
+				WeaponMeshComp->SetSkeletalMesh(WeaponMesh.Object);
+				WeaponMeshComp->SetupAttachment(TempBody, FName(FString::Printf(TEXT("Weapon0%d"), i)));
+				WeaponMeshComp->SetRelativeRotation(FRotator(0.f, 0.f, -90.f));
+			}
+		}
+	}
 	
 }
 
@@ -197,6 +223,7 @@ void ACharacter_Kasane::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	InputComp->BindNativeInputAction(InputConfig, BaseGameplayTags::InputTag_Move, ETriggerEvent::Completed, this, &ACharacter_Kasane::ResetMovementElapsedTime);
 	InputComp->BindNativeInputAction(InputConfig, BaseGameplayTags::InputTag_Look, ETriggerEvent::Triggered, this, &ACharacter_Kasane::OnInputLookTriggered);
 	InputComp->BindNativeInputAction(InputConfig, BaseGameplayTags::InputTag_Targeting_Toggle, ETriggerEvent::Triggered, this, &ACharacter_Kasane::OnTargetingInputTriggered);
+	InputComp->BindNativeInputAction(InputConfig, BaseGameplayTags::InputTag_Item_Change, ETriggerEvent::Triggered, this, &ACharacter_Kasane::OnChangeItemInputTriggered);
 	InputComp->BindAbilityInputAction(InputConfig, this, &ACharacter_Kasane::OnAbilityInputTriggered);
 	InputComp->BindSASAbilityInputAction(InputConfig, this, &ACharacter_Kasane::OnSASAbilityInputTriggered);
 	InputComp->BindDirectionInput(DirectionInputConfig, this, &ACharacter_Kasane::PushInput);
@@ -247,6 +274,7 @@ void ACharacter_Kasane::OnInputLookTriggered(const FInputActionValue& Value)
 
 void ACharacter_Kasane::OnTargetingInputTriggered(const FInputActionValue& Value)
 {
+	Debug::Print("Targeting Input");
 	TArray<AActor*> TargetActors;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ACharacter::StaticClass(), TargetActors);
 	TargetActors.Remove(this);
@@ -324,6 +352,32 @@ uint8 ACharacter_Kasane::GetDirectionByHistory()
 	return Result;
 }
 
+FVector ACharacter_Kasane::GetInputDirection()
+{
+	FVector InputDirection(0.f);
+	if (DirectionHistory & (static_cast<uint8>(EBaseDirectionType::Front) & 0b0011))
+	{
+		InputDirection += FVector::ForwardVector;
+	}
+	
+	if (DirectionHistory & (static_cast<uint8>(EBaseDirectionType::Back) & 0b0011))
+	{
+		InputDirection += FVector::BackwardVector;
+	}
+	
+	if (DirectionHistory & (static_cast<uint8>(EBaseDirectionType::Right) & 0b1100))
+	{
+		InputDirection += FVector::RightVector;
+	}
+	
+	if (DirectionHistory & (static_cast<uint8>(EBaseDirectionType::Left) & 0b1100))
+	{
+		InputDirection += FVector::LeftVector;
+	}
+
+	return InputDirection;
+}
+
 void ACharacter_Kasane::ActivateDash(bool bIsDashing)
 {
 	GetCharacterMovement()->MaxWalkSpeed = bIsDashing ? 1200.f : 800.f;
@@ -338,4 +392,78 @@ UPawnCombatComponent* ACharacter_Kasane::GetPawnCombatComponent() const
 void ACharacter_Kasane::ClearInputHistory()
 {
 	DirectionHistory = static_cast<uint8>(EBaseDirectionType::Max);
+}
+
+void ACharacter_Kasane::ChangeCamera(bool bUseMain)
+{
+	auto PC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	if (bUseMain)
+		PC->SetViewTargetWithBlend(this, 1.f);
+	else
+		PC->SetViewTargetWithBlend(ComboDirectCameraActor->GetChildActor(), 1.f);
+}
+
+void ACharacter_Kasane::ActivateAfterimage(bool InIsActive)
+{
+	if (AfterImageEffectSystem == nullptr) return;
+	if (InIsActive)
+	{
+		AfterimageEffectComponent = UNiagaraFunctionLibrary::SpawnSystemAttached(
+			AfterImageEffectSystem,
+			GetMesh(),
+			NAME_None,
+			FVector(0.f,0.f,0.f),
+			FRotator(0.f,0.f,0.f),
+			EAttachLocation::Type::SnapToTarget,
+			false);
+	}
+	else
+	{
+		if (AfterimageEffectComponent)
+		{
+			AfterimageEffectComponent->DestroyComponent();
+		}
+	}
+}
+
+void ACharacter_Kasane::ActivateCloneSkeletalMesh(bool InIsActive, int32 InCount)
+{
+	bool NeedToActivateLeftClone = true;
+	bool NeedToActivateRightClone = true;
+	if (InIsActive)
+	{
+		switch (InCount)
+		{
+			case 2:
+				NeedToActivateLeftClone = false;
+			case 1:
+				NeedToActivateRightClone = false;
+				break;
+			default:
+				break;
+		}
+	}
+	LeftCloneComponent->SetHiddenInGame(NeedToActivateLeftClone, true);
+	RightCloneComponent->SetHiddenInGame(NeedToActivateRightClone, true);
+}
+
+void ACharacter_Kasane::OnChangeItemInputTriggered(const FInputActionValue& Value)
+{
+	if (InventoryComponent == nullptr) return;
+	float Axis = Value.Get<float>();
+	if (Axis > 0.f)
+	{
+		InventoryComponent->ChangeIndex(false);
+	}
+	else
+	{
+		InventoryComponent->ChangeIndex(true);
+	}
+}
+
+void ACharacter_Kasane::BeginPlay()
+{
+	Super::BeginPlay();
+	ComboDirectCameraActor->CreateChildActor();
+	ActivateCloneSkeletalMesh(false);
 }

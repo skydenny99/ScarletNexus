@@ -30,6 +30,9 @@ public:
 protected:
 	int32 CurrentControlNum = 0;
 	int32 MaxControlNum = 5;
+
+	UPROPERTY(EditDefaultsOnly)
+	bool bCanClonable = true;
 	
 	UPROPERTY(EditDefaultsOnly)
 	UStaticMeshComponent* MeshComponent;
@@ -43,6 +46,8 @@ protected:
 	UPROPERTY()
 	AActor* CurrentTarget;
 	TOptional<FVector> CurrentTargetLocation;
+	FVector CachedLaunchedLocation;
+	FRotator CachedLaunchedRotation;
 	bool bIsAttached = false;
 
 	UPROPERTY(BlueprintReadOnly, Category="Projectile", meta = (ExposeOnSpawn = true))
@@ -56,7 +61,11 @@ protected:
 public:
 	FORCEINLINE void Attached() { bIsAttached = true; }
 	FORCEINLINE bool IsAttached() const { return bIsAttached; }
-	FORCEINLINE void SetTarget(AActor* Target) {CurrentTarget = Target;}
+	FORCEINLINE void SetTarget(AActor* Target)
+	{
+		CurrentTargetLocation.Reset();
+		CurrentTarget = Target;
+	}
 	FORCEINLINE void SetTarget(const FVector& TargetVector) {CurrentTargetLocation = TargetVector;}
 	FORCEINLINE void SetDamageHandle(const FGameplayEffectSpecHandle& Handle) {PropDamageSpecHandle = Handle;}
 
@@ -66,7 +75,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	float GetDamage() {return Damage;}
 	
-	void OnStartGrab();
+
+	void OnStartGrab(bool NeedToClone, bool DoubleClone);
 	
 	// void OnComponentHit()override;
 	
@@ -87,6 +97,7 @@ public:
 
 	void FloatingTick(float DeltaTime);
 	void Launch();
+	void CloneLaunch();
 	
 };
 

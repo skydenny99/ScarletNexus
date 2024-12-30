@@ -25,6 +25,10 @@ protected:
 	UPROPERTY(EditDefaultsOnly)
 	TSoftObjectPtr<UDataAsset_StartupBase> StartupData;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category= "Time Dilation")
+	bool IsAffectedByAccelAbility = true;
+	void SetCustomTimeDilation(float TimeDilation) { CustomTimeDilation = TimeDilation; };
+
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 

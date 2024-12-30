@@ -15,7 +15,7 @@
 AFellowCharacter_Arashi::AFellowCharacter_Arashi()
 {
 
-	
+	IsAffectedByAccelAbility = false;
 	MainBody = GetMesh();
 	MainBody->SetRelativeLocationAndRotation(FVector(0.f, 0.f, -90.f), FRotator(0.f, -90.f, 0.f));
 

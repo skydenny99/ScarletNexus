@@ -25,8 +25,7 @@ namespace BaseGameplayTags
 
 	//Item
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_Item_Use, "InputTag.Item.Use");
-	UE_DEFINE_GAMEPLAY_TAG(InputTag_Item_Change_Left, "InputTag.Item.Change.Left");
-	UE_DEFINE_GAMEPLAY_TAG(InputTag_Item_Change_Right, "InputTag.Item.Change.Right");
+	UE_DEFINE_GAMEPLAY_TAG(InputTag_Item_Change, "InputTag.Item.Change");
 
 	//SAS
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_SAS_First, "InputTag.SAS.First");
@@ -65,10 +64,13 @@ namespace BaseGameplayTags
 
 	// Ability - Attack
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Ground_Weapon, "Player.Ability.Attack.Ground.Weapon");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Ground_Weapon_Fire, "Player.Ability.Attack.Ground.Weapon.Fire");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Ground_Psych, "Player.Ability.Attack.Ground.Psych");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Ground_Charge, "Player.Ability.Attack.Ground.Charge");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Ground_Charge_Fire, "Player.Ability.Attack.Ground.Charge.Fire");
 
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Aerial_Weapon, "Player.Ability.Attack.Aerial.Weapon");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Aerial_Weapon_Fire, "Player.Ability.Attack.Aerial.Weapon.Fire");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Aerial_Psych, "Player.Ability.Attack.Aerial.Psych");
 
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Special_Psych, "Player.Ability.Attack.Special.Psych");
@@ -110,6 +112,9 @@ namespace BaseGameplayTags
 
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_Move_Aerial, "Player.Status.Move.Aerial");
 
+	// Cooldown
+	UE_DEFINE_GAMEPLAY_TAG(Player_Cooldown_Item_Heal, "Player.Cooldown.Item.Heal");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Cooldown_Item_SAS_Recover, "Player.Cooldown.Item.SAS_Recover");
 
 	// Weapon
 	UE_DEFINE_GAMEPLAY_TAG(Player_Weapon_Kasane_Wp0, "Player.Weapon.Kasane.Wp0");

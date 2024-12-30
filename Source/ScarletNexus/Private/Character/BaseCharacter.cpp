@@ -7,6 +7,7 @@
 #include "AbilitySystem/Attribute/BaseAttributeSet.h"
 #include "DataAsset/DataAsset_StartupBase.h"
 #include "BaseDebugHelper.h"
+#include "Subsystem/TimeControlSubsystem.h"
 
 // Sets default values
 ABaseCharacter::ABaseCharacter()
@@ -23,7 +24,13 @@ ABaseCharacter::ABaseCharacter()
 void ABaseCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	if (IsAffectedByAccelAbility)
+	{
+		if (auto TimeSubsystem = GetWorld()->GetSubsystem<UTimeControlSubsystem>())
+		{
+			TimeSubsystem->TimeDilationDelegate.AddUObject(this, &ABaseCharacter::SetCustomTimeDilation);
+		}
+	}
 }
 
 UAbilitySystemComponent* ABaseCharacter::GetAbilitySystemComponent() const

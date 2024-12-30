@@ -11,7 +11,7 @@ AActor* UAN_LookAtPsychTarget::GetTargetActor(AActor* Owner) const
 {
 	if (ACharacter_Kasane* Character = Cast<ACharacter_Kasane>(Owner))
 	{
-		return Character->GetPsychokinesisComponent()->GetPsychTarget();
+		return Character->GetPsychokinesisComponent()->GetCurrentPsychTarget();
 	}
 	return nullptr;
 }

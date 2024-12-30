@@ -9,7 +9,9 @@
 #include "Kismet/GameplayStatics.h"
 #include "Character_Kasane.generated.h"
 
-
+class UInventoryComponent;
+class UNiagaraSystem;
+class UNiagaraComponent;
 class USASManageComponent;
 class UCameraComponent;
 class UPsychokinesisComponent;
@@ -59,6 +61,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category="Psych")
 	UPsychokinesisComponent* PsychokinesisComponent;
 
+	UPROPERTY(EditDefaultsOnly, Category="Inventory")
+	UInventoryComponent* InventoryComponent;
+
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	UDataAsset_InputConfig* InputConfig;
 	
@@ -82,6 +87,7 @@ protected:
 	void UpdateMovementElapsedTime(const FInputActionInstance& Instance);
 	void ResetMovementElapsedTime(const FInputActionValue& Value);
 	void OnTargetingInputTriggered(const FInputActionValue& Value);
+	void OnChangeItemInputTriggered(const FInputActionValue& Value);
 
 
 	// Combat Component
@@ -112,8 +118,21 @@ private:
 	uint8 DirectionHistory = static_cast<uint8>(EBaseDirectionType::Max);
 	void PushInput(EBaseDirectionType Direction);
 	void ClearInputHistory();
+
+	// SAS variables
+	UPROPERTY()
+	USkeletalMeshComponent* LeftCloneComponent = nullptr;
+	UPROPERTY()
+	USkeletalMeshComponent* RightCloneComponent = nullptr;
+	UPROPERTY()
+	UNiagaraComponent* AfterimageEffectComponent = nullptr;
+	UPROPERTY(EditDefaultsOnly, Category = "SAS")
+	UNiagaraSystem* AfterImageEffectSystem = nullptr;
+	
 public:
 	FORCEINLINE uint8 GetDirectionByHistory();
+	UFUNCTION(BlueprintPure)
+	FVector GetInputDirection();
 
 	UFUNCTION(BlueprintCallable)
 	void ActivateDash(bool bIsDashing);
@@ -125,6 +144,9 @@ public:
 	
 	UFUNCTION(BlueprintPure)
 	FORCEINLINE UPsychokinesisComponent* GetPsychokinesisComponent() const { return PsychokinesisComponent; };
+
+	UFUNCTION(BlueprintPure)
+	FORCEINLINE UInventoryComponent* GetInventoryComponent() const { return InventoryComponent; };
 	
 	UFUNCTION(BlueprintPure)
 	FORCEINLINE UTargetTrackingSpringArmComponent* GetTargetTrackingComponent() const { return CameraBoom; }
@@ -134,24 +156,15 @@ public:
 	FORCEINLINE AActor* GetComboDirectCameraActor() const { return ComboDirectCameraActor->GetChildActor(); }
 
 
+	// SAS functions
+	UFUNCTION(BlueprintCallable)
+	void ActivateAfterimage(bool InIsActive);
 	virtual UPawnCombatComponent* GetPawnCombatComponent() const override;
 
 	
 	
 	
+	UFUNCTION(BlueprintCallable)
+	void ActivateCloneSkeletalMesh(bool InIsActive, int32 InCount = 2);
 };
 
-inline void ACharacter_Kasane::ChangeCamera(bool bUseMain)
-{
-	auto PC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
-	if (bUseMain)
-		PC->SetViewTargetWithBlend(this, 1.f);
-	else
-		PC->SetViewTargetWithBlend(ComboDirectCameraActor->GetChildActor(), 1.f);
-}
-
-inline void ACharacter_Kasane::BeginPlay()
-{
-	Super::BeginPlay();
-	ComboDirectCameraActor->CreateChildActor();
-}

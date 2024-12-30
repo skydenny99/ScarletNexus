@@ -2,18 +2,30 @@
 
 
 #include "Shared/AnimNotify/ANS_SlowWorldTime.h"
+
+#include "BaseDebugHelper.h"
 #include "Kismet/GameplayStatics.h"
+#include "Subsystem/TimeControlSubsystem.h"
 
 void UANS_SlowWorldTime::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation,
-	float TotalDuration, const FAnimNotifyEventReference& EventReference)
+                                     float TotalDuration, const FAnimNotifyEventReference& EventReference)
 {
 	Super::NotifyBegin(MeshComp, Animation, TotalDuration, EventReference);
-	UGameplayStatics::SetGlobalTimeDilation(MeshComp->GetOwner(), TargetTimeDilation);
+	auto TimeSubSystem = MeshComp->GetWorld()->GetSubsystem<UTimeControlSubsystem>();
+	if (TimeSubSystem)
+	{
+		TimeSubSystem->SetupWorldTimeDilation(DilationName, TargetTimeDilation);
+//		UGameplayStatics::SetGlobalTimeDilation(MeshComp->GetOwner(), TargetTimeDilation);
+	}
 }
 
 void UANS_SlowWorldTime::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation,
 	const FAnimNotifyEventReference& EventReference)
 {
 	Super::NotifyEnd(MeshComp, Animation, EventReference);
-	UGameplayStatics::SetGlobalTimeDilation(MeshComp->GetOwner(), 1.f);
+	if (auto TimeSubSystem = MeshComp->GetWorld()->GetSubsystem<UTimeControlSubsystem>())
+	{
+		TimeSubSystem->ReleaseWorldTimeDilation(DilationName);
+	// UGameplayStatics::SetGlobalTimeDilation(MeshComp->GetOwner(), 1.f);
+	}
 }

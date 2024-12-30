@@ -8,6 +8,7 @@
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "PsychAbilityHelperLibrary.generated.h"
 
+class UGameplayEffect;
 class ACharacter_Kasane;
 /**
  * 
@@ -19,12 +20,14 @@ class SCARLETNEXUS_API UPsychAbilityHelperLibrary : public UBlueprintFunctionLib
 
 public:
 	static void NativeSetPsychObject(const ACharacter_Kasane* Kasane, AActor* PsychObject);
-	static bool NativeHasPsychokineticPropInRange(const ACharacter_Kasane* Kasane);
-	static void NativeOnActivatePsychAbility(const ACharacter_Kasane* Kasane);
+	static bool NativeHasPsychokineticThrowablePropInRange(const ACharacter_Kasane* Kasane);
+	static bool NativeHasPsychokineticSpecialPropInRange(const ACharacter_Kasane* Kasane);
+	static void NativeOnActivateNormalPsychAbility(const ACharacter_Kasane* Kasane);
+	static void NativeOnActivateSpecialPsychAbility(const ACharacter_Kasane* Kasane);
 	static void NativeOnChargingCancelPsychAbility(const ACharacter_Kasane* Kasane);
 
 	UFUNCTION(BlueprintCallable, Category = "FunctionLibrary")
-	static void ActivateThrowPsychAbility(const ACharacter_Kasane* Kasane);
+	static void ActivateThrowPsychAbility(ACharacter_Kasane* Kasane);
 
 	UFUNCTION(BlueprintCallable, Category = "FunctionLibrary")
 	static void SetPropDamageHandle(UGameplayAbility* Ability, ACharacter_Kasane* Kasane, float Level, TSubclassOf<UGameplayEffect> DamageEffectClass);
@@ -33,4 +36,8 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "FunctionLibrary")
 	static void SetBlockUpdateTarget(const ACharacter_Kasane* Kasane, bool InBlock);
+
+	static UGameplayEffect* CreatePsychCostGameplayEffect(const ACharacter_Kasane* Kasane);
+	UFUNCTION(BlueprintCallable, Category = "FunctionLibrary")
+	static void ApplyPsychCostGameplayEffect(const ACharacter_Kasane* Kasane);
 };
