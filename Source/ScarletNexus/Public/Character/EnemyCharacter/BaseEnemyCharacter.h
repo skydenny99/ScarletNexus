@@ -11,7 +11,8 @@ class UCapsuleComponent;
 class UCharacterMovementComponent;
 class UEnemyCombatComponent;
 class UEnemyAttributeSet;
-
+class UWidgetComponent;
+class UEnemyUIComponent;
 
 /**
  * 
@@ -45,6 +46,18 @@ protected:
 
 	UPROPERTY(VisibleAnyWhere, BlueprintReadOnly, category = "Combat", meta = (AllowPrivateAccess = "true"))
 	UEnemyCombatComponent* EnemyCombatComponent;
+
+	UPROPERTY(VisibleDefaultsOnly)
+	UWidgetComponent* HealthComponent;
+
+	UPROPERTY(VisibleDefaultsOnly)
+	UWidgetComponent* NoticeComponent;
+
+	UPROPERTY(VisibleDefaultsOnly)
+	UWidgetComponent* LockOnComponent;
+	
+	UPROPERTY(BlueprintReadOnly)
+	UEnemyUIComponent* EnemyUIComponent;
 
 	public:
 	FORCEINLINE UEnemyCombatComponent* GetEnemyCombatComponent() const { return EnemyCombatComponent; }

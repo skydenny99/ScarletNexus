@@ -7,13 +7,25 @@
 #include "DataAsset/DataAsset_StartupBase.h"
 #include "AbilitySystem/Attribute/EnemyAttributeSet.h"
 #include "BaseDebugHelper.h"
+#include "Components/WidgetComponent.h"
+#include "Components/UI/EnemyUIComponent.h"
 
 ABaseEnemyCharacter::ABaseEnemyCharacter()
 {
 	EnemyCombatComponent = CreateDefaultSubobject<UEnemyCombatComponent>(TEXT("EnemyCombatComponent"));
 
 	BaseAttributeSet = CreateDefaultSubobject<UEnemyAttributeSet>(TEXT("EnemyAttributeSet"));
+
+	HealthComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("HealthComponent"));
+	HealthComponent->SetupAttachment(GetMesh());
 	
+	NoticeComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("NoticeComponent"));
+	NoticeComponent->SetupAttachment(GetMesh());
+
+	LockOnComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("LockOnComponent"));
+	LockOnComponent->SetupAttachment(GetMesh());
+	
+	EnemyUIComponent = CreateDefaultSubobject<UEnemyUIComponent>(TEXT("EnemyUIComponent"));
 }
 
 void ABaseEnemyCharacter::PossessedBy(AController* NewController)
