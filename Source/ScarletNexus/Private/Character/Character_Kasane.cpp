@@ -347,6 +347,32 @@ uint8 ACharacter_Kasane::GetDirectionByHistory()
 	return Result;
 }
 
+FVector ACharacter_Kasane::GetInputDirection()
+{
+	FVector InputDirection(0.f);
+	if (DirectionHistory & (static_cast<uint8>(EBaseDirectionType::Front) & 0b0011))
+	{
+		InputDirection += FVector::ForwardVector;
+	}
+	
+	if (DirectionHistory & (static_cast<uint8>(EBaseDirectionType::Back) & 0b0011))
+	{
+		InputDirection += FVector::BackwardVector;
+	}
+	
+	if (DirectionHistory & (static_cast<uint8>(EBaseDirectionType::Right) & 0b1100))
+	{
+		InputDirection += FVector::RightVector;
+	}
+	
+	if (DirectionHistory & (static_cast<uint8>(EBaseDirectionType::Left) & 0b1100))
+	{
+		InputDirection += FVector::LeftVector;
+	}
+
+	return InputDirection;
+}
+
 void ACharacter_Kasane::ActivateDash(bool bIsDashing)
 {
 	GetCharacterMovement()->MaxWalkSpeed = bIsDashing ? 1200.f : 800.f;

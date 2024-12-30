@@ -79,6 +79,7 @@ protected:
 	void UpdateMovementElapsedTime(const FInputActionInstance& Instance);
 	void ResetMovementElapsedTime(const FInputActionValue& Value);
 	void OnTargetingInputTriggered(const FInputActionValue& Value);
+	void OnChangeItemInputTriggered(const FInputActionValue& Value);
 
 	
 public:
@@ -116,6 +117,8 @@ private:
 	
 public:
 	FORCEINLINE uint8 GetDirectionByHistory();
+	UFUNCTION(BlueprintPure)
+	FVector GetInputDirection();
 
 	UFUNCTION(BlueprintCallable)
 	void ActivateDash(bool bIsDashing);
@@ -145,8 +148,5 @@ public:
 	
 	UFUNCTION(BlueprintCallable)
 	void ActivateCloneSkeletalMesh(bool InIsActive, int32 InCount = 2);
-
-	// Item Functions
-	void OnChangeItemInputTriggered(const FInputActionValue& Value);
 };
 
