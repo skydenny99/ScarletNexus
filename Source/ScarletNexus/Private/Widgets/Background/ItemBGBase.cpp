@@ -25,12 +25,12 @@ int UItemBGBase::Side(const int Index,const int Lenght, const bool bIsLeft)
 	return bIsLeft ? (Index-1 + Lenght) % Lenght : (Index+1 + Lenght) % Lenght;
 }
 
-void UItemBGBase::UpdateBefore(const TArray<FConsumItemInfo>& Items, int32 Middle,bool bIsLeft)
+void UItemBGBase::UpdateBefore(const TArray<FConsumItemInfo>& Items, int32 Middle, int32 Quantity ,bool bIsLeft)
 {
 	const int Index = Side(Middle,Items.Num(),bIsLeft);
 
 	Glow->SetColorAndOpacity(Items[Index].Color);
-	T_ItemName->SetText(FText::FromName(Items[Index].Name));
+	T_ItemName->SetText(FText::FromName(Items[Index].DisplayName));
 	Glow->SetOpacity(0.1f);
 
 	if (bIsLeft)
@@ -39,6 +39,10 @@ void UItemBGBase::UpdateBefore(const TArray<FConsumItemInfo>& Items, int32 Middl
 		Item_Right_Swap->SetBrushFromMaterial(MiddleMaterialInstance);
 		Item_Middle_Swap->SetBrushFromMaterial(LeftMaterialInstance);
 		Item_Left_Swap->SetBrushFromMaterial(LeftSwapMaterialInstance);
+
+		LeftQuantity->SetText(FText::FromString(FString::FromInt(Quantity)));
+		MiddleQuantity->SetText(FText::FromString(FString::FromInt(Quantity)));
+		RightQuantity->SetText(FText::FromString(FString::FromInt(Quantity)));
 	}
 	else
 	{
@@ -60,7 +64,7 @@ void UItemBGBase::UpdateAfter(const TArray<FConsumItemInfo>& Items, int32 Middle
 	Glow->SetOpacity(0.1f);
 }
 
-void UItemBGBase::Init(const TArray<FConsumItemInfo>& Items, int32 Middle)
+void UItemBGBase::Init(const TArray<FConsumItemInfo>& Items, int32 Middle, int32 Quantity)
 {
 	const int Index = Side(Middle,Items.Num(),true);
 
@@ -75,15 +79,19 @@ void UItemBGBase::Init(const TArray<FConsumItemInfo>& Items, int32 Middle)
 	Item_Right->SetBrushFromMaterial(RightSwapMaterialInstance);
 	
 	Glow->SetColorAndOpacity(Items[Middle].Color);
-	T_ItemName->SetText(FText::FromName(Items[Middle].Name));
+	T_ItemName->SetText(FText::FromName(Items[Middle].DisplayName));
 	Glow->SetOpacity(0.1f);
+
+	
+	MiddleQuantity->SetText(FText::FromString(FString::FromInt(Quantity)));
+	
 }
 
 void UItemBGBase::OnOwningPlayerUIComponentInitialized(UPlayerUIComponent* PlayerUIComponent) const
 {
 	Super::OnOwningPlayerUIComponentInitialized(PlayerUIComponent);
 
-	PlayerUIComponent->OnItemInit.AddDynamic(this,&UItemBGBase::Init);
-	PlayerUIComponent->OnUpdateAfter.AddDynamic(this,&UItemBGBase::UpdateAfter);
-	PlayerUIComponent->OnUpdateBefore.AddDynamic(this,&UItemBGBase::UpdateBefore);
+	//PlayerUIComponent->OnItemInit.AddDynamic(this,&UItemBGBase::Init);
+	//PlayerUIComponent->OnUpdateAfter.AddDynamic(this,&UItemBGBase::UpdateAfter);
+	//PlayerUIComponent->OnUpdateBefore.AddDynamic(this,&UItemBGBase::UpdateBefore);
 }
