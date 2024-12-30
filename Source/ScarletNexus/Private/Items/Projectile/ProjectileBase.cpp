@@ -66,7 +66,7 @@ void AProjectileBase::HandleApplyProjectile(APawn* HitPawn, FGameplayEventData& 
 	{
 		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
 			HitPawn,
-			BaseGameplayTags::Shared_Event_HitReact_Normal,
+			BaseGameplayTags::Shared_Event_HitReact_Critical,
 			Payload
 		);
 	}

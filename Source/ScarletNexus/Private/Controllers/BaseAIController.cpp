@@ -41,11 +41,11 @@ ABaseAIController::ABaseAIController(const FObjectInitializer& ObjectInitializer
     
     AISenseConfig_Sight->DetectionByAffiliation.bDetectNeutrals = false;
     
-    AISenseConfig_Sight->SightRadius = 1500.0f;
+    AISenseConfig_Sight->SightRadius = 3500.0f;
     
     AISenseConfig_Sight->LoseSightRadius = 0.f;
    
-    AISenseConfig_Sight->PeripheralVisionAngleDegrees = 80.0f;
+    AISenseConfig_Sight->PeripheralVisionAngleDegrees = 180.0f;
 
     AIPerceptionComponent = CreateDefaultSubobject<UAIPerceptionComponent>("AIPerceptionComponent");
     
