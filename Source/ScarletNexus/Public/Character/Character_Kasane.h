@@ -128,6 +128,8 @@ public:
 
 
 	virtual UPawnCombatComponent* GetPawnCombatComponent() const override;
+
+	
 	
 	
 };

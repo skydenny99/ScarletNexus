@@ -334,6 +334,7 @@ UPawnCombatComponent* ACharacter_Kasane::GetPawnCombatComponent() const
 	return  KasaneCombatComponent;	
 }
 
+
 void ACharacter_Kasane::ClearInputHistory()
 {
 	DirectionHistory = static_cast<uint8>(EBaseDirectionType::Max);
