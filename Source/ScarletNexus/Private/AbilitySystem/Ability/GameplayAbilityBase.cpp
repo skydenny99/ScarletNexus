@@ -59,3 +59,24 @@ FGameplayEffectSpecHandle UGameplayAbilityBase::MakeKasaneDamageEffectSpecHandle
     return SpecHandle;
     
 }
+
+FGameplayEffectSpecHandle UGameplayAbilityBase::MakeKasanePropDamageEffectSpecHandle(
+    TSubclassOf<UGameplayEffect> Effect, float DamageFloat)
+{
+    check(Effect);
+
+    FGameplayEffectContextHandle ContextHandle;
+    ContextHandle.SetAbility(this);
+    ContextHandle.AddSourceObject(GetAvatarActorFromActorInfo());
+    ContextHandle.AddInstigator(GetAvatarActorFromActorInfo(), GetAvatarActorFromActorInfo());
+
+    FGameplayEffectSpecHandle SpecHandle = GetBaseAbilitySystemComponent()->MakeOutgoingSpec(
+        Effect,
+        GetAbilityLevel(),
+        ContextHandle
+    );
+	
+    SpecHandle.Data->SetSetByCallerMagnitude(BaseGameplayTags::Shared_SetByCaller_BaseDamage,DamageFloat);
+    return SpecHandle;
+}
+

@@ -8,6 +8,9 @@
 #include "BaseDebugHelper.h"
 #include "BaseFunctionLibrary.h"
 #include "BaseGameplayTags.h"
+#include "AbilitySystem/Ability/GameplayAbilityBase.h"
+#include "Actor/GE_Prop.h"
+#include "Character/Character_Kasane.h"
 #include "EntitySystem/MovieSceneEntitySystemRunner.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -27,6 +30,7 @@ APsychokineticThrowableProp::APsychokineticThrowableProp()
 	MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComponent"));
 	RootComponent = MeshComponent;
 	
+	Damage = 10;
 }
 
 void APsychokineticThrowableProp::BeginPlay()
@@ -35,6 +39,23 @@ void APsychokineticThrowableProp::BeginPlay()
 	MeshComponent->OnComponentHit.AddDynamic(this, &APsychokineticThrowableProp::OnMeshHit);
 }
 
+
+void APsychokineticThrowableProp::HandleApplyProp(APawn* HitPawn, FGameplayEventData& Payload)
+{
+	
+	// ACharacter_Kasane* Player = Cast<ACharacter_Kasane>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	 const bool bWasApplied = UBaseFunctionLibrary::ApplyGameplayEffectSpecHandleToTargetActor(PropDamageSpecHandle.Data->GetContext().GetInstigator(), HitPawn, PropDamageSpecHandle);
+	if (bWasApplied)
+	 {
+	 	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
+	 		HitPawn,
+	 		BaseGameplayTags::Shared_Event_HitReact_KnockDown,
+	 		Payload
+	 	);
+	 }
+
+	
+}
 
 void APsychokineticThrowableProp::OnStartGrab()
 {
@@ -54,17 +75,21 @@ void APsychokineticThrowableProp::OnMeshHit(UPrimitiveComponent* HitComponent, A
 	FGameplayEventData Data;
 	Data.Instigator = this;
 	Data.Target = OtherActor;
-	
+	APawn* HitPawn = Cast<APawn>(OtherActor);
 	// Hit.GetComponent()->Get
 	switch (Hit.Component->GetCollisionObjectType())
 	{
 	case ECC_GameTraceChannel3:
-			UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(OtherActor, BaseGameplayTags::Shared_Event_HitReact_KnockDown, Data);
-			Debug::Print(TEXT("Hit!!!!!!!!!!!"));
+			// UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(OtherActor, BaseGameplayTags::Shared_Event_HitReact_KnockDown, Data);
+			// UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(OtherActor, BaseGameplayTags::Shared_Event_HitReact_Critical, Data);
+			//Debug::Print(TEXT("Hit!!!!!!!!!!!"));
+
+			HandleApplyProp(HitPawn, Data);
+			Debug::Print(FString::Printf(TEXT("HitPawn: %s"), *HitPawn->GetName()));
+			Debug::Print(FString::Printf(TEXT("Instigator: %s"), *Data.Instigator.GetName()));
+		
 			OnHit();
-		
 		break;
-		
 	default:
 		break;
 	}

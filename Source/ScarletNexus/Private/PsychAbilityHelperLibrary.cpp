@@ -3,6 +3,8 @@
 
 #include "PsychAbilityHelperLibrary.h"
 
+#include "BaseGameplayTags.h"
+#include "AbilitySystem/BaseAbilitySystemComponent.h"
 #include "Actor/PsychokineticPropBase.h"
 #include "Actor/PsychokineticThrowableProp.h"
 #include "Character/Character_Kasane.h"
@@ -77,6 +79,34 @@ void UPsychAbilityHelperLibrary::ActivateThrowPsychAbility(const ACharacter_Kasa
 		else
 		{
 			ThrowableProp->Launch();
+		}
+	}
+}
+
+void UPsychAbilityHelperLibrary::SetPropDamageHandle(UGameplayAbility* Ability, ACharacter_Kasane* Kasane, float Level,
+	TSubclassOf<UGameplayEffect> DamageEffectClass)
+{
+	if (Kasane == nullptr || DamageEffectClass == nullptr) return;
+
+	if (UPsychokinesisComponent* PsychokinesisComponent = Kasane->GetPsychokinesisComponent())
+	{
+		APsychokineticThrowableProp* ThrowableProp = Cast<APsychokineticThrowableProp>(PsychokinesisComponent->GetPsychTarget());
+		if (ThrowableProp)
+		{
+			
+			FGameplayEffectContextHandle ContextHandle;
+			ContextHandle.SetAbility(Ability);
+			ContextHandle.AddSourceObject(Kasane);
+			ContextHandle.AddInstigator(Kasane, Kasane);
+
+			FGameplayEffectSpecHandle SpecHandle = Kasane->GetBaseAbilitySystemComponent()->MakeOutgoingSpec(
+				DamageEffectClass,
+				Level,
+				ContextHandle
+			);
+	
+			SpecHandle.Data->SetSetByCallerMagnitude(BaseGameplayTags::Shared_SetByCaller_BaseDamage,ThrowableProp->GetDamage());
+			ThrowableProp->SetDamageHandle(SpecHandle);
 		}
 	}
 }

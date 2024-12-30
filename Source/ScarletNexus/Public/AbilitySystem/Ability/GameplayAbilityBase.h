@@ -43,6 +43,9 @@ public:
 	UFUNCTION(BlueprintPure, Category = "Ability")
 	FGameplayEffectSpecHandle MakeKasaneDamageEffectSpecHandle(TSubclassOf<UGameplayEffect> Effect, const FScalableFloat& DamageFloat);
 
+	UFUNCTION(BlueprintPure, Category = "Ability")
+	FGameplayEffectSpecHandle MakeKasanePropDamageEffectSpecHandle(TSubclassOf<UGameplayEffect> Effect, float DamageFloat);
+
 	
 };
 

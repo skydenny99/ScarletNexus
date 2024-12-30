@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayEffect.h"
 #include "Character/Character_Kasane.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "PsychAbilityHelperLibrary.generated.h"
@@ -24,6 +25,10 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "FunctionLibrary")
 	static void ActivateThrowPsychAbility(const ACharacter_Kasane* Kasane);
+
+	UFUNCTION(BlueprintCallable, Category = "FunctionLibrary")
+	static void SetPropDamageHandle(UGameplayAbility* Ability, ACharacter_Kasane* Kasane, float Level, TSubclassOf<UGameplayEffect> DamageEffectClass);
+	
 	static void ActivateSpecialPsychAbility();
 
 	UFUNCTION(BlueprintCallable, Category = "FunctionLibrary")

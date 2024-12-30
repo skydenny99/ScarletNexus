@@ -3,10 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayEffectTypes.h"
 #include "Actor/PsychokineticPropBase.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "PsychokineticThrowableProp.generated.h"
 
+class UGameplayEffect;
 class UProjectileMovementComponent;
 /**
  * 
@@ -20,6 +22,10 @@ public:
 	APsychokineticThrowableProp();
 
 	virtual void BeginPlay() override;
+
+	UPROPERTY(EditAnywhere)
+	float Damage;
+
 
 protected:
 	int32 CurrentControlNum = 0;
@@ -39,14 +45,27 @@ protected:
 	TOptional<FVector> CurrentTargetLocation;
 	bool bIsAttached = false;
 
+	UPROPERTY(BlueprintReadOnly, Category="Projectile", meta = (ExposeOnSpawn = true))
+	FGameplayEffectSpecHandle PropDamageSpecHandle;
+	
+	UFUNCTION()
+	void HandleApplyProp(APawn* HitPawn, FGameplayEventData& Payload);
+
+
+
 public:
 	FORCEINLINE void Attached() { bIsAttached = true; }
 	FORCEINLINE bool IsAttached() const { return bIsAttached; }
 	FORCEINLINE void SetTarget(AActor* Target) {CurrentTarget = Target;}
 	FORCEINLINE void SetTarget(const FVector& TargetVector) {CurrentTargetLocation = TargetVector;}
+	FORCEINLINE void SetDamageHandle(const FGameplayEffectSpecHandle& Handle) {PropDamageSpecHandle = Handle;}
 
+
+
+
+	UFUNCTION(BlueprintCallable)
+	float GetDamage() {return Damage;}
 	
-
 	void OnStartGrab();
 	
 	// void OnComponentHit()override;
