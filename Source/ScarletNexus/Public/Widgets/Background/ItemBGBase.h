@@ -6,10 +6,12 @@
 #include "Widgets/WidgetBase.h"
 #include "ItemBGBase.generated.h"
 
+class UInventoryComponent;
 struct FInventoryItemInfo;
 class UPaperSprite;
 class UTextBlock;
 class UImage;
+class UWidgetAnimation;
 struct FConsumItemInfo;
 
 /**
@@ -19,7 +21,10 @@ UCLASS()
 class SCARLETNEXUS_API UItemBGBase : public UWidgetBase
 {
 	GENERATED_BODY()
-
+private:
+	UPROPERTY(BlueprintReadOnly,meta=(AllowPrivateAccess=true))
+	int32 CachedCurrentIndex;
+	
 protected:
 	UPROPERTY()
 	UMaterialInstance* MaterialInstance;
@@ -80,24 +85,35 @@ protected:
 
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* RightQuantity;
+
+	//UPROPERTY(Transient ,meta = (BindWidgetAnim))
+	//UWidgetAnimation* SwapR;
+	
+	//UPROPERTY(Transient ,meta = (BindWidgetAnim))
+	//UWidgetAnimation* SwapL;
+
 public:
 	virtual void NativeConstruct() override;
+
+	UPROPERTY()
+	UInventoryComponent* InventoryComponent;
 	
 	UFUNCTION()
 	static int32 Side (const int Index,const int Lenght,const bool bIsLeft);
 
 	UFUNCTION(BlueprintCallable)
-	void UpdateBefore(const TArray<FConsumItemInfo>& Items, int32 Middle, int32 Quantity ,bool bIsLeft);
+	void UpdateBefore(int32 OldIndex , bool bIsLeft);
 
 	//UFUNCTION(BlueprintCallable)
 	//void UpdateBefore(const TArray<FConsumItemInfo>& Items, int32 Middle, const TArray<FInventoryItemInfo>& ItemInfo, int32 Quantity ,bool bIsLeft);
 	
 	UFUNCTION(BlueprintCallable)
-	void UpdateAfter(const TArray<FConsumItemInfo>& Items, int32 Middle);
+	void UpdateAfter(int32 CurrentIndex);
 
 	UFUNCTION(BlueprintCallable)
-	void Init(const TArray<FConsumItemInfo>& Items, int32 Middle, int32 Quantity);
+	void Init(int32 CurrentIndex);
 
 	UFUNCTION()
 	void OnOwningPlayerUIComponentInitialized(UPlayerUIComponent* PlayerUIComponent) const override;
+	
 };

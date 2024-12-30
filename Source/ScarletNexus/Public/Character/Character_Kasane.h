@@ -60,7 +60,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category="Psych")
 	UPsychokinesisComponent* PsychokinesisComponent;
 
-	UPROPERTY(EditDefaultsOnly, Category="Inventory")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Inventory")
 	UInventoryComponent* InventoryComponent;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
@@ -79,7 +79,6 @@ protected:
 	void UpdateMovementElapsedTime(const FInputActionInstance& Instance);
 	void ResetMovementElapsedTime(const FInputActionValue& Value);
 	void OnTargetingInputTriggered(const FInputActionValue& Value);
-
 	
 public:
 	void OnAttackInputTriggered(FGameplayTag InputTag, const FInputActionInstance& Instance);

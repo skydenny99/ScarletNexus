@@ -8,6 +8,8 @@
 #include "Kismet/KismetMaterialLibrary.h"
 #include "Styling/SlateBrush.h"
 #include "PaperSpriteBlueprintLibrary.h"
+#include "Character/Character_Kasane.h"
+#include "Components/InventoryComponent.h"
 #include "Components/UI/PlayerUIComponent.h"
 
 void UItemBGBase::NativeConstruct()
@@ -18,6 +20,16 @@ void UItemBGBase::NativeConstruct()
 	Glow->SetBrushFromMaterial(GlowMaterialInstance);
 	Glow->SetColorAndOpacity(FColor::Green);
 	Glow->SetOpacity(0.1f);
+
+	
+	//UE_LOG(LogTemp,Warning,TEXT("OwningPlayer : %s"),*GetOwningPlayer()->GetName());
+	check(GetOwningPlayer());
+	
+	check(Cast<ACharacter_Kasane>(GetOwningPlayer()->GetPawn())->GetInventoryComponent());
+	
+	InventoryComponent = Cast<ACharacter_Kasane>(GetOwningPlayer()->GetPawn())->GetInventoryComponent();
+
+	Init(0);
 }
 
 int UItemBGBase::Side(const int Index,const int Lenght, const bool bIsLeft)
@@ -25,66 +37,80 @@ int UItemBGBase::Side(const int Index,const int Lenght, const bool bIsLeft)
 	return bIsLeft ? (Index-1 + Lenght) % Lenght : (Index+1 + Lenght) % Lenght;
 }
 
-void UItemBGBase::UpdateBefore(const TArray<FConsumItemInfo>& Items, int32 Middle, int32 Quantity ,bool bIsLeft)
+void UItemBGBase::UpdateBefore(int32 OldIndex ,bool bIsLeft)
 {
-	const int Index = Side(Middle,Items.Num(),bIsLeft);
+	UE_LOG(LogTemp, Display, TEXT("CurrentIndex: %d"),OldIndex);
+	
+	TArray<FInventoryItemInfo> Items = InventoryComponent->GetInventoryItems();
+	const int Index = Side(OldIndex,Items.Num(),bIsLeft);
+	CachedCurrentIndex = Index;
 
-	Glow->SetColorAndOpacity(Items[Index].Color);
-	T_ItemName->SetText(FText::FromName(Items[Index].DisplayName));
+	Glow->SetColorAndOpacity(InventoryComponent->GetItemInfo(Items[Index].ItemName).Color);
+	T_ItemName->SetText(FText::FromName(InventoryComponent->GetItemInfo(Items[Index].ItemName).ItemDisplayName));
 	Glow->SetOpacity(0.1f);
 
 	if (bIsLeft)
 	{
-		LeftSwapMaterialInstance = UKismetMaterialLibrary::CreateDynamicMaterialInstance(GetWorld(),Items[Side(Index,Items.Num(),bIsLeft)].ItemMaterial);
+		LeftSwapMaterialInstance = UKismetMaterialLibrary::CreateDynamicMaterialInstance(GetWorld(),InventoryComponent->GetItemInfo(Items[Side(Index,Items.Num(),bIsLeft)].ItemName).ItemMaterial);
 		Item_Right_Swap->SetBrushFromMaterial(MiddleMaterialInstance);
 		Item_Middle_Swap->SetBrushFromMaterial(LeftMaterialInstance);
 		Item_Left_Swap->SetBrushFromMaterial(LeftSwapMaterialInstance);
 
-		LeftQuantity->SetText(FText::FromString(FString::FromInt(Quantity)));
-		MiddleQuantity->SetText(FText::FromString(FString::FromInt(Quantity)));
-		RightQuantity->SetText(FText::FromString(FString::FromInt(Quantity)));
+		LeftQuantity->SetText(FText::FromString(FString::FromInt(Items[Side(Index,Items.Num(),true)].CurrentCount)));
+		MiddleQuantity->SetText(FText::FromString(FString::FromInt(Items[Index].CurrentCount)));
+		//RightQuantity->SetText(FText::FromString(FString::FromInt(Items[Side(OldIndex,Items.Num(),false)].CurrentCount)));
+		RightQuantity->SetText(FText::FromString(FString::FromInt(Items[OldIndex].CurrentCount)));
 	}
 	else
 	{
-		RightSwapMaterialInstance = UKismetMaterialLibrary::CreateDynamicMaterialInstance(GetWorld(),Items[Side(Index,Items.Num(),bIsLeft)].ItemMaterial);
+		RightSwapMaterialInstance = UKismetMaterialLibrary::CreateDynamicMaterialInstance(GetWorld(),InventoryComponent->GetItemInfo(Items[Side(Index,Items.Num(),bIsLeft)].ItemName).ItemMaterial);
 		Item_Left_Swap->SetBrushFromMaterial(MiddleMaterialInstance);
 		Item_Middle_Swap->SetBrushFromMaterial(RightMaterialInstance);
 		Item_Right_Swap->SetBrushFromMaterial(RightSwapMaterialInstance);
+		
+		LeftQuantity->SetText(FText::FromString(FString::FromInt(Items[OldIndex].CurrentCount)));
+		MiddleQuantity->SetText(FText::FromString(FString::FromInt(Items[Index].CurrentCount)));
+		RightQuantity->SetText(FText::FromString(FString::FromInt(Items[Side(Index,Items.Num(),false)].CurrentCount)));
 	}
 }
 
-void UItemBGBase::UpdateAfter(const TArray<FConsumItemInfo>& Items, int32 Middle)
+void UItemBGBase::UpdateAfter(int32 CurrentIndex)
 {
-	LeftMaterialInstance = UKismetMaterialLibrary::CreateDynamicMaterialInstance(GetWorld(),Items[Side(Middle,Items.Num(),true)].ItemMaterial);
-	MiddleMaterialInstance = UKismetMaterialLibrary::CreateDynamicMaterialInstance(GetWorld(),Items[Middle].ItemMaterial);
-	RightMaterialInstance = UKismetMaterialLibrary::CreateDynamicMaterialInstance(GetWorld(),Items[Side(Middle,Items.Num(),false)].ItemMaterial);
+	TArray<FInventoryItemInfo> Items = InventoryComponent->GetInventoryItems();
+
+	LeftMaterialInstance = UKismetMaterialLibrary::CreateDynamicMaterialInstance(GetWorld(),InventoryComponent->GetItemInfo(Items[Side(CurrentIndex,Items.Num(),true)].ItemName).ItemMaterial);
+	MiddleMaterialInstance = UKismetMaterialLibrary::CreateDynamicMaterialInstance(GetWorld(),InventoryComponent->GetItemInfo(Items[CurrentIndex].ItemName).ItemMaterial);
+	RightMaterialInstance = UKismetMaterialLibrary::CreateDynamicMaterialInstance(GetWorld(),InventoryComponent->GetItemInfo(Items[Side(CurrentIndex,Items.Num(),false)].ItemName).ItemMaterial);
 	Item_Left->SetBrushFromMaterial(LeftMaterialInstance);
 	Item_Middle->SetBrushFromMaterial(MiddleMaterialInstance);
 	Item_Right->SetBrushFromMaterial(RightMaterialInstance);
 	Glow->SetOpacity(0.1f);
 }
 
-void UItemBGBase::Init(const TArray<FConsumItemInfo>& Items, int32 Middle, int32 Quantity)
+void UItemBGBase::Init(int32 CurrentIndex)
 {
-	const int Index = Side(Middle,Items.Num(),true);
+	UE_LOG(LogTemp, Display, TEXT("UItemBGBase::Init"));
+	TArray<FInventoryItemInfo> Items = InventoryComponent->GetInventoryItems();
+	const int LIndex = Side(CurrentIndex,Items.Num(),true);
+	const int RIndex = Side(CurrentIndex,Items.Num(),false);
 
-	LeftSwapMaterialInstance = UKismetMaterialLibrary::CreateDynamicMaterialInstance(GetWorld(),Items[Side(Index,Items.Num(),true)].ItemMaterial);
-	LeftMaterialInstance = UKismetMaterialLibrary::CreateDynamicMaterialInstance(GetWorld(),Items[Side(Middle,Items.Num(),true)].ItemMaterial);
-	MiddleMaterialInstance = UKismetMaterialLibrary::CreateDynamicMaterialInstance(GetWorld(),Items[Middle].ItemMaterial);
-	MiddleSwapMaterialInstance = UKismetMaterialLibrary::CreateDynamicMaterialInstance(GetWorld(),Items[Middle].ItemMaterial);
-	RightMaterialInstance = UKismetMaterialLibrary::CreateDynamicMaterialInstance(GetWorld(),Items[Side(Middle,Items.Num(),false)].ItemMaterial);
-	RightSwapMaterialInstance = UKismetMaterialLibrary::CreateDynamicMaterialInstance(GetWorld(),Items[Side(Index,Items.Num(),false)].ItemMaterial);
+	LeftSwapMaterialInstance = UKismetMaterialLibrary::CreateDynamicMaterialInstance(GetWorld(),InventoryComponent->GetItemInfo(Items[Side(LIndex,Items.Num(),true)].ItemName).ItemMaterial);
+	LeftMaterialInstance = UKismetMaterialLibrary::CreateDynamicMaterialInstance(GetWorld(),InventoryComponent->GetItemInfo(Items[LIndex].ItemName).ItemMaterial);
+	MiddleMaterialInstance = UKismetMaterialLibrary::CreateDynamicMaterialInstance(GetWorld(),InventoryComponent->GetItemInfo(Items[CurrentIndex].ItemName).ItemMaterial);
+	MiddleSwapMaterialInstance = UKismetMaterialLibrary::CreateDynamicMaterialInstance(GetWorld(),InventoryComponent->GetItemInfo(Items[CurrentIndex].ItemName).ItemMaterial);
+	RightMaterialInstance = UKismetMaterialLibrary::CreateDynamicMaterialInstance(GetWorld(),InventoryComponent->GetItemInfo(Items[Side(CurrentIndex,Items.Num(),false)].ItemName).ItemMaterial);
+	RightSwapMaterialInstance = UKismetMaterialLibrary::CreateDynamicMaterialInstance(GetWorld(),InventoryComponent->GetItemInfo(Items[Side(RIndex,Items.Num(),false)].ItemName).ItemMaterial);
 	Item_Left->SetBrushFromMaterial(LeftSwapMaterialInstance);
 	Item_Middle->SetBrushFromMaterial(MiddleSwapMaterialInstance);
 	Item_Right->SetBrushFromMaterial(RightSwapMaterialInstance);
 	
-	Glow->SetColorAndOpacity(Items[Middle].Color);
-	T_ItemName->SetText(FText::FromName(Items[Middle].DisplayName));
+	Glow->SetColorAndOpacity(InventoryComponent->GetItemInfo(Items[CurrentIndex].ItemName).Color);
+	T_ItemName->SetText(FText::FromName(InventoryComponent->GetItemInfo(Items[CurrentIndex].ItemName).ItemDisplayName));
 	Glow->SetOpacity(0.1f);
 
-	
-	MiddleQuantity->SetText(FText::FromString(FString::FromInt(Quantity)));
-	
+	LeftQuantity->SetText(FText::FromString(FString::FromInt(Items[LIndex].CurrentCount)));
+	MiddleQuantity->SetText(FText::FromString(FString::FromInt(Items[CurrentIndex].CurrentCount)));
+	RightQuantity->SetText(FText::FromString(FString::FromInt(Items[RIndex].CurrentCount)));
 }
 
 void UItemBGBase::OnOwningPlayerUIComponentInitialized(UPlayerUIComponent* PlayerUIComponent) const

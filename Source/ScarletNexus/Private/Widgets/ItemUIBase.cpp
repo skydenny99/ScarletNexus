@@ -18,22 +18,17 @@ void UItemUIBase::NativeOnInitialized()
 	GaugeMaterialInstance->SetScalarParameterValue("Progress", 1.0f);
 }
 
-void UItemUIBase::UpdateGauge(const FConsumItemInfo Item)
+void UItemUIBase::UpdateGauge(const FColor& Color, float Percent)
 {
-	GaugeMaterialInstance->SetVectorParameterValue("Color",Item.Color);
-	GaugeMaterialInstance->SetScalarParameterValue("Percent",Item.Percentage);
-
-	ArrowMaterialInstance->SetVectorParameterValue("Color",Item.Color);
-
-	if (Item.Percentage >= 1)
-	{
-		//blink
-	}
+	GaugeMaterialInstance->SetVectorParameterValue("Color",Color);
+	GaugeMaterialInstance->SetScalarParameterValue("Percent",Percent);
+	
+	ArrowMaterialInstance->SetVectorParameterValue("Color",Color);
 }
 
 void UItemUIBase::OnOwningPlayerUIComponentInitialized(UPlayerUIComponent* PlayerUIComponent) const
 {
 	Super::OnOwningPlayerUIComponentInitialized(PlayerUIComponent);
 
-	PlayerUIComponent->OnCurrentItemChanged.AddDynamic(this,&UItemUIBase::UpdateGauge);
+	//PlayerUIComponent->OnCurrentItemChanged.AddDynamic(this,&UItemUIBase::UpdateGauge);
 }

@@ -47,7 +47,9 @@ void UInventoryComponent::ChangeIndex(bool InIsLeft)
 {
 	Debug::Print(FString::Printf(TEXT("Current Inventory: %d"), Inventory.Num()));
 	if (Inventory.IsEmpty()) return;
+	int32 LastIndex = CurrentIndex;
 	CurrentIndex = (CurrentIndex + (InIsLeft ? -1 : 1) + Inventory.Num()) % Inventory.Num();
+	OnChangeSelectedItemDelegate.Broadcast(LastIndex, CurrentIndex, InIsLeft);
 	Debug::Print(FString::Printf(TEXT("Current Item: %s"), *Inventory[CurrentIndex].ItemName.ToString()));
 }
 
@@ -65,10 +67,19 @@ void UInventoryComponent::UseItemByName(AActor* Target, const FName& ItemName)
 {
 	FInventoryItemInfo FoundItem;
 	if (HasItem(ItemName, FoundItem) == false) return;
+	
 	auto ASC = UBaseFunctionLibrary::NativeGetAbilitySystemComponentFromActor(Target);
 	if (ASC)
 	{
-		FoundItem.CurrentCount--;
+		for (auto& ItemInfo : Inventory)
+		{
+			if (ItemInfo.ItemName == ItemName)
+			{
+				ItemInfo.CurrentCount--;
+				break;
+			}
+		}
+		//FoundItem.CurrentCount--;
 		FUsableItemInfo* ItemInfo = ItemDataTable->FindRow<FUsableItemInfo>(ItemName, "");
 		ASC->ApplyGameplayEffectToSelf(ItemInfo->GE_ItemEffect.GetDefaultObject(), ItemInfo->Level, ASC->MakeEffectContext());
 		ASC->ApplyGameplayEffectToSelf(ItemInfo->GE_ItemCooldown.GetDefaultObject(), ItemInfo->Level, ASC->MakeEffectContext());
@@ -83,8 +94,8 @@ float UInventoryComponent::GetItemCooldown(AActor* Target, const FName& ItemName
 		FUsableItemInfo* ItemInfo = ItemDataTable->FindRow<FUsableItemInfo>(ItemName, "");
 		FGameplayEffectQuery Query = FGameplayEffectQuery::MakeQuery_MatchAnyOwningTags(ItemInfo->CooldownTag.GetSingleTagContainer());
 		TArray<TPair<float, float>> Pair = ASC->GetActiveEffectsTimeRemainingAndDuration(Query);
-		if (Pair.IsEmpty()) return 1.f;
+		if (Pair.IsEmpty()) return 0.f;
 		return Pair[0].Key / Pair[0].Value;
 	}
-	return 1.f;
+	return 0.f;
 }

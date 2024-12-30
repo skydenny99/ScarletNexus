@@ -8,6 +8,7 @@
 #include "GameFramework/GameModeBase.h"
 #include "ScarletNexusGameMode.generated.h"
 
+
 //Player
 DECLARE_DYNAMIC_DELEGATE_OneParam(FOnPercentValueChanged, float, Percent);
 DECLARE_DYNAMIC_DELEGATE_OneParam(FOnfloatValueChanged, float, HelathPoint);
@@ -44,6 +45,8 @@ class SCARLETNEXUS_API AScarletNexusGameMode : public AGameModeBase
 	GENERATED_BODY()
 public:
 	//AScarletNexusGameMode();
+
+	virtual void BeginPlay() override;
 	
 protected:	
 	/*UPROPERTY(EditAnywhere)
@@ -51,6 +54,12 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly)
 	UUserWidget* HUD;*/
+
+	UPROPERTY(BlueprintReadOnly)
+	TArray<FSASData> SASData;
+	
+	UPROPERTY(EditAnyWhere, BlueprintReadOnly)
+	UDataTable* SASDataTable;
 	
 public:
 	/*UFUNCTION()

@@ -28,10 +28,24 @@ void AScarletNexusGameMode::BeginPlay()
 	HUD->AddToViewport();
 }
 */
+void AScarletNexusGameMode::BeginPlay()
+{
+	Super::BeginPlay();
+
+	if (SASDataTable != nullptr)
+	{
+		TArray<FSASData*> TempResult;
+		SASDataTable->GetAllRows<FSASData>("",TempResult);
+		for (auto Result : TempResult)
+		{
+			SASData.Add(*Result);
+		}
+	}
+}
 
 void AScarletNexusGameMode::BP_BindPercentWithAttributeChangeDelegate(AActor* InActor,
-                                                                       const FGameplayAttribute InCurrentAttribute, const FGameplayAttribute InMaxAttribute,
-                                                                       FOnPercentValueChanged OnPercentValueChanged)
+                                                                      const FGameplayAttribute InCurrentAttribute, const FGameplayAttribute InMaxAttribute,
+                                                                      FOnPercentValueChanged OnPercentValueChanged)
 {
 	auto ASC = UBaseFunctionLibrary::NativeGetAbilitySystemComponentFromActor(InActor);
 	ASC->GetGameplayAttributeValueChangeDelegate(InCurrentAttribute).AddLambda([InActor, InMaxAttribute, OnPercentValueChanged](const FOnAttributeChangeData& ChangeData)
