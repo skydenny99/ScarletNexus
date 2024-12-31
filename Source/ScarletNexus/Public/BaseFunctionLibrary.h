@@ -48,6 +48,8 @@ public:
 
 	UFUNCTION(BlueprintPure, Category = "FunctionLibrary")
 	static bool ApplyGameplayEffectSpecHandleToTargetActor(AActor* Instigator, AActor* TargetActor, const FGameplayEffectSpecHandle& OutSpecHandle);
-	
+
+	UFUNCTION(BlueprintCallable, Category = "FunctionLibrary")
+	static AActor* GetNearestActorFromTarget(TArray<AActor*> Candidates, AActor* TargetActor);
 
 };

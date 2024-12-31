@@ -122,3 +122,14 @@ bool UBaseFunctionLibrary::ApplyGameplayEffectSpecHandleToTargetActor(AActor* In
 	
 	return ActiveGameplayEffectHandle.WasSuccessfullyApplied();
 }
+
+AActor* UBaseFunctionLibrary::GetNearestActorFromTarget(TArray<AActor*> Candidates, AActor* TargetActor)
+{
+	if (Candidates.IsEmpty()) return nullptr;
+	Candidates.Sort([TargetActor] (const AActor& left, const AActor& right)
+	{
+		return FVector::DistSquared2D(TargetActor->GetActorLocation(), left.GetActorLocation())
+		< FVector::DistSquared2D(TargetActor->GetActorLocation(), right.GetActorLocation());
+	});
+	return Candidates[0];
+}

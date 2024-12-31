@@ -55,6 +55,7 @@ void UComboSystemComponent::GrantAttackAbilites(UAbilitySystemComponent* ASC, in
 		Spec.Level = Level;
 		ASC->GiveAbility(Spec);
 		AbilitySpecs.Add(Spec.Ability->AbilityTags.First(), Spec);
+		Debug::Print(FString::Printf(TEXT("%s Ability Granted"), *Spec.Ability->AbilityTags.First().ToString()), FColor::Green);
 	}
 	UBaseFunctionLibrary::AddPlaygameTagToActor(Kasane, BaseGameplayTags::Shared_Status_CanAttack);
 }

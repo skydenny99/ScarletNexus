@@ -253,7 +253,15 @@ void UPsychokinesisComponent::AttachPsychTargetToBone(APsychokineticThrowablePro
 	Target->Attached();
 }
 
-void UPsychokinesisComponent::SetPsychTargetInForce(AActor* InActor)
+void UPsychokinesisComponent::OverrideSpecialTarget(AActor* InActor)
+{
+	APsychokineticPropBase* Temp = Cast<APsychokineticSpecialPropBase>(InActor);
+	if (Temp == nullptr) return;
+	Temp->OnUsePsychProp.BindUObject(this, &UPsychokinesisComponent::OnUsePsychProp);
+	PsychSpecialTarget = Temp;
+}
+
+void UPsychokinesisComponent::OverrideCurrentPsychTarget(AActor* InActor)
 {
 	APsychokineticPropBase* Temp = Cast<APsychokineticPropBase>(InActor);
 	if (Temp == nullptr) return;

@@ -40,7 +40,7 @@ class SCARLETNEXUS_API UTargetTrackingSpringArmComponent : public USpringArmComp
 	TArray<AActor*> FoundTargets;
 
 	UPROPERTY(EditDefaultsOnly)
-	FTrackingBoundary TrackingBoundary;
+	FTrackingBoundary DefaultTrackingBoundary;
 	
 	int32 TargetIndex = 0;
 	UPROPERTY()
@@ -52,7 +52,7 @@ class SCARLETNEXUS_API UTargetTrackingSpringArmComponent : public USpringArmComp
 	bool bUpdateCameraTracking = false;
 
 	bool bOverrideTrackingTarget = false;
-	FTrackingBoundary OverrideTrackingBoundary {0.4, 0.4, 0.3, 0.5};
+	FTrackingBoundary OverrideTrackingBoundary {0.4, 0.4, 0.45, 0.3};
 	UPROPERTY()
 	AActor* OverrideTargetActor = nullptr;
 	
@@ -73,7 +73,9 @@ public:
 	AActor* GetTestTarget() const {return FoundTargets.IsEmpty() ? nullptr : FoundTargets.Last();}
 	AActor* GetCurrentTarget();
 
+	UFUNCTION(BlueprintCallable)
 	FORCEINLINE void ActivateOverrideTracking(bool InActivate) { bOverrideTrackingTarget = InActivate; }
+	UFUNCTION(BlueprintCallable)
 	FORCEINLINE void SetOverrideTargetActor(AActor* InTargetActor) { OverrideTargetActor = InTargetActor; }
 };
 

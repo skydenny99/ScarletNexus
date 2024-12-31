@@ -8,6 +8,7 @@
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "PsychAbilityHelperLibrary.generated.h"
 
+class APsychokineticPropBase;
 class UGameplayEffect;
 class ACharacter_Kasane;
 /**
@@ -18,13 +19,18 @@ class SCARLETNEXUS_API UPsychAbilityHelperLibrary : public UBlueprintFunctionLib
 {
 	GENERATED_BODY()
 
+private:
+	static void NativeOnActivatePsychAbilityInternal(const ACharacter_Kasane* Kasane, APsychokineticPropBase* Prop);
+
 public:
 	static void NativeSetPsychObject(const ACharacter_Kasane* Kasane, AActor* PsychObject);
 	static bool NativeHasPsychokineticThrowablePropInRange(const ACharacter_Kasane* Kasane);
 	static bool NativeHasPsychokineticSpecialPropInRange(const ACharacter_Kasane* Kasane);
 	static void NativeOnActivateNormalPsychAbility(const ACharacter_Kasane* Kasane);
 	static void NativeOnActivateSpecialPsychAbility(const ACharacter_Kasane* Kasane);
-	static void NativeOnChargingCancelPsychAbility(const ACharacter_Kasane* Kasane);
+	
+	UFUNCTION(BlueprintCallable, Category = "FunctionLibrary")
+	static void CancelChargingPsychAbility(const ACharacter_Kasane* Kasane);
 
 	UFUNCTION(BlueprintCallable, Category = "FunctionLibrary")
 	static void ActivateThrowPsychAbility(ACharacter_Kasane* Kasane);
@@ -32,12 +38,13 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "FunctionLibrary")
 	static void SetPropDamageHandle(UGameplayAbility* Ability, ACharacter_Kasane* Kasane, float Level, TSubclassOf<UGameplayEffect> DamageEffectClass);
 	
-	static void ActivateSpecialPsychAbility();
+	UFUNCTION(BlueprintCallable, Category = "FunctionLibrary")
+	static void ActivateSpecialPsychAbility(ACharacter_Kasane* Kasane);
 
 	UFUNCTION(BlueprintCallable, Category = "FunctionLibrary")
 	static void SetBlockUpdateTarget(const ACharacter_Kasane* Kasane, bool InBlock);
 
-	static UGameplayEffect* CreatePsychCostGameplayEffect(const ACharacter_Kasane* Kasane);
+	static UGameplayEffect* CreatePsychCostGameplayEffect(const ACharacter_Kasane* Kasane, APsychokineticPropBase* Target);
 	UFUNCTION(BlueprintCallable, Category = "FunctionLibrary")
 	static void ApplyPsychCostGameplayEffect(const ACharacter_Kasane* Kasane);
 };

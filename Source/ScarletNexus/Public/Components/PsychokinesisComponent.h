@@ -87,13 +87,16 @@ public:
 	FOnPsychTargetUpdated OnPsychThrowableTargetUpdated;
 	FOnPsychTargetUpdated OnPsychSpecialTargetUpdated;
 
-	void SetPsychTargetInForce(AActor* InActor);
+	UFUNCTION(BlueprintCallable)
+	void OverrideSpecialTarget(AActor* InActor);
+	void OverrideCurrentPsychTarget(AActor* InActor);
 
 	FORCEINLINE APsychokineticPropBase* GetPsychThrowableTarget() const {return PsychThrowableTarget;}
 	FORCEINLINE APsychokineticPropBase* GetPsychSpecialTarget() const {return PsychSpecialTarget;}
 	FORCEINLINE void SetCurrentPsychTarget(APsychokineticPropBase* PsychTarget) {  CurrentPsychTarget = PsychTarget; }
 	FORCEINLINE APsychokineticPropBase* GetCurrentPsychTarget() const { return CurrentPsychTarget; }
 
+	UFUNCTION(BlueprintCallable)
 	FORCEINLINE void SetBlockUpdate(bool InBlockUpdate)
 	{
 		Debug::Print(FString::Printf(TEXT("PsychokinesisComponent::SetBlockUpdate - %s"), *FString(InBlockUpdate ? "Block" : "Release")));

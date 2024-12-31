@@ -110,6 +110,7 @@ namespace BaseGameplayTags
 	
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_Charging, "Player.Status.Charging");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_ChargeReady, "Player.Status.ChargeReady");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Status_Gimmick, "Player.Status.Gimmick");
 
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_Move_Aerial, "Player.Status.Move.Aerial");
 
@@ -158,6 +159,8 @@ namespace BaseGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_Combo, "Shared.Event.Combo");
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_Charge_Cancel, "Shared.Event.Charge.Cancel");
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_Charge, "Shared.Event.Charge");
+	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_Gimmick_CanAttack, "Shared.Event.Gimmick.CanAttack");
+	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_Gimmick_CannotAttack, "Shared.Event.Gimmick.CannotAttack");
 	
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_Charge_Confirm, "Shared.Event.Charge.Confirm");
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_ThrowProjectile, "Shared.Event.ThrowProjectile");

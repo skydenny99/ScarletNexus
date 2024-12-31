@@ -65,8 +65,6 @@ FRotator UTargetTrackingSpringArmComponent::GetDesiredRotation() const
 		DesiredRot = PawnViewRotation;
 	}
 	
-	if (bUpdateCameraTracking == false)
-		return DesiredRot;
 	if (bOverrideTrackingTarget)
 	{
 		if (OverrideTargetActor == nullptr)
@@ -74,28 +72,38 @@ FRotator UTargetTrackingSpringArmComponent::GetDesiredRotation() const
 	}
 	else
 	{
+		if (bUpdateCameraTracking == false)
+			return DesiredRot;
 		if (TargetActor == nullptr)
 			return DesiredRot;
 	}
-
-	AActor* Target = bOverrideTrackingTarget ? OverrideTargetActor : TargetActor;
+	
+	const AActor* Target = bOverrideTrackingTarget ? OverrideTargetActor : TargetActor;
+	const auto [BoundaryLeft, BoundaryRight, BoundaryTop, BoundaryBottom]
+	= bOverrideTrackingTarget ? OverrideTrackingBoundary : DefaultTrackingBoundary;
+	
 	FVector TargetLocation = Target->GetActorLocation();
 	FVector2D TargetScreenLocation = FVector2D::ZeroVector;
 	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	bool bProjectResult = PlayerController->ProjectWorldLocationToScreen(TargetLocation, TargetScreenLocation);
+	int32 ScreenWidth = 0, ScreenHeight = 0;
+	PlayerController->GetViewportSize(ScreenWidth, ScreenHeight);
+	TargetScreenLocation.X /= ScreenWidth;
+	TargetScreenLocation.Y /= ScreenHeight;
 	// if (bProjectResult == false)
 	// 	return DesiredRot;
-	float LeftBoundary = GSystemResolution.ResX * TrackingBoundary.BoundaryLeft;
-	float RightBoundary = GSystemResolution.ResX * (1 - TrackingBoundary.BoundaryRight);
-	float TopBoundary = GSystemResolution.ResY * TrackingBoundary.BoundaryTop;
-	float BottomBoundary = GSystemResolution.ResY * (1 - TrackingBoundary.BoundaryBottom);
 	
-	if (bProjectResult == false || TargetScreenLocation.X < LeftBoundary  || TargetScreenLocation.X > RightBoundary
-		|| TargetScreenLocation.Y < TopBoundary  || TargetScreenLocation.Y > BottomBoundary)
+	// float LeftBoundary = GSystemResolution.ResX * BoundaryLeft;
+	// float RightBoundary = GSystemResolution.ResX * (1 - BoundaryRight);
+	// float TopBoundary = GSystemResolution.ResY * BoundaryTop;
+	// float BottomBoundary = GSystemResolution.ResY * (1 + BoundaryBottom);
+
+	if (bProjectResult == false || TargetScreenLocation.X < BoundaryLeft  || TargetScreenLocation.X > 1 - BoundaryRight
+		|| TargetScreenLocation.Y < BoundaryTop  || TargetScreenLocation.Y > 1 - BoundaryBottom)
 	{
 		FRotator TargetLookRotator = UKismetMathLibrary::FindLookAtRotation(OwningPawn->GetActorLocation(), TargetLocation);
 		TargetLookRotator.Roll = DesiredRot.Roll;
-		TargetLookRotator = FMath::RInterpTo(DesiredRot, TargetLookRotator, GetWorld()->GetDeltaSeconds(), 3.0f);
+		TargetLookRotator = FMath::RInterpTo(DesiredRot, TargetLookRotator, GetWorld()->GetDeltaSeconds(), 8.0f);
 		PlayerController->SetControlRotation(TargetLookRotator);
 		return TargetLookRotator;
 	}
