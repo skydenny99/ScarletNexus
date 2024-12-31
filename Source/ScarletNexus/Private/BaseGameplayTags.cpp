@@ -10,6 +10,7 @@ namespace BaseGameplayTags
 	//Movement
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_Move, "InputTag.Move");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_Dodge, "InputTag.Dodge");
+	UE_DEFINE_GAMEPLAY_TAG(InputTag_QuickStanding, "InputTag.QuickStanding");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_Jump, "InputTag.Jump");
 
 	//Attack

@@ -133,6 +133,8 @@ public:
 	FORCEINLINE uint8 GetDirectionByHistory();
 	UFUNCTION(BlueprintPure)
 	FVector GetInputDirection();
+	UFUNCTION(BlueprintPure)
+	FVector GetInputDirectionWithLookRotation();
 
 	UFUNCTION(BlueprintCallable)
 	void ActivateDash(bool bIsDashing);

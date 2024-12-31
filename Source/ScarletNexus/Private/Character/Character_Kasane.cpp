@@ -385,6 +385,12 @@ FVector ACharacter_Kasane::GetInputDirection()
 	return InputDirection;
 }
 
+FVector ACharacter_Kasane::GetInputDirectionWithLookRotation()
+{
+	if (DirectionHistory == static_cast<uint8>(EBaseDirectionType::Max)) return FVector::ZeroVector;
+	return FRotator(0.f, GetControlRotation().Yaw, 0.f).RotateVector(GetInputDirection());
+}
+
 void ACharacter_Kasane::ActivateDash(bool bIsDashing)
 {
 	GetCharacterMovement()->MaxWalkSpeed = bIsDashing ? 1200.f : 800.f;
