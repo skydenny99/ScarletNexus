@@ -25,7 +25,7 @@ bool UGA_AerialPsych::CanActivateAbility(const FGameplayAbilitySpecHandle Handle
 {
 	if (Super::CanActivateAbility(Handle, ActorInfo, SourceTags, TargetTags, OptionalRelevantTags))
 	{
-		return ComboSystem->PsychAerialCombo.CurrentComboCount < ComboSystem->PsychAerialCombo.MaxComboCount
+		return CheckCost(Handle, ActorInfo) && ComboSystem->PsychAerialCombo.CurrentComboCount < ComboSystem->PsychAerialCombo.MaxComboCount
 		&& UPsychAbilityHelperLibrary::NativeHasPsychokineticThrowablePropInRange(Kasane);
 	}
 	return false;
