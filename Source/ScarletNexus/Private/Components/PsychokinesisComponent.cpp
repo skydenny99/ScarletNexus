@@ -149,6 +149,16 @@ void UPsychokinesisComponent::PlayJustDodgePsychMontage()
 	PsychSkeletalMesh->GetAnimInstance()->Montage_Play(PsychMontageData->ObjectJustDodgeMontage);
 }
 
+void UPsychokinesisComponent::CancelPlayingPsychMontage()
+{
+	if (APsychokineticThrowableProp* ThrowableProp = Cast<APsychokineticThrowableProp>(CurrentPsychTarget))
+	{
+		ThrowableProp->OnPsychAttackCancel();
+	}
+	PsychSkeletalMesh->GetAnimInstance()->StopAllMontages(0.f);
+	
+}
+
 void UPsychokinesisComponent::GetProperPsychType(int32 ComboCount, EPsychType& PsychType, UAnimMontage*& ChargeMontage,
                                                  UAnimMontage*& AttackMontage)
 {

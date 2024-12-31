@@ -94,6 +94,7 @@ public:
 	);
 	
 	void OnChargingCancel();
+	void OnPsychAttackCancel();
 
 	void FloatingTick(float DeltaTime);
 	void Launch();

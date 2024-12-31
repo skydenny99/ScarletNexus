@@ -62,6 +62,7 @@ void APsychokineticThrowableProp::OnStartGrab(bool NeedToClone, bool DoubleClone
 	MeshComponent->SetCollisionProfileName("PlayerProjectile");
 	CachedLaunchedLocation = GetActorLocation();
 	CachedLaunchedRotation = GetActorRotation();
+	bIsUsed = true;
 	// if SAS: clone activated - Launch Clone
 	if (bCanClonable && NeedToClone)
 	{
@@ -120,6 +121,14 @@ void APsychokineticThrowableProp::OnChargingCancel()
 	}
 }
 
+void APsychokineticThrowableProp::OnPsychAttackCancel()
+{
+	//MeshComponent->SetSimulatePhysics(true);
+	ProjectileMovementComponent->SetUpdatedComponent(RootComponent);
+	ProjectileMovementComponent->Velocity = (GetActorForwardVector() * 500.f);
+	OnHit();
+}
+
 void APsychokineticThrowableProp::FloatingTick(float DeltaTime)
 {
 	SetActorLocation(UKismetMathLibrary::VInterpTo(GetActorLocation(), GetActorLocation() + FVector::UpVector * (FloatingHeight / ChargeTime), DeltaTime, 1.f));
@@ -161,7 +170,6 @@ void APsychokineticThrowableProp::Launch()
 	ProjectileMovementComponent->SetUpdatedComponent(RootComponent);
 	ProjectileMovementComponent->Velocity = (GetActorForwardVector() * ProjectileMovementComponent->MaxSpeed);
 	SetLifeSpan(5.f);
-	bIsUsed = true;
 	OnUsePsychProp.ExecuteIfBound(this);
 }
 

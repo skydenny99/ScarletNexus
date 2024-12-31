@@ -109,6 +109,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void PlayJustDodgePsychMontage();
 
+	UFUNCTION(BlueprintCallable)
+	void CancelPlayingPsychMontage();
+
 	USkeletalMeshComponent* GetPsychSkeletalMesh() const { return PsychSkeletalMesh; }
 	
 
