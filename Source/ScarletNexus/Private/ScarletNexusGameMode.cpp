@@ -10,6 +10,7 @@
 #include "Blueprint/UserWidget.h"
 #include "Character/Character_Kasane.h"
 
+
 /*
 AScarletNexusGameMode::AScarletNexusGameMode()
 {
@@ -32,7 +33,7 @@ void AScarletNexusGameMode::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (SASDataTable != nullptr)
+	/*if (SASDataTable != nullptr)
 	{
 		TArray<FSASData*> TempResult;
 		SASDataTable->GetAllRows<FSASData>("",TempResult);
@@ -40,7 +41,7 @@ void AScarletNexusGameMode::BeginPlay()
 		{
 			SASData.Add(*Result);
 		}
-	}
+	}*/
 }
 
 void AScarletNexusGameMode::BP_BindPercentWithAttributeChangeDelegate(AActor* InActor,
@@ -75,6 +76,19 @@ void AScarletNexusGameMode::BP_BindHealthPointWithAttributChangeDelegate(AActor*
 		}*/
 		OnFloatValueChanged.ExecuteIfBound(ChangeData.NewValue);
 	});
+}
+
+void AScarletNexusGameMode::InitSASData()
+{
+	if (SASDataTable != nullptr)
+	{
+		TArray<FSASData*> TempResult;
+		SASDataTable->GetAllRows<FSASData>("",TempResult);
+		for (auto Result : TempResult)
+		{
+			SASData.Add(*Result);
+		}
+	}
 }
 
 /*

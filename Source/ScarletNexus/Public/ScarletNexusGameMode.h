@@ -44,7 +44,6 @@ class SCARLETNEXUS_API AScarletNexusGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
 public:
-	//AScarletNexusGameMode();
 
 	virtual void BeginPlay() override;
 	
@@ -103,4 +102,7 @@ public:
 	//SAS Gauge
 	//UFUNCTION(BlueprintCallable)
 	//void BP_BindSASTopGaugeWithAttributeChangeDelegate(AActor* InActor, const FGameplayAttribute InCurrentAttribute, const FGameplayAttribute InMaxAttribute, FOnPercentValueChanged OnPercentValueChanged);
+
+	UFUNCTION(BlueprintCallable)
+	void InitSASData();
 };
