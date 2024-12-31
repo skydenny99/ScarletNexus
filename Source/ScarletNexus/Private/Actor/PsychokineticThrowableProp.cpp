@@ -8,6 +8,8 @@
 #include "BaseDebugHelper.h"
 #include "BaseFunctionLibrary.h"
 #include "BaseGameplayTags.h"
+#include "Components/WidgetComponent.h"
+#include "Components/UI/PropUIComponent.h"
 #include "EntitySystem/MovieSceneEntitySystemRunner.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -26,6 +28,9 @@ APsychokineticThrowableProp::APsychokineticThrowableProp()
 
 	MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComponent"));
 	RootComponent = MeshComponent;
+
+	InterectComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("InterectComponent"));
+	InterectComponent->SetupAttachment(MeshComponent);
 	
 }
 

@@ -7,6 +7,7 @@
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "PsychokineticThrowableProp.generated.h"
 
+class UWidgetComponent;
 class UProjectileMovementComponent;
 /**
  * 
@@ -36,6 +37,9 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly)
 	UProjectileMovementComponent* ProjectileMovementComponent;
+
+	UPROPERTY(EditDefaultsOnly)
+	UWidgetComponent* InterectComponent;
 
 	UPROPERTY()
 	AActor* CurrentTarget;
