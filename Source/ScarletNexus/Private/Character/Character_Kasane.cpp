@@ -2,6 +2,8 @@
 
 
 #include "Character/Character_Kasane.h"
+
+#include "AbilitySystemBlueprintLibrary.h"
 #include "Components/BaseInputComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "EnhancedInputSubsystems.h"
@@ -321,7 +323,12 @@ void ACharacter_Kasane::OnAttackInputCompleted(FGameplayTag InputTag, const FInp
 
 void ACharacter_Kasane::OnFalling(ACharacter* Character, EMovementMode PrevMovementMode, uint8 PreviousCustomMode)
 {
-	GetCharacterMovement()->RotationRate = GetCharacterMovement()->MovementMode == EMovementMode::MOVE_Falling ?
+	
+	if (PrevMovementMode == MOVE_Falling)
+	{
+		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(Character, BaseGameplayTags::Shared_Event_Grounded, FGameplayEventData());
+	}
+	GetCharacterMovement()->RotationRate = GetCharacterMovement()->MovementMode == MOVE_Falling ?
 		FallingRotationRate : OriginRotationRate;
 }
 
