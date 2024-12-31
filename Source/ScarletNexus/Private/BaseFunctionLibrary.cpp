@@ -52,7 +52,6 @@ void UBaseFunctionLibrary::BP_HasTag(AActor* Actor, FGameplayTag Tag, EBaseConfi
 
 UPawnCombatComponent* UBaseFunctionLibrary::NativeGetPawnCombatComponentFromActor(AActor* Actor)
 {
-	check(Actor);
 	if (IPawnCombatInterface* PawnCombatInterFace = Cast<IPawnCombatInterface>(Actor))
 	{
 		return PawnCombatInterFace->GetPawnCombatComponent();
