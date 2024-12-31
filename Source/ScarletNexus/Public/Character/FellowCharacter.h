@@ -10,6 +10,8 @@ class USkeletalMeshComponent;
 class UCapsuleComponent;
 class UCharacterMovementComponent;
 class UFellowCombatComponent;
+class UPlayerUIComponent;
+class UPawnUIComponent;
 
 /**
  * 
@@ -37,15 +39,16 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "CharacterMovementComponent")
 	UCharacterMovementComponent* Movement;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="UI")
+	UPlayerUIComponent* PlayerUIComponent;
 
 	virtual void PossessedBy(AController* NewController) override;
 	
 	UPROPERTY(VisibleAnyWhere, BlueprintReadOnly, category = "Combat", meta = (AllowPrivateAccess = "true"))
 	UFellowCombatComponent* FellowCombatComponent;
 
-
-	
-	
+	virtual UPawnUIComponent* GetPawnUIComponent() const override;
+	virtual UPlayerUIComponent* GetPlayerUIComponent() const override;
 
 public:
 	FORCEINLINE UFellowCombatComponent* GetFellowCombatComponent() const { return FellowCombatComponent; }

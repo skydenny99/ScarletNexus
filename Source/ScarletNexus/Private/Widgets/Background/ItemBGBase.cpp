@@ -39,8 +39,6 @@ int UItemBGBase::Side(const int Index,const int Lenght, const bool bIsLeft)
 
 void UItemBGBase::UpdateBefore(int32 OldIndex ,bool bIsLeft)
 {
-	UE_LOG(LogTemp, Display, TEXT("CurrentIndex: %d"),OldIndex);
-	
 	TArray<FInventoryItemInfo> Items = InventoryComponent->GetInventoryItems();
 	const int Index = Side(OldIndex,Items.Num(),bIsLeft);
 	CachedCurrentIndex = Index;
@@ -89,7 +87,6 @@ void UItemBGBase::UpdateAfter(int32 CurrentIndex)
 
 void UItemBGBase::Init(int32 CurrentIndex)
 {
-	UE_LOG(LogTemp, Display, TEXT("UItemBGBase::Init"));
 	TArray<FInventoryItemInfo> Items = InventoryComponent->GetInventoryItems();
 	const int LIndex = Side(CurrentIndex,Items.Num(),true);
 	const int RIndex = Side(CurrentIndex,Items.Num(),false);
@@ -111,6 +108,31 @@ void UItemBGBase::Init(int32 CurrentIndex)
 	LeftQuantity->SetText(FText::FromString(FString::FromInt(Items[LIndex].CurrentCount)));
 	MiddleQuantity->SetText(FText::FromString(FString::FromInt(Items[CurrentIndex].CurrentCount)));
 	RightQuantity->SetText(FText::FromString(FString::FromInt(Items[RIndex].CurrentCount)));
+}
+
+void UItemBGBase::UpdateQuantity(int32 CurrentIndex)
+{
+	
+	TArray<FInventoryItemInfo> Items = InventoryComponent->GetInventoryItems();
+	const int LIndex = Side(CurrentIndex,Items.Num(),true);
+	const int RIndex = Side(CurrentIndex,Items.Num(),false);
+	
+	LeftQuantity->SetText(FText::FromString(FString::FromInt(Items[LIndex].CurrentCount)));
+	MiddleQuantity->SetText(FText::FromString(FString::FromInt(Items[CurrentIndex].CurrentCount)));
+	RightQuantity->SetText(FText::FromString(FString::FromInt(Items[RIndex].CurrentCount)));
+}
+
+void UItemBGBase::SetGlowVisibility(float Percent)
+{
+	if (Percent < 1)
+	{
+		Glow->SetVisibility(ESlateVisibility::Collapsed);
+		return;
+	}
+	if (Percent == 1.0f)
+	{
+		Glow->SetVisibility(ESlateVisibility::Visible);
+	}
 }
 
 void UItemBGBase::OnOwningPlayerUIComponentInitialized(UPlayerUIComponent* PlayerUIComponent) const

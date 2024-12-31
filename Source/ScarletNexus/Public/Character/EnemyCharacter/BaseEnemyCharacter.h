@@ -47,13 +47,13 @@ protected:
 	UPROPERTY(VisibleAnyWhere, BlueprintReadOnly, category = "Combat", meta = (AllowPrivateAccess = "true"))
 	UEnemyCombatComponent* EnemyCombatComponent;
 
-	UPROPERTY(VisibleDefaultsOnly)
+	UPROPERTY(VisibleAnyWhere, BlueprintReadOnly, category = "UI")
 	UWidgetComponent* HealthComponent;
 
-	UPROPERTY(VisibleDefaultsOnly)
+	UPROPERTY(VisibleAnyWhere, BlueprintReadOnly, category = "UI")
 	UWidgetComponent* NoticeComponent;
 
-	UPROPERTY(VisibleDefaultsOnly)
+	UPROPERTY(VisibleAnyWhere, BlueprintReadOnly, category = "UI")
 	UWidgetComponent* LockOnComponent;
 	
 	UPROPERTY(BlueprintReadOnly)
@@ -63,8 +63,9 @@ protected:
 	FORCEINLINE UEnemyCombatComponent* GetEnemyCombatComponent() const { return EnemyCombatComponent; }
 
 	virtual UPawnCombatComponent* GetPawnCombatComponent() const override;
-
-
+	
 	virtual FVector GetTargetVector() {return FVector::ZeroVector;}
+
+	virtual UPawnUIComponent* GetPawnUIComponent() const override;
 	
 };

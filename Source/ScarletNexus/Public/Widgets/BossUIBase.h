@@ -60,7 +60,7 @@ public:
 	void UpdateDebuff(EBaseDebuffType DebuffType = EBaseDebuffType::NONE);
 
 	UFUNCTION(BlueprintCallable)
-	void OnDamaged(const float SetPercent);
+	void SetHpPercent(const float SetPercent);
 	
 	UFUNCTION(BlueprintCallable)
 	void UpdateHp(const float TopProgress, const float DeltaSec);

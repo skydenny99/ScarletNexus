@@ -14,5 +14,4 @@ UBaseAttributeSet::UBaseAttributeSet()
 void UBaseAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data)
 {
 	
-
 }

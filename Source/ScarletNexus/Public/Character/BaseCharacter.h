@@ -6,14 +6,16 @@
 #include "GameFramework/Character.h"
 #include "AbilitySystemInterface.h"
 #include "Interfaces/PawnCombatInterface.h"
+#include "Interfaces/PawnUIInterface.h"
 #include "BaseCharacter.generated.h"
 
 class UBaseAbilitySystemComponent;
 class UDataAsset_StartupBase;
- class UBaseAttributeSet;
+class UBaseAttributeSet;
+
 
 UCLASS()
-class SCARLETNEXUS_API ABaseCharacter : public ACharacter, public IAbilitySystemInterface, public IPawnCombatInterface
+class SCARLETNEXUS_API ABaseCharacter : public ACharacter, public IAbilitySystemInterface, public IPawnCombatInterface, public IPawnUIInterface
 {
 	GENERATED_BODY()
 
@@ -40,10 +42,13 @@ protected:
 	
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	virtual void PossessedBy(AController* NewController) override;
-
-
+	
 	// Combat 인터페이스
 	virtual UPawnCombatComponent* GetPawnCombatComponent() const override;
+
+	// UI
+	virtual UPawnUIComponent* GetPawnUIComponent() const override;
+	virtual UPlayerUIComponent* GetPlayerUIComponent() const override;
 	
 public:
 	FORCEINLINE UBaseAbilitySystemComponent* GetBaseAbilitySystemComponent() const { return BaseAbilitySystemComponent; }

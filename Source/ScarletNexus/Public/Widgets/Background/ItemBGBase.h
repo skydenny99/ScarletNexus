@@ -103,15 +103,18 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void UpdateBefore(int32 OldIndex , bool bIsLeft);
-
-	//UFUNCTION(BlueprintCallable)
-	//void UpdateBefore(const TArray<FConsumItemInfo>& Items, int32 Middle, const TArray<FInventoryItemInfo>& ItemInfo, int32 Quantity ,bool bIsLeft);
 	
 	UFUNCTION(BlueprintCallable)
 	void UpdateAfter(int32 CurrentIndex);
 
 	UFUNCTION(BlueprintCallable)
 	void Init(int32 CurrentIndex);
+
+	UFUNCTION(BlueprintCallable)
+	void UpdateQuantity(int32 CurrentIndex);
+
+	UFUNCTION(BlueprintCallable)
+	void SetGlowVisibility(float Percent);
 
 	UFUNCTION()
 	void OnOwningPlayerUIComponentInitialized(UPlayerUIComponent* PlayerUIComponent) const override;

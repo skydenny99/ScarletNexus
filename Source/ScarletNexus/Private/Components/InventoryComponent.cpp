@@ -61,6 +61,8 @@ FUsableItemInfo UInventoryComponent::GetCurrentSelectedItemInfo() const
 void UInventoryComponent::UseCurrentSelectedItem(AActor* Target)
 {
 	UseItemByName(Target, Inventory[CurrentIndex].ItemName);
+
+	OnUseItemDelegate.Broadcast(CurrentIndex);
 }
 
 void UInventoryComponent::UseItemByName(AActor* Target, const FName& ItemName)

@@ -5,6 +5,14 @@
 #include "Components/UI/PlayerUIComponent.h"
 #include "Components/TextBlock.h"
 
+void UFellowBGBase::NativeOnInitialized()
+{
+	Super::NativeOnInitialized();
+
+	T_LName->SetText(FText::FromString(TEXT("Hanabi Ichijo")));
+	T_RName->SetText(FText::FromString(TEXT("Arashi Spring")));
+}
+
 void UFellowBGBase::InitLeft(const FString LName, const float LeftFellowHp)
 {
 	T_LName->SetText(FText::FromString(LName));
@@ -16,6 +24,16 @@ void UFellowBGBase::InitRight(const FString RName, const float RightFellowHp)
 {
 	T_RName->SetText(FText::FromString(RName));
 	T_RHealthPoint->SetText(FText::FromString(FString::FromInt(static_cast<int>(RightFellowHp))));
+	T_RHealthPoint_Max->SetText(FText::FromString(FString::FromInt(static_cast<int>(RightFellowHp))));
+}
+
+void UFellowBGBase::InitLeftFellowHp(const float LeftFellowHp)
+{
+	T_LHealthPoint_Max->SetText(FText::FromString(FString::FromInt(static_cast<int>(LeftFellowHp))));
+}
+
+void UFellowBGBase::InitRightFellowHp(const float RightFellowHp)
+{
 	T_RHealthPoint_Max->SetText(FText::FromString(FString::FromInt(static_cast<int>(RightFellowHp))));
 }
 

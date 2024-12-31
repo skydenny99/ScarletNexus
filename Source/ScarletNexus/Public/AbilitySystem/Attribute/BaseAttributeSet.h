@@ -8,9 +8,10 @@
 
 #include "BaseAttributeSet.generated.h"
 
+
+class IPawnUIInterface;
 //DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPercentChangeDelegate, float, NewPercent);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnValueChangeDelegate, float, NewValue);
-
 
 /**
  * 
@@ -39,6 +40,7 @@ class SCARLETNEXUS_API UBaseAttributeSet : public UAttributeSet
 	//UPROPERTY(BlueprintAssignable)
 	//FOnValueChangeDelegate OnCurrentBrainCrushGaugeValueChanged;
 
-	
+protected:
+	TWeakInterfacePtr<IPawnUIInterface> CachedUIInterface;
 	
 };

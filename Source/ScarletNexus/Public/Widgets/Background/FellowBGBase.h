@@ -36,11 +36,20 @@ protected:
 	UTextBlock* T_RName;
 
 public:
+	virtual void NativeOnInitialized() override;
+	
 	UFUNCTION(BlueprintCallable)
 	void InitLeft(const FString LName, const float LeftFellowHp);
 
 	UFUNCTION(BlueprintCallable)
 	void InitRight(const FString RName, const float RightFellowHp);
+
+	UFUNCTION(BlueprintCallable)
+	void InitLeftFellowHp(const float LeftFellowHp);
+
+	UFUNCTION(BlueprintCallable)
+	void InitRightFellowHp(const float RightFellowHp);
+
 	
 	UFUNCTION(BlueprintCallable)
 	void UpdateFellowLeftHp(const float LeftHp);

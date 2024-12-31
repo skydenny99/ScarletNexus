@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/UI/PawnUIComponent.h"
+#include "Interfaces/PawnUIInterface.h"
 #include "PlayerUIComponent.generated.h"
 
 //PlayerBG
@@ -23,6 +24,9 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FInitSASSimbolDelegate,const TArray<
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FInitGaugeDelegate, FColor,NewColor, float,NewPercent);
 //Announcer
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FAnnouncerDelegate, UMaterial* ,NewMaterial, FString, NewText);
+
+//Targetting LockOn
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FTargettingDelegate,AActor*, NewActor);
 
 /**
  * 
@@ -113,4 +117,8 @@ public:
 	//Announcer
 	UPROPERTY(BlueprintAssignable)
 	FAnnouncerDelegate OnUpdateAnnounce;
+
+	//Lock ON
+	UPROPERTY(BlueprintAssignable)
+	FTargettingDelegate OnTargetting;
 };

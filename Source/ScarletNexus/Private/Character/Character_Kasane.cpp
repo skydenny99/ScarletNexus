@@ -24,6 +24,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "NiagaraFunctionLibrary.h"
 #include "Components/InventoryComponent.h"
+#include "Components/UI/PlayerUIComponent.h"
 
 ACharacter_Kasane::ACharacter_Kasane()
 {
@@ -131,6 +132,7 @@ ACharacter_Kasane::ACharacter_Kasane()
 
 	SASManageComponent = CreateDefaultSubobject<USASManageComponent>(TEXT("SASManager"));
 	InventoryComponent = CreateDefaultSubobject<UInventoryComponent>(TEXT("InventoryComponent"));
+	PlayerUIComponent = CreateDefaultSubobject<UPlayerUIComponent>(TEXT("PlayerUIComponent"));
 
 	// Attribute
 	BaseAttributeSet = CreateDefaultSubobject<UPlayerAttributeSet>(TEXT("KasaneAttributeSet"));
@@ -170,7 +172,6 @@ ACharacter_Kasane::ACharacter_Kasane()
 			}
 		}
 	}
-	
 }
 
 void ACharacter_Kasane::PossessedBy(AController* NewController)
@@ -274,8 +275,19 @@ void ACharacter_Kasane::OnTargetingInputTriggered(const FInputActionValue& Value
 	TargetActors.Remove(this);
 	CameraBoom->SetFoundTargets(TargetActors);
 	CameraBoom->ToggleTargetTracking();
+
+	PlayerUIComponent->OnTargetting.Broadcast(CameraBoom->GetCurrentTarget());
 }
 
+UPawnUIComponent* ACharacter_Kasane::GetPawnUIComponent() const
+{
+	return PlayerUIComponent;
+}
+
+UPlayerUIComponent* ACharacter_Kasane::GetPlayerUIComponent() const
+{
+	return PlayerUIComponent;
+}
 
 void ACharacter_Kasane::OnAbilityInputTriggered(FGameplayTag InputTag)
 {

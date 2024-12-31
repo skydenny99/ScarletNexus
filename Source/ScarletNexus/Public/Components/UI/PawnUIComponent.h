@@ -21,10 +21,14 @@ class SCARLETNEXUS_API UPawnUIComponent : public UPawnExtensionComponent
 	GENERATED_BODY()
 
 public:
-	//Player,Enemy
 	UPROPERTY(BlueprintAssignable)
 	FOnPercentChangeDelegate OnCurrentHpChanged;
 
+	UPROPERTY(BlueprintAssignable)
+	FOnPercentChangeDelegate OnCurrentHpValueChanged;
+
+
+	
 	UPROPERTY(BlueprintAssignable)
 	FDebuffChangeDelegate OnDebuffChanged;
 };

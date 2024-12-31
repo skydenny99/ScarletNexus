@@ -11,11 +11,13 @@
 void UWidgetBase::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
-
+	
 	if (IPawnUIInterface* PawnUIInterface = Cast<IPawnUIInterface>(GetOwningPlayerPawn()))
 	{
+		UE_LOG(LogTemp, Warning, TEXT("if pawnUIInterface check"));
 		if (UPlayerUIComponent* PlayerUIComponent = PawnUIInterface->GetPlayerUIComponent())
 		{
+			UE_LOG(LogTemp, Warning, TEXT("if PlayerUIComponent check"));
 			BP_OnOwningPlayerUIComponentInitialized(PlayerUIComponent);
 			OnOwningPlayerUIComponentInitialized(PlayerUIComponent);
 		}

@@ -49,12 +49,13 @@ protected:
 
 public:
 	virtual void NativeConstruct() override;
+	virtual void NativeOnInitialized() override;
 
 	UFUNCTION(BlueprintCallable)
 	void SetHealthGauge(const float SetPercent);
 
 	UFUNCTION(BlueprintCallable)
-	void UpdateBrainCrashGauge(const float Percent);
+	void SetBrainCrashGauge(const float Percent);
 
 	UFUNCTION()
 	void UpdateHealthGauge(const float TopProgress, const float DeltaSec);

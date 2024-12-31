@@ -19,6 +19,9 @@ class SCARLETNEXUS_API UEnemyUIComponent : public UPawnUIComponent
 
 public:
 	UPROPERTY(BlueprintAssignable)
+	FOnPercentChangeDelegate OnBossHpChanged;
+	
+	UPROPERTY(BlueprintAssignable)
 	FOnPercentChangeDelegate OnBrainCrashChanged;
 
 	//Boss

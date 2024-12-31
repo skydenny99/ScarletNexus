@@ -8,7 +8,7 @@
 #include "InventoryComponent.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnChangeSelectedItemDelegate, int32, OldIndex, int32, NewIndex, bool, IsLeft);
-//DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnUseItemDelegate,int );
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnUseItemDelegate,int32 ,NewIndex);
 
 USTRUCT(BlueprintType)
 struct FUsableItemInfo : public FTableRowBase
@@ -73,8 +73,8 @@ protected:
 	UPROPERTY(BlueprintAssignable)
 	FOnChangeSelectedItemDelegate OnChangeSelectedItemDelegate;
 
-	//UPROPERTY(BlueprintAssignable)
-	//FOnUseItemDelegate OnUseItemDelegate;
+	UPROPERTY(BlueprintAssignable)
+	FOnUseItemDelegate OnUseItemDelegate;
 
 public:	
 	// Sets default values for this component's properties

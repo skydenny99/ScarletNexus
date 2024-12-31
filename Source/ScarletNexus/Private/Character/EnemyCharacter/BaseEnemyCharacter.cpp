@@ -41,13 +41,16 @@ void ABaseEnemyCharacter::PossessedBy(AController* NewController)
 			Debug::Print(TEXT("Enemy Start Up Data Loaded"), FColor::Green);
 		}
 	}
-
-	
 }
 
 UPawnCombatComponent* ABaseEnemyCharacter::GetPawnCombatComponent() const
 {
 	return EnemyCombatComponent;
+}
+
+UPawnUIComponent* ABaseEnemyCharacter::GetPawnUIComponent() const
+{
+	return EnemyUIComponent;
 }
 
 

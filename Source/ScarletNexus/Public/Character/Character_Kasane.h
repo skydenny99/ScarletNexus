@@ -23,6 +23,8 @@ class UDataAsset_DirectionInputConfig;
 class UDataAsset_InputConfig;
 struct FInputActionValue;
 struct FGameplayTag;
+class UPlayerUIComponent;
+class UPlayerUIComponent;
 
 /**
  * 
@@ -63,6 +65,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Inventory")
 	UInventoryComponent* InventoryComponent;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="UI")
+	UPlayerUIComponent* PlayerUIComponent;
+
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	UDataAsset_InputConfig* InputConfig;
 	
@@ -79,6 +84,10 @@ protected:
 	void UpdateMovementElapsedTime(const FInputActionInstance& Instance);
 	void ResetMovementElapsedTime(const FInputActionValue& Value);
 	void OnTargetingInputTriggered(const FInputActionValue& Value);
+
+	//UI
+	virtual UPawnUIComponent* GetPawnUIComponent() const override;
+	virtual UPlayerUIComponent* GetPlayerUIComponent() const override;
 	
 public:
 	void OnAttackInputTriggered(FGameplayTag InputTag, const FInputActionInstance& Instance);
@@ -129,6 +138,9 @@ public:
 
 	UFUNCTION(BlueprintPure)
 	FORCEINLINE UInventoryComponent* GetInventoryComponent() const { return InventoryComponent; };
+
+	//UFUNCTION(BlueprintPure)
+	//FORCEINLINE UPlayerUIComponent* GetPlayerUIComponent() const { return PlayerUIComponent; };
 	
 	UFUNCTION(BlueprintPure)
 	FORCEINLINE UTargetTrackingSpringArmComponent* GetTargetTrackingComponent() const { return CameraBoom; }

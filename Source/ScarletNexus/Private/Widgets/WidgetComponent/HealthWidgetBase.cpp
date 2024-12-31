@@ -7,6 +7,7 @@
 #include "Kismet/KismetMaterialLibrary.h"
 #include "Components/Image.h"
 #include "Components/UI/EnemyUIComponent.h"
+#include "BaseDebugHelper.h"
 
 
 void UHealthWidgetBase::NativeConstruct()
@@ -28,13 +29,20 @@ void UHealthWidgetBase::NativeConstruct()
 	bIsActive = false;
 }
 
+void UHealthWidgetBase::NativeOnInitialized()
+{
+	Super::NativeOnInitialized();
+
+	Debug::Print(TEXT("NativeHealthwidgetBase--------------"));
+}
+
 void UHealthWidgetBase::SetHealthGauge(const float SetPercent)
 {
 	Percent = SetPercent;
 	bIsActive = true;
 }
 
-void UHealthWidgetBase::UpdateBrainCrashGauge(const float SetPercent)
+void UHealthWidgetBase::SetBrainCrashGauge(const float SetPercent)
 {
 	BrainCrashMaterialInstance->SetScalarParameterValue("Percent",SetPercent);
 }
@@ -65,8 +73,8 @@ void UHealthWidgetBase::OnOwningEnemyUIComponentInitialized(UEnemyUIComponent* E
 {
 	Super::OnOwningEnemyUIComponentInitialized(EnemyUIComponent);
 
-	EnemyUIComponent->OnCurrentHpChanged.AddDynamic(this,&UHealthWidgetBase::SetHealthGauge);
-	EnemyUIComponent->OnBrainCrashChanged.AddDynamic(this,&UHealthWidgetBase::UpdateBrainCrashGauge);
+	//EnemyUIComponent->OnBossHpChanged.AddDynamic(this,&UHealthWidgetBase::SetHealthGauge);
+	//EnemyUIComponent->OnBrainCrashChanged.AddDynamic(this,&UHealthWidgetBase::UpdateBrainCrashGauge);
 }
 
 void UHealthWidgetBase::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)

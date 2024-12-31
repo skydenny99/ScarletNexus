@@ -2,8 +2,14 @@
 
 
 #include "AbilitySystem/Attribute/PlayerAttributeSet.h"
+
+#include <string>
+
 #include "GameplayEffectExtension.h"
 #include "BaseDebugHelper.h"
+#include "Components/UI/PawnUIComponent.h"
+#include "Components/UI/PlayerUIComponent.h"
+#include "Interfaces/PawnUIInterface.h"
 
 UPlayerAttributeSet::UPlayerAttributeSet()
 {
@@ -29,11 +35,26 @@ UPlayerAttributeSet::UPlayerAttributeSet()
 void UPlayerAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data)
 {
 	Super::PostGameplayEffectExecute(Data);
+
+	if (!CachedUIInterface.IsValid())
+	{
+		CachedUIInterface = TWeakInterfacePtr<IPawnUIInterface>(Data.Target.GetAvatarActor());
+	}
+
+	checkf(CachedUIInterface.IsValid(), TEXT("%s does not Implemetation IPawnUIInterface."), *Data.Target.GetAvatarActor()->GetActorLabel());
+	UPawnUIComponent* PawnUIComponent = CachedUIInterface->GetPawnUIComponent();
+	checkf(PawnUIComponent, TEXT("Can not Load PawnUIComponent from %s"), *Data.Target.GetAvatarActor()->GetActorLabel());
+
+	UPlayerUIComponent* PlayerUIComponent = CachedUIInterface->GetPlayerUIComponent();
+	
 	
 	if (Data.EvaluatedData.Attribute == GetCurrentHpAttribute())
 	{
 		const float NewCurrentHp = FMath::Clamp(GetCurrentHp(), 0.0f, GetMaxHp());
 		SetCurrentHp(NewCurrentHp);
+		PawnUIComponent->OnCurrentHpValueChanged.Broadcast(NewCurrentHp);
+		Debug::Print(FString::Printf(TEXT("HP = %f"),NewCurrentHp));
+		
 	}
 	
 

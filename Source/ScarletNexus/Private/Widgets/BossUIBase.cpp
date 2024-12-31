@@ -28,7 +28,7 @@ void UBossUIBase::NativeConstruct()
 	bIsActive = false;
 }
 
-void UBossUIBase::OnDamaged(const float SetPercent)
+void UBossUIBase::SetHpPercent(const float SetPercent)
 {
 	Percent = SetPercent;
 	//UE_LOG(LogTemp, Warning, TEXT("percent : %f"),Percent);
@@ -79,7 +79,7 @@ void UBossUIBase::OnOwningEnemyUIComponentInitialized(UEnemyUIComponent* EnemyUI
 {
 	Super::OnOwningEnemyUIComponentInitialized(EnemyUIComponent);
 
-	EnemyUIComponent->OnCurrentHpChanged.AddDynamic(this,&UBossUIBase::OnDamaged);
+	//EnemyUIComponent->OnBossHpChanged.AddDynamic(this,&UBossUIBase::OnDamaged);
 	EnemyUIComponent->OnBrainCrashChanged.AddDynamic(this,&UBossUIBase::UpdateBrainCrashGauge);
 }
 
