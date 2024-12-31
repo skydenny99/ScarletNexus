@@ -249,7 +249,7 @@ namespace BaseGameplayTags
 	// CommonEnemy
 	UE_DEFINE_GAMEPLAY_TAG(Enemy_Common_Ability_Attack_Melee, "Enemy.Common.Ability.Attack.Melee");
 	UE_DEFINE_GAMEPLAY_TAG(Enemy_Common_Ability_Attack_Ranged, "Enemy.Common.Ability.Attack.Ranged");
-	
+	UE_DEFINE_GAMEPLAY_TAG(Enemy_Common_Ability_threat, "Enemy.Common.Ability.threat");
 
 	
 	UE_DEFINE_GAMEPLAY_TAG(Enemy_Common_Ability_Status_Dead, "Enemy.Common.Ability.Status.Dead");
