@@ -29,18 +29,6 @@ void UGA_GroundPsych::PreActivate(const FGameplayAbilitySpecHandle Handle, const
 	UPsychAbilityHelperLibrary::NativeOnActivateNormalPsychAbility(Kasane);
 }
 
-void UGA_GroundPsych::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
-	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
-	const FGameplayEventData* TriggerEventData)
-{
-	if (!CommitAbilityCost(Handle, ActorInfo, ActivationInfo))
-	{			
-		constexpr bool bReplicateEndAbility = true;
-		constexpr bool bWasCancelled = true;
-		EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
-	}
-	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
-}
 
 void UGA_GroundPsych::OnEndAbility(UGameplayAbility* Ability)
 {

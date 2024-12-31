@@ -47,11 +47,6 @@ void UTargetTrackingSpringArmComponent::SetTargetTracking(bool IsTargetTracking)
 	}
 }
 
-void UTargetTrackingSpringArmComponent::SetTargetTrackingByAttack(AActor* AttackTarget)
-{
-	TargetActor = AttackTarget;
-}
-
 FRotator UTargetTrackingSpringArmComponent::GetDesiredRotation() const
 {
 	FRotator DesiredRot = GetComponentRotation();
@@ -82,10 +77,18 @@ FRotator UTargetTrackingSpringArmComponent::GetDesiredRotation() const
 	const auto [BoundaryLeft, BoundaryRight, BoundaryTop, BoundaryBottom]
 	= bOverrideTrackingTarget ? OverrideTrackingBoundary : DefaultTrackingBoundary;
 	
-	FVector TargetLocation = Target->GetActorLocation();
-	FVector2D TargetScreenLocation = FVector2D::ZeroVector;
+	const FVector TargetLocation = Target->GetActorLocation();
+	FRotator TargetLookRotator = UKismetMathLibrary::FindLookAtRotation(OwningPawn->GetActorLocation(), TargetLocation);
+	TargetLookRotator.Roll = DesiredRot.Roll;
 	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
-	bool bProjectResult = PlayerController->ProjectWorldLocationToScreen(TargetLocation, TargetScreenLocation);
+	if (bFixedTrackingTarget)
+	{
+		PlayerController->SetControlRotation(TargetLookRotator);
+		return TargetLookRotator;
+	}
+	
+	FVector2D TargetScreenLocation = FVector2D::ZeroVector;
+	const bool bProjectResult = PlayerController->ProjectWorldLocationToScreen(TargetLocation, TargetScreenLocation);
 	int32 ScreenWidth = 0, ScreenHeight = 0;
 	PlayerController->GetViewportSize(ScreenWidth, ScreenHeight);
 	TargetScreenLocation.X /= ScreenWidth;
@@ -101,8 +104,6 @@ FRotator UTargetTrackingSpringArmComponent::GetDesiredRotation() const
 	if (bProjectResult == false || TargetScreenLocation.X < BoundaryLeft  || TargetScreenLocation.X > 1 - BoundaryRight
 		|| TargetScreenLocation.Y < BoundaryTop  || TargetScreenLocation.Y > 1 - BoundaryBottom)
 	{
-		FRotator TargetLookRotator = UKismetMathLibrary::FindLookAtRotation(OwningPawn->GetActorLocation(), TargetLocation);
-		TargetLookRotator.Roll = DesiredRot.Roll;
 		TargetLookRotator = FMath::RInterpTo(DesiredRot, TargetLookRotator, GetWorld()->GetDeltaSeconds(), 8.0f);
 		PlayerController->SetControlRotation(TargetLookRotator);
 		return TargetLookRotator;
@@ -135,11 +136,9 @@ void UTargetTrackingSpringArmComponent::TickComponent(float DeltaTime, enum ELev
 
 AActor* UTargetTrackingSpringArmComponent::GetCurrentTarget()
 {
-	if (FoundTargets.IsEmpty())
-		return nullptr;
-	if (TargetActor)
-		return TargetActor;
 	SortByDistance();
 	
+	if (TargetActor)
+		return TargetActor;
 	return FoundTargets.IsEmpty() ? nullptr : FoundTargets[0];
 }

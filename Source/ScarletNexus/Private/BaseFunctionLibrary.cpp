@@ -133,3 +133,16 @@ AActor* UBaseFunctionLibrary::GetNearestActorFromTarget(TArray<AActor*> Candidat
 	});
 	return Candidates[0];
 }
+
+bool UBaseFunctionLibrary::TryCancelAllAbilityByTag(AActor* Actor, FGameplayTag Tag)
+{
+	UBaseAbilitySystemComponent* ASC = NativeGetAbilitySystemComponentFromActor(Actor);
+	TArray<FGameplayAbilitySpecHandle> Handles;
+	ASC->FindAllAbilitiesWithTags(Handles, Tag.GetSingleTagContainer(), true);
+	if (Handles.IsEmpty()) return false;
+	for (auto& Handle : Handles)
+	{
+		ASC->CancelAbilityHandle(Handle);
+	}
+	return true;
+}

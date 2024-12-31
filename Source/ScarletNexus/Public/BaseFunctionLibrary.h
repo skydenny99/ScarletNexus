@@ -52,4 +52,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "FunctionLibrary")
 	static AActor* GetNearestActorFromTarget(TArray<AActor*> Candidates, AActor* TargetActor);
 
+	UFUNCTION(BlueprintCallable, Category = "FunctionLibrary")
+	static bool TryCancelAllAbilityByTag(AActor* Actor, FGameplayTag Tag);
 };
