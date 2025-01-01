@@ -68,41 +68,41 @@ bool UComboSystemComponent::TryActivateAbilityByInputTag(FGameplayTag tag)
 	{
 		if (UBaseFunctionLibrary::NativeActorHasTag(Kasane, BaseGameplayTags::Player_Status_Move_Dodge_Instant))
 		{
-			AbilityTag = Movement->IsFalling() ? BaseGameplayTags::Player_Ability_JustDodge_Aerial_Weapon
-			: BaseGameplayTags::Player_Ability_JustDodge_Ground_Weapon;
+			AbilityTag = Movement->IsWalking() ? BaseGameplayTags::Player_Ability_JustDodge_Ground_Weapon
+			: BaseGameplayTags::Player_Ability_JustDodge_Aerial_Weapon;
 			goto Execute;
 		}
 		
 		if (UBaseFunctionLibrary::NativeActorHasTag(Kasane, BaseGameplayTags::Player_Status_ComboDashAttack))
 		{
-			AbilityTag = Movement->IsFalling() ? BaseGameplayTags::Player_Ability_Attack_Aerial_ComboDashAttack
-			: BaseGameplayTags::Player_Ability_Attack_Ground_ComboDashAttack;
+			AbilityTag = Movement->IsWalking() ? BaseGameplayTags::Player_Ability_Attack_Ground_ComboDashAttack
+			: BaseGameplayTags::Player_Ability_Attack_Aerial_ComboDashAttack;
 			goto Execute;
 		}
 
 		if (UBaseFunctionLibrary::NativeActorHasTag(Kasane, BaseGameplayTags::Player_Status_Move_Dodge))
 		{
-			AbilityTag = Movement->IsFalling() ? BaseGameplayTags::Player_Ability_Attack_Aerial_DashAttack
-			: BaseGameplayTags::Player_Ability_Attack_Ground_DashAttack;
+			AbilityTag = Movement->IsWalking() ? BaseGameplayTags::Player_Ability_Attack_Ground_DashAttack
+			: BaseGameplayTags::Player_Ability_Attack_Aerial_DashAttack;
 			goto Execute;
 		}
 
 
 		if (UBaseFunctionLibrary::NativeActorHasTag(Kasane, BaseGameplayTags::Player_Status_SAS_Elemental_Fire))
 		{
-			AbilityTag = Movement->IsFalling() ? BaseGameplayTags::Player_Ability_Attack_Aerial_Weapon_Fire
-			: BaseGameplayTags::Player_Ability_Attack_Ground_Weapon_Fire;
+			AbilityTag = Movement->IsWalking() ? BaseGameplayTags::Player_Ability_Attack_Ground_Weapon_Fire
+			: BaseGameplayTags::Player_Ability_Attack_Aerial_Weapon_Fire;
 		}
 		else
 		{
-			AbilityTag = Movement->IsFalling() ? BaseGameplayTags::Player_Ability_Attack_Aerial_Weapon
-			: BaseGameplayTags::Player_Ability_Attack_Ground_Weapon;
+			AbilityTag = Movement->IsWalking() ? BaseGameplayTags::Player_Ability_Attack_Ground_Weapon
+			: BaseGameplayTags::Player_Ability_Attack_Aerial_Weapon;
 		}
 		
 	}
 	else if (tag.MatchesTagExact(BaseGameplayTags::InputTag_Attack_Weapon_Special))
 	{
-		if (Movement->IsFalling() == false && ActionElapsedTime > ChargeAttackThreshold)
+		if (Movement->IsWalking() && ActionElapsedTime > ChargeAttackThreshold)
 		{
 			AbilityTag = UBaseFunctionLibrary::NativeActorHasTag(Kasane, BaseGameplayTags::Player_Status_SAS_Elemental_Fire) ?
 				BaseGameplayTags::Player_Ability_Attack_Ground_Charge_Fire : BaseGameplayTags::Player_Ability_Attack_Ground_Charge;
@@ -112,13 +112,13 @@ bool UComboSystemComponent::TryActivateAbilityByInputTag(FGameplayTag tag)
 	{
 		if (UBaseFunctionLibrary::NativeActorHasTag(Kasane, BaseGameplayTags::Player_Status_Move_Dodge_Instant))
 		{
-			AbilityTag = Movement->IsFalling() ? BaseGameplayTags::Player_Ability_JustDodge_Aerial_Psych
-			: BaseGameplayTags::Player_Ability_JustDodge_Ground_Psych;
+			AbilityTag = Movement->IsWalking() ? BaseGameplayTags::Player_Ability_JustDodge_Ground_Psych
+			: BaseGameplayTags::Player_Ability_JustDodge_Aerial_Psych;
 			goto Execute;
 		}
 
-		AbilityTag = Movement->IsFalling() ? BaseGameplayTags::Player_Ability_Attack_Aerial_Psych
-		: BaseGameplayTags::Player_Ability_Attack_Ground_Psych;
+		AbilityTag = Movement->IsWalking() ? BaseGameplayTags::Player_Ability_Attack_Ground_Psych
+		: BaseGameplayTags::Player_Ability_Attack_Aerial_Psych;
 	}
 	else if (tag.MatchesTagExact(BaseGameplayTags::InputTag_Attack_Psych_Special))
 	{
@@ -242,7 +242,7 @@ void UComboSystemComponent::ProcessInputAction(FGameplayTag InputTag, ETriggerEv
 		else
 		{
 			FGameplayTag AbilityTag = FGameplayTag();
-			if (InputTag == BaseGameplayTags::InputTag_Attack_Weapon_Jump)
+			if (Kasane->GetCharacterMovement()->IsWalking() && InputTag == BaseGameplayTags::InputTag_Attack_Weapon_Jump)
 			{
 				UBaseFunctionLibrary::AddPlaygameTagToActor(Kasane, BaseGameplayTags::Shared_Status_CanAttack);
 				AbilityTag = BaseGameplayTags::Player_Ability_Attack_Ground_Somersault;
@@ -250,8 +250,8 @@ void UComboSystemComponent::ProcessInputAction(FGameplayTag InputTag, ETriggerEv
 			else if (InputTag == BaseGameplayTags::InputTag_Attack_Weapon_Special)
 			{
 				AbilityTag =
-					Kasane->GetCharacterMovement()->IsFalling() ?
-						BaseGameplayTags::Player_Ability_Attack_Aerial_Backstep : BaseGameplayTags::Player_Ability_Attack_Ground_Backstep;
+					Kasane->GetCharacterMovement()->IsWalking() ?
+						BaseGameplayTags::Player_Ability_Attack_Ground_Backstep : BaseGameplayTags::Player_Ability_Attack_Aerial_Backstep;
 			}
 			
 			if (AbilityTag.IsValid() == false || AbilitySpecs.Contains(AbilityTag) == false)
