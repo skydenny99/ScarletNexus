@@ -28,7 +28,7 @@ APsychokineticThrowableProp::APsychokineticThrowableProp()
 	ProjectileMovementComponent->Bounciness = 0.3f;
 
 	MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComponent"));
-	RootComponent = MeshComponent;
+	SetRootComponent(MeshComponent);
 	
 	Damage = 10;
 }

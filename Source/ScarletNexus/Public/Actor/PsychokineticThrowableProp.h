@@ -40,7 +40,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly)
 	float FloatingHeight = 150.f;
 	
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"), Category = "Projectile")
 	UProjectileMovementComponent* ProjectileMovementComponent;
 
 	UPROPERTY()

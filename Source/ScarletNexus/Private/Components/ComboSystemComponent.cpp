@@ -10,10 +10,10 @@
 #include "BaseGameplayTags.h"
 #include "PsychAbilityHelperLibrary.h"
 #include "AbilitySystem/BaseAbilitySystemComponent.h"
-#include "Actor/PsychokineticThrowableProp.h"
 #include "Character/EnemyCharacter/BaseEnemyCharacter.h"
 #include "DataAsset/DataAsset_AttackAbility.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Items/Projectile/ProjectileBase.h"
 
 // Sets default values for this component's properties
 UComboSystemComponent::UComboSystemComponent()
@@ -291,37 +291,40 @@ bool UComboSystemComponent::CheckJustDodge() // 최적화 필요
 
 	TSet<AActor*> OverlappedActors;
 
-	JustDodgeBoundary->GetOverlappingActors(OverlappedActors, APsychokineticThrowableProp::StaticClass()); // BaseProjectile::StaticClass();
-	if (OverlappedActors.IsEmpty()) return false;
-	AActor* NearestProjectile = nullptr;
-	float MinDist = std::numeric_limits<float>::infinity();
-	const FVector OwnerLocation = GetOwner()->GetActorLocation();
-	for (const auto OverlappedActor : OverlappedActors)
+	JustDodgeBoundary->GetOverlappingActors(OverlappedActors, AProjectileBase::StaticClass()); // BaseProjectile::StaticClass();
+	if (OverlappedActors.IsEmpty() == false)
 	{
-		if (OverlappedActor == GetOwner()) continue;
-		float TempDist = FVector::DistSquared(OverlappedActor->GetActorLocation(), OwnerLocation);
-		if (TempDist < MinDist)
+		Debug::Print("Found Projectile");
+		AActor* NearestProjectile = nullptr;
+		float MinDist = std::numeric_limits<float>::infinity();
+		const FVector OwnerLocation = GetOwner()->GetActorLocation();
+		for (const auto OverlappedActor : OverlappedActors)
 		{
-			NearestProjectile = OverlappedActor;
-			MinDist = TempDist;
+			if (OverlappedActor == GetOwner()) continue;
+			float TempDist = FVector::DistSquared(OverlappedActor->GetActorLocation(), OwnerLocation);
+			if (TempDist < MinDist)
+			{
+				NearestProjectile = OverlappedActor;
+				MinDist = TempDist;
+			}
+		}
+
+		if (NearestProjectile != nullptr)
+		{
+			UPsychAbilityHelperLibrary::NativeOverrideThrowablePsychObject(Kasane, NearestProjectile);
+			UBaseFunctionLibrary::AddPlaygameTagToActor(Kasane, BaseGameplayTags::Player_Status_Move_Dodge_Instant_Psych);
+			UGameplayStatics::SetGlobalTimeDilation(Kasane, GlobalTimeDilation);
+			Debug::Print(FString::Printf(TEXT("Set Nearest Projectile: %s"), *NearestProjectile->GetActorLabel()));
+			return true;
 		}
 	}
-
-	if (NearestProjectile != nullptr)
-	{
-		UPsychAbilityHelperLibrary::NativeOverrideThrowablePsychObject(Kasane, NearestProjectile);
-		UBaseFunctionLibrary::AddPlaygameTagToActor(Kasane, BaseGameplayTags::Player_Status_Move_Dodge_Instant_Psych);
-		UGameplayStatics::SetGlobalTimeDilation(Kasane, GlobalTimeDilation);
-		Debug::Print(FString::Printf(TEXT("Set Nearest Projectile: %s"), *NearestProjectile->GetActorLabel()));
-		return true;
-	}
-
 	
 	JustDodgeBoundary->GetOverlappingActors(OverlappedActors, ABaseEnemyCharacter::StaticClass());
 	if (OverlappedActors.IsEmpty()) return false;
 	for (auto OverlappedActor : OverlappedActors)
 	{
 		if (OverlappedActor == GetOwner()) continue;
+		Debug::Print("Found EnemyAttack");
 		if (UBaseFunctionLibrary::NativeActorHasTag(OverlappedActor, BaseGameplayTags::Shared_Status_CanAttack))
 		{
 			UBaseFunctionLibrary::AddPlaygameTagToActor(Kasane, BaseGameplayTags::Player_Status_Move_Dodge_Instant_Weapon);

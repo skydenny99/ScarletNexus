@@ -131,6 +131,10 @@ ACharacter_Kasane::ACharacter_Kasane()
 	JustDodgeBoundary = CreateDefaultSubobject<USphereComponent>(TEXT("JustDodgeBoundary"));
 	JustDodgeBoundary->SetupAttachment(MainBody, FName("Waist"));
 	JustDodgeBoundary->InitSphereRadius(500.f);
+	JustDodgeBoundary->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	JustDodgeBoundary->SetCollisionObjectType(ECC_GameTraceChannel7);
+	JustDodgeBoundary->SetCollisionResponseToChannel(ECC_GameTraceChannel6, ECR_Overlap); // Enemy Projectile
+	JustDodgeBoundary->SetCollisionResponseToChannel(ECC_GameTraceChannel4, ECR_Overlap); // Enemy Attack
 
 	SASManageComponent = CreateDefaultSubobject<USASManageComponent>(TEXT("SASManager"));
 	InventoryComponent = CreateDefaultSubobject<UInventoryComponent>(TEXT("InventoryComponent"));
