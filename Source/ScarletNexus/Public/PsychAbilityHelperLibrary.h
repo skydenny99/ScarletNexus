@@ -23,7 +23,7 @@ private:
 	static void NativeOnActivatePsychAbilityInternal(const ACharacter_Kasane* Kasane, APsychokineticPropBase* Prop);
 
 public:
-	static void NativeSetPsychObject(const ACharacter_Kasane* Kasane, AActor* PsychObject);
+	static void NativeOverrideThrowablePsychObject(const ACharacter_Kasane* Kasane, AActor* PsychObject);
 	static bool NativeHasPsychokineticThrowablePropInRange(const ACharacter_Kasane* Kasane);
 	static bool NativeHasPsychokineticSpecialPropInRange(const ACharacter_Kasane* Kasane);
 	static void NativeOnActivateNormalPsychAbility(const ACharacter_Kasane* Kasane);

@@ -259,13 +259,12 @@ void UPsychokinesisComponent::OverrideSpecialTarget(AActor* InActor)
 	if (Temp == nullptr) return;
 	Temp->OnUsePsychProp.BindUObject(this, &UPsychokinesisComponent::OnUsePsychProp);
 	PsychSpecialTarget = Temp;
-	Debug::Print("PsychokinesisComponent::OverrideSpecialTarget");
 }
 
-void UPsychokinesisComponent::OverrideCurrentPsychTarget(AActor* InActor)
+void UPsychokinesisComponent::OverrideThrowableTarget(AActor* InActor)
 {
-	APsychokineticPropBase* Temp = Cast<APsychokineticPropBase>(InActor);
+	APsychokineticPropBase* Temp = Cast<APsychokineticThrowableProp>(InActor);
 	if (Temp == nullptr) return;
 	Temp->OnUsePsychProp.BindUObject(this, &UPsychokinesisComponent::OnUsePsychProp);
-	CurrentPsychTarget = Temp;
+	PsychThrowableTarget = Temp;
 }

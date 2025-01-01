@@ -89,7 +89,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void OverrideSpecialTarget(AActor* InActor);
-	void OverrideCurrentPsychTarget(AActor* InActor);
+	void OverrideThrowableTarget(AActor* InActor);
 
 	FORCEINLINE APsychokineticPropBase* GetPsychThrowableTarget() const {return PsychThrowableTarget;}
 	FORCEINLINE APsychokineticPropBase* GetPsychSpecialTarget() const {return PsychSpecialTarget;}
