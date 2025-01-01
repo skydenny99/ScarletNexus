@@ -38,7 +38,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly)
 	UProjectileMovementComponent* ProjectileMovementComponent;
 
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
 	UWidgetComponent* InterectComponent;
 
 	UPROPERTY()

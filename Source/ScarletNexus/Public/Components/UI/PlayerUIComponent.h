@@ -121,4 +121,8 @@ public:
 	//Lock ON
 	UPROPERTY(BlueprintAssignable)
 	FTargettingDelegate OnTargetting;
+
+	//InterectProp
+	UPROPERTY(BlueprintAssignable)
+	FOnPercentChangeDelegate OnInterectPercentChanged;
 };

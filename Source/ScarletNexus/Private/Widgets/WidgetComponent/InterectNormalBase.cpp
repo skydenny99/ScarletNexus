@@ -15,6 +15,13 @@ void UInterectNormalBase::NativeOnInitialized()
 
 	InitClickSprite(true);
 	DenyOverlay->SetVisibility(ESlateVisibility::Collapsed);
+
+	/*PsychInstance = UKismetMaterialLibrary::CreateDynamicMaterialInstance(GetWorld(), PsychMaterial);
+	PsychGauge->SetBrushFromMaterial(PsychInstance);
+	PsychInstance->SetScalarParameterValue("Percent",0.0f);
+	
+	PsychBlinkInstance = UKismetMaterialLibrary::CreateDynamicMaterialInstance(GetWorld(), PsychBlinkMaterial);
+	PsychBlinkInstance->SetScalarParameterValue("isActivate",1.0f);*/
 }
 
 void UInterectNormalBase::PlayBlinkAnim()

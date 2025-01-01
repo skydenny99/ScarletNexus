@@ -10,6 +10,8 @@ class UImage;
 class UOverlay;
 class UPaperSprite;
 class UWidgetAnimation;
+class UMaterial;
+class UMaterialInstanceDynamic;
 
 /**
  * 
@@ -28,7 +30,7 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite)
 	TArray<UPaperSprite*> ClickPaperSprite;
-
+	
 	UPROPERTY()
 	UMaterialInstanceDynamic* PsychInstance;
 
@@ -37,9 +39,21 @@ protected:
 
 	UPROPERTY(meta = (BindWidget))
 	UImage* ButtonFrame_Inner_Full;
-	
+
 	UPROPERTY(meta = (BindWidget))
 	UOverlay* DenyOverlay;
+	
+	/*
+	UPROPERTY(EditDefaultsOnly)
+	UMaterial* PsychMaterial;
+	
+	UPROPERTY(EditDefaultsOnly)
+	UMaterial* PsychBlinkMaterial;
+
+	UPROPERTY(meta = (BindWidget))
+	UImage* PsychGauge;
+	*/
+	
 	
 public:
 	virtual void NativeOnInitialized() override;

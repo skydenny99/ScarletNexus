@@ -9,6 +9,7 @@
 #include "BaseDebugHelper.h"
 #include "Components/WidgetComponent.h"
 #include "Components/UI/EnemyUIComponent.h"
+#include "Components/SphereComponent.h"
 
 ABaseEnemyCharacter::ABaseEnemyCharacter()
 {
@@ -26,6 +27,11 @@ ABaseEnemyCharacter::ABaseEnemyCharacter()
 	LockOnComponent->SetupAttachment(GetMesh());
 	
 	EnemyUIComponent = CreateDefaultSubobject<UEnemyUIComponent>(TEXT("EnemyUIComponent"));
+
+	CollisionSphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("CollisionSphereComponent"));
+	CollisionSphereComponent->SetupAttachment(RootComponent);
+
+	CollisionSphereComponent->SetWorldScale3D(FVector(50.0f, 50.0f, 50.0f));
 }
 
 void ABaseEnemyCharacter::PossessedBy(AController* NewController)
