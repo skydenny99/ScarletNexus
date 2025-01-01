@@ -42,5 +42,9 @@ protected:
 
 public:
 	FORCEINLINE UBoxComponent* GetWeaponCollisionBox() const { return WeaponCollsionBox; }
+
+	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "On Spawn Hit FX"))
+	void BP_OnSpawnHitFX(const AActor* HitActor);
+
 	
 };
