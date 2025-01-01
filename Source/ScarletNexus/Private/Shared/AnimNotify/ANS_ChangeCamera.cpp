@@ -22,6 +22,7 @@ void UANS_ChangeCamera::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequenc
 	Super::NotifyEnd(MeshComp, Animation, EventReference);
 	if (ACharacter_Kasane* Character = Cast<ACharacter_Kasane>(MeshComp->GetOwner()))
 	{
-		Character->ChangeCamera(true);
+		Character->ChangeCamera(true, .3f);
+		Character->GetController()->SetControlRotation(Character->GetComboDirectCameraActor()->GetActorRotation());
 	}
 }

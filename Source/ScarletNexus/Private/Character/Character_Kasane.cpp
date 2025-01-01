@@ -407,13 +407,13 @@ void ACharacter_Kasane::ClearInputHistory()
 	DirectionHistory = static_cast<uint8>(EBaseDirectionType::Max);
 }
 
-void ACharacter_Kasane::ChangeCamera(bool bUseMain)
+void ACharacter_Kasane::ChangeCamera(bool bUseMain, float BlendTime)
 {
 	auto PC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	if (bUseMain)
-		PC->SetViewTargetWithBlend(this, 1.f);
+		PC->SetViewTargetWithBlend(this, BlendTime);
 	else
-		PC->SetViewTargetWithBlend(ComboDirectCameraActor->GetChildActor(), 1.f);
+		PC->SetViewTargetWithBlend(ComboDirectCameraActor->GetChildActor(), BlendTime);
 }
 
 void ACharacter_Kasane::ActivateAfterimage(bool InIsActive)
