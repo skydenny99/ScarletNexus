@@ -74,6 +74,7 @@ namespace BaseGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Aerial_Weapon, "Player.Ability.Attack.Aerial.Weapon");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Aerial_Weapon_Fire, "Player.Ability.Attack.Aerial.Weapon.Fire");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Aerial_Psych, "Player.Ability.Attack.Aerial.Psych");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Aerial_CutDown, "Player.Ability.Attack.Aerial.CutDown");
 
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Special_Psych, "Player.Ability.Attack.Special.Psych");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Ground_Backstep, "Player.Ability.Attack.Ground.Backstep");

@@ -102,10 +102,17 @@ bool UComboSystemComponent::TryActivateAbilityByInputTag(FGameplayTag tag)
 	}
 	else if (tag.MatchesTagExact(BaseGameplayTags::InputTag_Attack_Weapon_Special))
 	{
-		if (Movement->IsWalking() && ActionElapsedTime > ChargeAttackThreshold)
+		if (ActionElapsedTime > ChargeAttackThreshold)
 		{
-			AbilityTag = UBaseFunctionLibrary::NativeActorHasTag(Kasane, BaseGameplayTags::Player_Status_SAS_Elemental_Fire) ?
-				BaseGameplayTags::Player_Ability_Attack_Ground_Charge_Fire : BaseGameplayTags::Player_Ability_Attack_Ground_Charge;
+			if (Movement->IsWalking())
+			{
+				AbilityTag = UBaseFunctionLibrary::NativeActorHasTag(Kasane, BaseGameplayTags::Player_Status_SAS_Elemental_Fire) ?
+					BaseGameplayTags::Player_Ability_Attack_Ground_Charge_Fire : BaseGameplayTags::Player_Ability_Attack_Ground_Charge;
+			}
+			else
+			{
+				AbilityTag = BaseGameplayTags::Player_Ability_Attack_Aerial_CutDown;
+			}
 		}
 	}
 	else if (tag.MatchesTagExact(BaseGameplayTags::InputTag_Attack_Psych_Normal))
