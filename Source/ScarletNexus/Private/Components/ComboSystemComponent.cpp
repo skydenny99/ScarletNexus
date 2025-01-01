@@ -11,6 +11,7 @@
 #include "PsychAbilityHelperLibrary.h"
 #include "AbilitySystem/BaseAbilitySystemComponent.h"
 #include "Actor/PsychokineticThrowableProp.h"
+#include "Character/EnemyCharacter/BaseEnemyCharacter.h"
 #include "DataAsset/DataAsset_AttackAbility.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
@@ -66,7 +67,7 @@ bool UComboSystemComponent::TryActivateAbilityByInputTag(FGameplayTag tag)
 	UCharacterMovementComponent* Movement = Kasane->GetCharacterMovement();
 	if (tag.MatchesTagExact(BaseGameplayTags::InputTag_Attack_Weapon_Normal))
 	{
-		if (UBaseFunctionLibrary::NativeActorHasTag(Kasane, BaseGameplayTags::Player_Status_Move_Dodge_Instant))
+		if (UBaseFunctionLibrary::NativeActorHasTag(Kasane, BaseGameplayTags::Player_Status_Move_Dodge_Instant_Weapon))
 		{
 			AbilityTag = Movement->IsWalking() ? BaseGameplayTags::Player_Ability_JustDodge_Ground_Weapon
 			: BaseGameplayTags::Player_Ability_JustDodge_Aerial_Weapon;
@@ -117,7 +118,7 @@ bool UComboSystemComponent::TryActivateAbilityByInputTag(FGameplayTag tag)
 	}
 	else if (tag.MatchesTagExact(BaseGameplayTags::InputTag_Attack_Psych_Normal))
 	{
-		if (UBaseFunctionLibrary::NativeActorHasTag(Kasane, BaseGameplayTags::Player_Status_Move_Dodge_Instant))
+		if (UBaseFunctionLibrary::NativeActorHasTag(Kasane, BaseGameplayTags::Player_Status_Move_Dodge_Instant_Psych))
 		{
 			AbilityTag = Movement->IsWalking() ? BaseGameplayTags::Player_Ability_JustDodge_Ground_Psych
 			: BaseGameplayTags::Player_Ability_JustDodge_Aerial_Psych;
@@ -289,18 +290,6 @@ bool UComboSystemComponent::CheckJustDodge() // 최적화 필요
 	if (JustDodgeBoundary == nullptr) return false;
 
 	TSet<AActor*> OverlappedActors;
-	// JustDodgeBoundary->GetOverlappingActors(OverlappedActors, AActor::StaticClass());
-	// if (OverlappedActors.IsEmpty()) return false;
-	// for (auto OverlappedActor : OverlappedActors)
-	// {
-	// 	if (OverlappedActor == GetOwner()) continue;
-	// 	if (UBaseFunctionLibrary::NativeActorHasTag(OverlappedActor, BaseGameplayTags::Shared_Status_CanAttack))
-	// 	{
-	// 		UBaseFunctionLibrary::AddPlaygameTagToActor(Kasane, BaseGameplayTags::Player_Status_Move_Dodge_Instant);
-	// 		UGameplayStatics::SetGlobalTimeDilation(Kasane, GlobalTimeDilation); // 저스트 회피 성공 시 느려짐
-	// 		return true;
-	// 	}
-	// }
 
 	JustDodgeBoundary->GetOverlappingActors(OverlappedActors, APsychokineticThrowableProp::StaticClass()); // BaseProjectile::StaticClass();
 	if (OverlappedActors.IsEmpty()) return false;
@@ -309,7 +298,6 @@ bool UComboSystemComponent::CheckJustDodge() // 최적화 필요
 	const FVector OwnerLocation = GetOwner()->GetActorLocation();
 	for (const auto OverlappedActor : OverlappedActors)
 	{
-		Debug::Print(OverlappedActor->GetActorLabel());
 		if (OverlappedActor == GetOwner()) continue;
 		float TempDist = FVector::DistSquared(OverlappedActor->GetActorLocation(), OwnerLocation);
 		if (TempDist < MinDist)
@@ -321,11 +309,25 @@ bool UComboSystemComponent::CheckJustDodge() // 최적화 필요
 
 	if (NearestProjectile != nullptr)
 	{
-		// TODO: Set Nearest Projectile For Throwing
-		UPsychAbilityHelperLibrary::NativeSetPsychObject(Kasane, NearestProjectile);
-		UBaseFunctionLibrary::AddPlaygameTagToActor(Kasane, BaseGameplayTags::Player_Status_Move_Dodge_Instant);
+		UPsychAbilityHelperLibrary::NativeOverrideThrowablePsychObject(Kasane, NearestProjectile);
+		UBaseFunctionLibrary::AddPlaygameTagToActor(Kasane, BaseGameplayTags::Player_Status_Move_Dodge_Instant_Psych);
 		UGameplayStatics::SetGlobalTimeDilation(Kasane, GlobalTimeDilation);
+		Debug::Print(FString::Printf(TEXT("Set Nearest Projectile: %s"), *NearestProjectile->GetActorLabel()));
 		return true;
+	}
+
+	
+	JustDodgeBoundary->GetOverlappingActors(OverlappedActors, ABaseEnemyCharacter::StaticClass());
+	if (OverlappedActors.IsEmpty()) return false;
+	for (auto OverlappedActor : OverlappedActors)
+	{
+		if (OverlappedActor == GetOwner()) continue;
+		if (UBaseFunctionLibrary::NativeActorHasTag(OverlappedActor, BaseGameplayTags::Shared_Status_CanAttack))
+		{
+			UBaseFunctionLibrary::AddPlaygameTagToActor(Kasane, BaseGameplayTags::Player_Status_Move_Dodge_Instant_Weapon);
+			UGameplayStatics::SetGlobalTimeDilation(Kasane, GlobalTimeDilation); // 저스트 회피 성공 시 느려짐
+			return true;
+		}
 	}
 	return false;
 }

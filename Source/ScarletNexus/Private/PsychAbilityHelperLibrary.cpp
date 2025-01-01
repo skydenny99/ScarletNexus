@@ -32,13 +32,14 @@ void UPsychAbilityHelperLibrary::NativeOnActivatePsychAbilityInternal(const ACha
 	}
 }
 
-void UPsychAbilityHelperLibrary::NativeSetPsychObject(const ACharacter_Kasane* Kasane, AActor* PsychObject)
+void UPsychAbilityHelperLibrary::NativeOverrideThrowablePsychObject(const ACharacter_Kasane* Kasane, AActor* PsychObject)
 {
 	if (Kasane == nullptr) return;
 	if (UPsychokinesisComponent* PsychokinesisComponent = Kasane->GetPsychokinesisComponent())
 	{
 		PsychokinesisComponent->SetBlockUpdate(true);
-		PsychokinesisComponent->OverrideCurrentPsychTarget(PsychObject);
+		PsychokinesisComponent->OverrideThrowableTarget(PsychObject);
+		PsychokinesisComponent->SetCurrentPsychTarget(PsychokinesisComponent->GetPsychThrowableTarget());
 	}
 }
 

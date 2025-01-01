@@ -110,7 +110,8 @@ namespace BaseGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_Move_Run, "Player.Status.Move.Run");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_Move_Dash, "Player.Status.Move.Dash");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_Move_Dodge, "Player.Status.Move.Dodge");
-	UE_DEFINE_GAMEPLAY_TAG(Player_Status_Move_Dodge_Instant, "Player.Status.Move.Dodge.Instant");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Status_Move_Dodge_Instant_Weapon, "Player.Status.Move.Dodge.Instant.Weapon");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Status_Move_Dodge_Instant_Psych, "Player.Status.Move.Dodge.Instant.Psych");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_ComboDashAttack, "Player.Status.ComboDashAttack");
 	
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_Charging, "Player.Status.Charging");
