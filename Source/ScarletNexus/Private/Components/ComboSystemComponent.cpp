@@ -241,26 +241,32 @@ void UComboSystemComponent::ProcessInputAction(FGameplayTag InputTag, ETriggerEv
 		}
 		else
 		{
-			if (InputTag == BaseGameplayTags::InputTag_Attack_Weapon_Special)
+			FGameplayTag AbilityTag = FGameplayTag();
+			if (InputTag == BaseGameplayTags::InputTag_Attack_Weapon_Jump)
 			{
-				// TODO activate or cancel charging ability
-				FGameplayTag AbilityTag =
+				UBaseFunctionLibrary::AddPlaygameTagToActor(Kasane, BaseGameplayTags::Shared_Status_CanAttack);
+				AbilityTag = BaseGameplayTags::Player_Ability_Attack_Ground_Somersault;
+			}
+			else if (InputTag == BaseGameplayTags::InputTag_Attack_Weapon_Special)
+			{
+				AbilityTag =
 					Kasane->GetCharacterMovement()->IsFalling() ?
 						BaseGameplayTags::Player_Ability_Attack_Aerial_Backstep : BaseGameplayTags::Player_Ability_Attack_Ground_Backstep;
-				if (AbilityTag.IsValid() == false || AbilitySpecs.Contains(AbilityTag) == false)
-				{
-					Debug::Print("Completed: Ability not found", FColor::Red);
-					return;
-				}
-				if (BaseAbilitySystemComponent->TryActivateAbility(AbilitySpecs[AbilityTag].Handle))
-				{
-					LastActivatedGameplayTag = AbilityTag;
-					Debug::Print(FString::Printf(TEXT("Ability %s"), *LastActivatedGameplayTag.ToString()), FColor::Red);
-				}
-				else
-				{
-					Debug::Print("Completed: Ability try failed", FColor::Red);
-				}
+			}
+			
+			if (AbilityTag.IsValid() == false || AbilitySpecs.Contains(AbilityTag) == false)
+			{
+				Debug::Print(FString::Printf(TEXT("Completed: Ability not found - %s"), *InputTag.ToString()), FColor::Red);
+				return;
+			}
+			if (BaseAbilitySystemComponent->TryActivateAbility(AbilitySpecs[AbilityTag].Handle))
+			{
+				LastActivatedGameplayTag = AbilityTag;
+				Debug::Print(FString::Printf(TEXT("Ability %s"), *LastActivatedGameplayTag.ToString()), FColor::Red);
+			}
+			else
+			{
+				Debug::Print("Completed: Ability try failed", FColor::Red);
 			}
 		}
 			

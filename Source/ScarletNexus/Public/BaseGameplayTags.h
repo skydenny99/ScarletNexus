@@ -18,6 +18,7 @@ namespace BaseGameplayTags
 	//Attack
 	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_Attack_Weapon_Normal);
 	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_Attack_Weapon_Special);
+	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_Attack_Weapon_Jump);
 
 	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_Attack_Psych_Normal);
 	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_Attack_Psych_Special);
@@ -83,6 +84,9 @@ namespace BaseGameplayTags
 	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Ability_Attack_Aerial_DashAttack);
 	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Ability_Attack_Ground_ComboDashAttack);
 	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Ability_Attack_Aerial_ComboDashAttack);
+
+	
+	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Ability_Attack_Ground_Somersault);
 
 	// Ability - Move
 	SCARLETNEXUS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Ability_Move_Dash);

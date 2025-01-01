@@ -16,6 +16,7 @@ namespace BaseGameplayTags
 	//Attack
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_Attack_Weapon_Normal, "InputTag.Attack.Weapon.Normal");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_Attack_Weapon_Special, "InputTag.Attack.Weapon.Special");
+	UE_DEFINE_GAMEPLAY_TAG(InputTag_Attack_Weapon_Jump, "InputTag.Attack.Weapon.Jump");
 
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_Attack_Psych_Normal, "InputTag.Attack.Psych.Normal");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_Attack_Psych_Special, "InputTag.Attack.Psych.Special");
@@ -81,6 +82,9 @@ namespace BaseGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Aerial_DashAttack, "Player.Ability.Attack.Aerial.DashAttack");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Ground_ComboDashAttack, "Player.Ability.Attack.Ground.ComboDashAttack");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Aerial_ComboDashAttack, "Player.Ability.Attack.Aerial.ComboDashAttack");
+
+	
+	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Ground_Somersault, "Player.Ability.Attack.Ground.Somersault");
 
 	// Ability - Move
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Move_Dash, "Player.Ability.Move.Dash");
