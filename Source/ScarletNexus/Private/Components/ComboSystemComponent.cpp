@@ -208,7 +208,10 @@ void UComboSystemComponent::ProcessInputAction(FGameplayTag InputTag, ETriggerEv
 			if (UBaseFunctionLibrary::NativeActorHasTag(Kasane, BaseGameplayTags::Player_Status_Charging))
 			{
 				ActionElapsedTime = Instance.GetElapsedTime() - StartActionElapsedTime;
-				
+				if (FMath::IsNearlyZero(ChargeCompletionTime) == false)
+				{
+					OnUpdateChargeGauge.ExecuteIfBound(ActionElapsedTime / ChargeCompletionTime);
+				}
 				//Debug::Print(FString::Printf(TEXT("Charging %f %f %f"),StartActionElapsedTime, ActionElapsedTime, ChargeCompletionTime), FColor::Blue);
 			}
 			else

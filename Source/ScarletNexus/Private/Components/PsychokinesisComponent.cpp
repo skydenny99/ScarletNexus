@@ -217,6 +217,7 @@ void UPsychokinesisComponent::OnOverlapEnd(UPrimitiveComponent* OverlappedCompon
 		if (Temp == PsychThrowableTarget && bBlockUpdate == false)
 		{
 			PsychThrowableTarget = nullptr;
+			OnPsychThrowableTargetUpdated.Broadcast(PsychThrowableTarget);
 		}
 	}
 	else
@@ -225,6 +226,7 @@ void UPsychokinesisComponent::OnOverlapEnd(UPrimitiveComponent* OverlappedCompon
 		if (Temp == PsychSpecialTarget && bBlockUpdate == false)
 		{
 			PsychSpecialTarget = nullptr;
+			OnPsychSpecialTargetUpdated.Broadcast(PsychSpecialTarget);
 		}
 	}
 	
@@ -259,6 +261,7 @@ void UPsychokinesisComponent::OverrideSpecialTarget(AActor* InActor)
 	if (Temp == nullptr) return;
 	Temp->OnUsePsychProp.BindUObject(this, &UPsychokinesisComponent::OnUsePsychProp);
 	PsychSpecialTarget = Temp;
+	OnPsychSpecialTargetUpdated.Broadcast(PsychSpecialTarget);
 }
 
 void UPsychokinesisComponent::OverrideThrowableTarget(AActor* InActor)
@@ -267,4 +270,5 @@ void UPsychokinesisComponent::OverrideThrowableTarget(AActor* InActor)
 	if (Temp == nullptr) return;
 	Temp->OnUsePsychProp.BindUObject(this, &UPsychokinesisComponent::OnUsePsychProp);
 	PsychThrowableTarget = Temp;
+	OnPsychThrowableTargetUpdated.Broadcast(PsychThrowableTarget);
 }

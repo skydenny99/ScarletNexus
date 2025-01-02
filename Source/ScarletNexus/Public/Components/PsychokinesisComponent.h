@@ -25,7 +25,7 @@ enum class EPsychType : uint8
 
 class APsychokineticPropBase;
 class USphereComponent;
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnPsychTargetUpdated, APsychokineticPropBase*)
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPsychPropChangedDelegate, APsychokineticPropBase*, PsychProp);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class SCARLETNEXUS_API UPsychokinesisComponent : public UActorComponent
@@ -37,6 +37,11 @@ public:
 	UPsychokinesisComponent();
 
 protected:
+	UPROPERTY(BlueprintAssignable)
+	FOnPsychPropChangedDelegate OnPsychThrowableTargetUpdated;
+	UPROPERTY(BlueprintAssignable)
+	FOnPsychPropChangedDelegate OnPsychSpecialTargetUpdated;
+	
 	bool bBlockUpdate = false;
 	
 	UPROPERTY(EditDefaultsOnly, Category="Psych")
@@ -84,8 +89,6 @@ public:
 	void InitComponents(USphereComponent* InDetectionBoundary, USkeletalMeshComponent* InSkeletalMesh);
 	void UpdatePsychTargetLocation(APsychokineticThrowableProp* Target, float DeltaTime);
 	void AttachPsychTargetToBone(APsychokineticThrowableProp* Target);
-	FOnPsychTargetUpdated OnPsychThrowableTargetUpdated;
-	FOnPsychTargetUpdated OnPsychSpecialTargetUpdated;
 
 	UFUNCTION(BlueprintCallable)
 	void OverrideSpecialTarget(AActor* InActor);

@@ -27,6 +27,8 @@ struct FComboCounter
 
 class ACharacter_Kasane;
 
+DECLARE_DELEGATE_OneParam(FOnUpdateChargeGauge, float);
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class SCARLETNEXUS_API UComboSystemComponent : public UActorComponent
 {
@@ -52,6 +54,8 @@ private:
 	float ComboDashResetTime = 1.f;
 
 public:
+	FOnUpdateChargeGauge OnUpdateChargeGauge;
+	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Combo")
 	FComboCounter WeaponGroundCombo;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Combo")

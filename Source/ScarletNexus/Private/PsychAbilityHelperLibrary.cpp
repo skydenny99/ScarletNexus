@@ -26,6 +26,7 @@ void UPsychAbilityHelperLibrary::NativeOnActivatePsychAbilityInternal(const ACha
 	{
 		PsychokinesisComponent->SetCurrentPsychTarget(Prop);
 		PsychokinesisComponent->SetBlockUpdate(true);
+		ComboSystem->OnUpdateChargeGauge.BindUObject(Prop, &APsychokineticPropBase::OnUpdatePsychChargeGauge);
 		ComboSystem->SetupChargeProperty(PsychokinesisComponent->GetCurrentPsychTarget()->GetChargeTime(), true);
 		ComboSystem->StartCharging();
 		ComboSystem->ResetWeaponCombo();
@@ -78,12 +79,15 @@ void UPsychAbilityHelperLibrary::NativeOnActivateSpecialPsychAbility(const AChar
 void UPsychAbilityHelperLibrary::CancelChargingPsychAbility(const ACharacter_Kasane* Kasane)
 {
 	if (Kasane == nullptr) return;
-	if (UPsychokinesisComponent* PsychokinesisComponent = Kasane->GetPsychokinesisComponent())
+	UPsychokinesisComponent* PsychokinesisComponent = Kasane->GetPsychokinesisComponent();
+	UComboSystemComponent* ComboSystem = Kasane->GetComboSystemComponent();
+	if (PsychokinesisComponent && ComboSystem)
 	{
 		APsychokineticThrowableProp* ThrowableProp = Cast<APsychokineticThrowableProp>(PsychokinesisComponent->GetCurrentPsychTarget());
 		if (ThrowableProp)
 		{
 			ThrowableProp->OnChargingCancel();
+			ComboSystem->OnUpdateChargeGauge.Unbind();
 		}
 	}
 }

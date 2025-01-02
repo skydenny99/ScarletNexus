@@ -38,4 +38,7 @@ public:
 	FORCEINLINE float GetPsychCost() const { return PsychCost; }
 	FORCEINLINE float GetChargeTime() const { return ChargeTime; }
 	FORCEINLINE bool IsUsed() const { return bIsUsed; }
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnUpdatePsychChargeGauge(float Gauge);
 };
