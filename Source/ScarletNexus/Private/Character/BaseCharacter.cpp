@@ -26,6 +26,7 @@ void ABaseCharacter::SetCustomTimeDilation(const ETimeDilationReason& Reason, fl
 	{
 		CustomTimeDilation = TimeDilation;
 	}
+	OnChangeCustomTimeDilationDelegate.Broadcast(Reason, TimeDilation);
 }
 
 bool ABaseCharacter::AllowSetTimeDilation(const ETimeDilationReason& Reason)
