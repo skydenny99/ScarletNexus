@@ -167,6 +167,8 @@ namespace BaseGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_Charge, "Shared.Event.Charge");
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_Gimmick_CanAttack, "Shared.Event.Gimmick.CanAttack");
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_Gimmick_CannotAttack, "Shared.Event.Gimmick.CannotAttack");
+	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_BrainCrush, "Shared.Event.BrainCrush");
+	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_BrainCrush_Recover, "Shared.Event.BrainCrush.Recover");
 	
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_Charge_Confirm, "Shared.Event.Charge.Confirm");
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_ThrowProjectile, "Shared.Event.ThrowProjectile");
