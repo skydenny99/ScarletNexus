@@ -54,6 +54,9 @@ protected:
 
 	UPROPERTY(VisibleAnyWhere, BlueprintReadOnly, category = "UI")
 	UWidgetComponent* LockOnComponent;
+
+	UPROPERTY(VisibleAnyWhere, BlueprintReadOnly, category = "UI")
+	UWidgetComponent* BrainCrashComponent;
 	
 	UPROPERTY(BlueprintReadOnly)
 	UEnemyUIComponent* EnemyUIComponent;

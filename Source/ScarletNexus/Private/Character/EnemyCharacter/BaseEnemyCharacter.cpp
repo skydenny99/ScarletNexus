@@ -25,6 +25,9 @@ ABaseEnemyCharacter::ABaseEnemyCharacter()
 
 	LockOnComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("LockOnComponent"));
 	LockOnComponent->SetupAttachment(GetMesh());
+
+	BrainCrashComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("BrainCrashComponent"));
+	BrainCrashComponent->SetupAttachment(GetMesh());
 	
 	EnemyUIComponent = CreateDefaultSubobject<UEnemyUIComponent>(TEXT("EnemyUIComponent"));
 
