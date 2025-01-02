@@ -20,9 +20,9 @@ void UTimeControlSubsystem::OnWorldBeginPlay(UWorld& InWorld)
 	}
 }
 
-void UTimeControlSubsystem::SetCustomTimeDilation(float TimeDilation)
+void UTimeControlSubsystem::SetCustomTimeDilation(ETimeDilationReason Reason, float TimeDilation)
 {
-	TimeDilationDelegate.Broadcast(TimeDilation);
+	TimeDilationDelegate.Broadcast(Reason, TimeDilation);
 }
 
 void UTimeControlSubsystem::SetupWorldTimeDilation(const FName& DilationName, float TimeDilation)

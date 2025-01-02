@@ -20,16 +20,26 @@ ABaseCharacter::ABaseCharacter()
 	
 }
 
+void ABaseCharacter::SetCustomTimeDilation(const ETimeDilationReason& Reason, float TimeDilation)
+{
+	if (AllowSetTimeDilation(Reason))
+	{
+		CustomTimeDilation = TimeDilation;
+	}
+}
+
+bool ABaseCharacter::AllowSetTimeDilation(const ETimeDilationReason& Reason)
+{
+	return true;
+}
+
 // Called when the game starts or when spawned
 void ABaseCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	if (IsAffectedByAccelAbility)
+	if (auto TimeSubsystem = GetWorld()->GetSubsystem<UTimeControlSubsystem>())
 	{
-		if (auto TimeSubsystem = GetWorld()->GetSubsystem<UTimeControlSubsystem>())
-		{
-			TimeSubsystem->TimeDilationDelegate.AddUObject(this, &ABaseCharacter::SetCustomTimeDilation);
-		}
+		TimeSubsystem->TimeDilationDelegate.AddUObject(this, &ABaseCharacter::SetCustomTimeDilation);
 	}
 }
 

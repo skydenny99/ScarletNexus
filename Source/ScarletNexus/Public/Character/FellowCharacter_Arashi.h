@@ -22,7 +22,7 @@ public:
 	AFellowCharacter_Arashi();
 
 protected:
-
+	virtual bool AllowSetTimeDilation(const ETimeDilationReason& Reason) override;
 	
 
 	

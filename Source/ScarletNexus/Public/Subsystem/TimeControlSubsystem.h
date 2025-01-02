@@ -6,10 +6,18 @@
 #include "Subsystems/WorldSubsystem.h"
 #include "TimeControlSubsystem.generated.h"
 
+
+UENUM(BlueprintType)
+enum class ETimeDilationReason : uint8
+{
+	None = 0,
+	SAS_Accel = 1,
+	Total = 2,
+};
 /**
  * 
  */
-DECLARE_MULTICAST_DELEGATE_OneParam(FTimeDilationDelegate, float)
+DECLARE_MULTICAST_DELEGATE_TwoParams(FTimeDilationDelegate, const ETimeDilationReason&, float)
 
 UCLASS()
 class SCARLETNEXUS_API UTimeControlSubsystem : public UWorldSubsystem
@@ -25,7 +33,7 @@ public:
 	virtual void OnWorldBeginPlay(UWorld& InWorld) override;
 	
 	UFUNCTION(BlueprintCallable, Category = "TimeControl")
-	void SetCustomTimeDilation(float TimeDilation);
+	void SetCustomTimeDilation(ETimeDilationReason Reason, float TimeDilation);
 	
 	UFUNCTION(BlueprintCallable, Category = "TimeControl")
 	void SetupWorldTimeDilation(const FName& DilationName, float TimeDilation);

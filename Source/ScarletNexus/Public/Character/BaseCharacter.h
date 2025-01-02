@@ -7,6 +7,7 @@
 #include "AbilitySystemInterface.h"
 #include "Interfaces/PawnCombatInterface.h"
 #include "Interfaces/PawnUIInterface.h"
+#include "Subsystem/TimeControlSubsystem.h"
 #include "BaseCharacter.generated.h"
 
 class UBaseAbilitySystemComponent;
@@ -27,10 +28,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly)
 	TSoftObjectPtr<UDataAsset_StartupBase> StartupData;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category= "Time Dilation")
-	bool IsAffectedByAccelAbility = true;
-	void SetCustomTimeDilation(float TimeDilation) { CustomTimeDilation = TimeDilation; };
-
+	void SetCustomTimeDilation(const ETimeDilationReason& Reason, float TimeDilation);
+	virtual bool AllowSetTimeDilation(const ETimeDilationReason& Reason);
+	
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 

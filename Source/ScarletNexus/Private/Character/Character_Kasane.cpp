@@ -31,7 +31,6 @@
 
 ACharacter_Kasane::ACharacter_Kasane()
 {
-	IsAffectedByAccelAbility = false;
 	USkeletalMeshComponent* MainBody = GetMesh();
 	MainBody->SetRelativeLocationAndRotation(FVector(0.f, 0.f, -100.f), FRotator(0.f, -90.f, 0.f));
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh> MainBodyMesh(TEXT("/Game/Resources/Characters/CH0200/CH200_Base.CH200_Base"));
@@ -299,6 +298,11 @@ UPawnUIComponent* ACharacter_Kasane::GetPawnUIComponent() const
 UPlayerUIComponent* ACharacter_Kasane::GetPlayerUIComponent() const
 {
 	return PlayerUIComponent;
+}
+
+bool ACharacter_Kasane::AllowSetTimeDilation(const ETimeDilationReason& Reason)
+{
+	return Reason != ETimeDilationReason::SAS_Accel;
 }
 
 void ACharacter_Kasane::OnAbilityInputTriggered(FGameplayTag InputTag)

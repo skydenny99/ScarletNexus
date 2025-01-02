@@ -97,6 +97,7 @@ protected:
 	//UI
 	virtual UPawnUIComponent* GetPawnUIComponent() const override;
 	virtual UPlayerUIComponent* GetPlayerUIComponent() const override;
+	virtual bool AllowSetTimeDilation(const ETimeDilationReason& Reason) override;
 
 	// Combat Component
 	UPROPERTY(VisibleAnyWhere, BlueprintReadOnly, category = "Combat", meta = (AllowPrivateAccess = "true"))
