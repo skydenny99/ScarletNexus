@@ -13,6 +13,9 @@ class UAIPerceptionComponent;
 class UAISenseConfig_Sight;
 class UBehaviorTree;
 
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnEnemyPerceptionUIUpdated);
+
 /**
  * 
  */
@@ -42,6 +45,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Team Agent ID")
 	int32 GetTeamId();
+
+	UPROPERTY(BlueprintAssignable)
+	FOnEnemyPerceptionUIUpdated OnEnemyPerceptionUIUpdated;
 
 	
 protected:

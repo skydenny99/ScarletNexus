@@ -13,5 +13,7 @@ UCLASS()
 class SCARLETNEXUS_API AEnemyBaseAIController : public ABaseAIController
 {
 	GENERATED_BODY()
+
+	
 	
 };

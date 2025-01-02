@@ -97,6 +97,8 @@ void ABaseAIController::OnEnemyPerceptionUpdated(AActor* Actor, FAIStimulus Stim
             {
                 Debug::Print((TEXT("OnEnemyPerceptionUpdated Call : %s"), Actor->GetName()),FColor::Red);
                 BlackboardComponent->SetValueAsObject(FName(TEXT("TargetActor")), Actor);
+
+                OnEnemyPerceptionUIUpdated.Broadcast();                
             }
         }
     }
