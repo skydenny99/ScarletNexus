@@ -35,7 +35,7 @@ APsychokineticThrowableProp::APsychokineticThrowableProp()
 	CollisionBoxComponent->SetCollisionProfileName("BlockAllDynamic");
 
 	InterectComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("InterectComponent"));
-	InterectComponent->SetupAttachment(MeshComponent);
+	InterectComponent->SetupAttachment(RootComponent);
 	
 	Damage = 10;
 }
