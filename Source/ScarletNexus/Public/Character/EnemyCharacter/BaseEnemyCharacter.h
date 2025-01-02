@@ -13,7 +13,6 @@ class UEnemyCombatComponent;
 class UEnemyAttributeSet;
 class UWidgetComponent;
 class UEnemyUIComponent;
-class USphereComponent;
 
 /**
  * 
@@ -59,8 +58,8 @@ protected:
 	UPROPERTY(BlueprintReadOnly)
 	UEnemyUIComponent* EnemyUIComponent;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
-	USphereComponent* CollisionSphereComponent;
+	/*UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
+	USphereComponent* CollisionSphereComponent;*/
 
 	public:
 	FORCEINLINE UEnemyCombatComponent* GetEnemyCombatComponent() const { return EnemyCombatComponent; }

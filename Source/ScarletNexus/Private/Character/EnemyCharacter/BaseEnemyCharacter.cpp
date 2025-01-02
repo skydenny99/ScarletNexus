@@ -28,10 +28,10 @@ ABaseEnemyCharacter::ABaseEnemyCharacter()
 	
 	EnemyUIComponent = CreateDefaultSubobject<UEnemyUIComponent>(TEXT("EnemyUIComponent"));
 
-	CollisionSphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("CollisionSphereComponent"));
+	/*CollisionSphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("CollisionSphereComponent"));
 	CollisionSphereComponent->SetupAttachment(RootComponent);
 
-	CollisionSphereComponent->SetWorldScale3D(FVector(50.0f, 50.0f, 50.0f));
+	CollisionSphereComponent->SetWorldScale3D(FVector(50.0f, 50.0f, 50.0f));*/
 }
 
 void ABaseEnemyCharacter::PossessedBy(AController* NewController)
