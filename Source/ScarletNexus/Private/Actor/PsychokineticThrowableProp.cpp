@@ -12,7 +12,6 @@
 #include "Actor/GE_Prop.h"
 #include "Character/Character_Kasane.h"
 #include "Components/BoxComponent.h"
-#include "Components/WidgetComponent.h"
 #include "Components/UI/PropUIComponent.h"
 #include "EntitySystem/MovieSceneEntitySystemRunner.h"
 #include "GameFramework/ProjectileMovementComponent.h"
@@ -33,9 +32,6 @@ APsychokineticThrowableProp::APsychokineticThrowableProp()
 	CollisionBoxComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("CollisionBoxComponent"));
 	SetRootComponent(CollisionBoxComponent);
 	CollisionBoxComponent->SetCollisionProfileName("BlockAllDynamic");
-
-	InterectComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("InterectComponent"));
-	InterectComponent->SetupAttachment(RootComponent);
 	
 	Damage = 10;
 }

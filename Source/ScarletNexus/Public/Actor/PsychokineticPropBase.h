@@ -7,6 +7,8 @@
 #include "PsychokineticPropBase.generated.h"
 
 class APsychokineticPropBase;
+class UWidgetComponent;
+
 DECLARE_DELEGATE_OneParam(FOnUsePsychProp, APsychokineticPropBase*);
 
 UCLASS()
@@ -19,6 +21,8 @@ public:
 	APsychokineticPropBase();
 
 protected:
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
+	UWidgetComponent* InterectComponent;
 
 	UPROPERTY(EditDefaultsOnly, meta=(ClampMin="0.15"))
 	float ChargeTime = 1.f;

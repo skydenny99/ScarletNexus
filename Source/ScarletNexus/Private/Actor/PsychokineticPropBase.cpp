@@ -2,6 +2,7 @@
 
 
 #include "Actor/PsychokineticPropBase.h"
+#include "Components/WidgetComponent.h"
 
 #include "BaseDebugHelper.h"
 
@@ -10,6 +11,9 @@ APsychokineticPropBase::APsychokineticPropBase()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
+
+	InterectComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("InterectComponent"));
+	InterectComponent->SetupAttachment(RootComponent);
 }
 
 void APsychokineticPropBase::DissolveProp()

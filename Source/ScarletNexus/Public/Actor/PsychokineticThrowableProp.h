@@ -10,7 +10,6 @@
 
 class UBoxComponent;
 class UGameplayEffect;
-class UWidgetComponent;
 class UProjectileMovementComponent;
 /**
  * 
@@ -44,9 +43,6 @@ protected:
 	
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"), Category = "Projectile")
 	UProjectileMovementComponent* ProjectileMovementComponent;
-
-	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
-	UWidgetComponent* InterectComponent;
 
 	UPROPERTY()
 	AActor* CurrentTarget;
