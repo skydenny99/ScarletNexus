@@ -21,6 +21,7 @@ class UComboSystemComponent;
 struct FInputActionInstance;
 class UDataAsset_DirectionInputConfig;
 class UDataAsset_InputConfig;
+class UKasaneCombatComponent;
 struct FInputActionValue;
 struct FGameplayTag;
 class UPlayerUIComponent;
@@ -73,6 +74,13 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	UDataAsset_DirectionInputConfig* DirectionInputConfig;
+
+	UPROPERTY(VisibleAnywhere, Category = "Collision")
+	UCapsuleComponent* MainCapsule;
+	
+	UPROPERTY(VisibleAnywhere, Category = "Collision")
+	UCapsuleComponent* HitboxCapsule;
+	
 	virtual void PossessedBy(AController* NewController) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	virtual void BeginPlay() override;
@@ -84,10 +92,17 @@ protected:
 	void UpdateMovementElapsedTime(const FInputActionInstance& Instance);
 	void ResetMovementElapsedTime(const FInputActionValue& Value);
 	void OnTargetingInputTriggered(const FInputActionValue& Value);
+	void OnChangeItemInputTriggered(const FInputActionValue& Value);
 
 	//UI
 	virtual UPawnUIComponent* GetPawnUIComponent() const override;
 	virtual UPlayerUIComponent* GetPlayerUIComponent() const override;
+
+	// Combat Component
+	UPROPERTY(VisibleAnyWhere, BlueprintReadOnly, category = "Combat", meta = (AllowPrivateAccess = "true"))
+	UKasaneCombatComponent* KasaneCombatComponent;
+	
+	
 	
 public:
 	void OnAttackInputTriggered(FGameplayTag InputTag, const FInputActionInstance& Instance);
@@ -124,6 +139,10 @@ private:
 	
 public:
 	FORCEINLINE uint8 GetDirectionByHistory();
+	UFUNCTION(BlueprintPure)
+	FVector GetInputDirection();
+	UFUNCTION(BlueprintPure)
+	FVector GetInputDirectionWithLookRotation();
 
 	UFUNCTION(BlueprintCallable)
 	void ActivateDash(bool bIsDashing);
@@ -145,7 +164,7 @@ public:
 	UFUNCTION(BlueprintPure)
 	FORCEINLINE UTargetTrackingSpringArmComponent* GetTargetTrackingComponent() const { return CameraBoom; }
 
-	void ChangeCamera(bool bUseMain = true);
+	void ChangeCamera(bool bUseMain = true, float BlendTime = 1.f);
 	FORCEINLINE UCameraComponent* GetMainCamera() const { return MainCamera; }
 	FORCEINLINE AActor* GetComboDirectCameraActor() const { return ComboDirectCameraActor->GetChildActor(); }
 
@@ -153,11 +172,12 @@ public:
 	// SAS functions
 	UFUNCTION(BlueprintCallable)
 	void ActivateAfterimage(bool InIsActive);
+	virtual UPawnCombatComponent* GetPawnCombatComponent() const override;
+
+	
+	
 	
 	UFUNCTION(BlueprintCallable)
 	void ActivateCloneSkeletalMesh(bool InIsActive, int32 InCount = 2);
-
-	// Item Functions
-	void OnChangeItemInputTriggered(const FInputActionValue& Value);
 };
 

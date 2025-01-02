@@ -2,6 +2,8 @@
 
 
 #include "Character/Character_Kasane.h"
+
+#include "AbilitySystemBlueprintLibrary.h"
 #include "Components/BaseInputComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "EnhancedInputSubsystems.h"
@@ -21,6 +23,7 @@
 #include "Components/SphereComponent.h"
 #include "Components/TargetTrackingSpringArmComponent.h"
 #include "Components/UnlockSystemComponent.h"
+#include "Components/Combat/KasaneCombatComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "NiagaraFunctionLibrary.h"
 #include "Components/InventoryComponent.h"
@@ -54,12 +57,12 @@ ACharacter_Kasane::ACharacter_Kasane()
 		OutlineBody->SetLeaderPoseComponent(MainBody);
 	}
 
-	UCapsuleComponent* MainCapsule = GetCapsuleComponent();
+	MainCapsule = GetCapsuleComponent();
 	const float CapsuleRadius = 42.f;
 	const float CapsuleHalfHeight = 96.f;
 	MainCapsule->InitCapsuleSize(CapsuleRadius, CapsuleHalfHeight);
 
-	UCapsuleComponent* HitboxCapsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Hitbox"));
+	HitboxCapsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Hitbox"));
 	HitboxCapsule->InitCapsuleSize(CapsuleRadius, CapsuleHalfHeight);
 	HitboxCapsule->SetupAttachment(MainBody, FName("Waist"));
 	HitboxCapsule->SetRelativeRotation(FRotator(0.f, 0.f, 90.f));
@@ -129,6 +132,10 @@ ACharacter_Kasane::ACharacter_Kasane()
 	JustDodgeBoundary = CreateDefaultSubobject<USphereComponent>(TEXT("JustDodgeBoundary"));
 	JustDodgeBoundary->SetupAttachment(MainBody, FName("Waist"));
 	JustDodgeBoundary->InitSphereRadius(500.f);
+	JustDodgeBoundary->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	JustDodgeBoundary->SetCollisionObjectType(ECC_GameTraceChannel7);
+	JustDodgeBoundary->SetCollisionResponseToChannel(ECC_GameTraceChannel6, ECR_Overlap); // Enemy Projectile
+	JustDodgeBoundary->SetCollisionResponseToChannel(ECC_GameTraceChannel4, ECR_Overlap); // Enemy Attack
 
 	SASManageComponent = CreateDefaultSubobject<USASManageComponent>(TEXT("SASManager"));
 	InventoryComponent = CreateDefaultSubobject<UInventoryComponent>(TEXT("InventoryComponent"));
@@ -136,6 +143,10 @@ ACharacter_Kasane::ACharacter_Kasane()
 
 	// Attribute
 	BaseAttributeSet = CreateDefaultSubobject<UPlayerAttributeSet>(TEXT("KasaneAttributeSet"));
+
+	// Cpmbat
+	KasaneCombatComponent = CreateDefaultSubobject<UKasaneCombatComponent>(TEXT("KasaneCombatComponent"));
+	
 
 	
 	// SAS - Clone
@@ -270,6 +281,7 @@ void ACharacter_Kasane::OnInputLookTriggered(const FInputActionValue& Value)
 
 void ACharacter_Kasane::OnTargetingInputTriggered(const FInputActionValue& Value)
 {
+	Debug::Print("Targeting Input");
 	TArray<AActor*> TargetActors;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ACharacter::StaticClass(), TargetActors);
 	TargetActors.Remove(this);
@@ -327,7 +339,12 @@ void ACharacter_Kasane::OnAttackInputCompleted(FGameplayTag InputTag, const FInp
 
 void ACharacter_Kasane::OnFalling(ACharacter* Character, EMovementMode PrevMovementMode, uint8 PreviousCustomMode)
 {
-	GetCharacterMovement()->RotationRate = GetCharacterMovement()->MovementMode == EMovementMode::MOVE_Falling ?
+	
+	if (PrevMovementMode == MOVE_Falling)
+	{
+		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(Character, BaseGameplayTags::Shared_Event_Grounded, FGameplayEventData());
+	}
+	GetCharacterMovement()->RotationRate = GetCharacterMovement()->MovementMode == MOVE_Falling ?
 		FallingRotationRate : OriginRotationRate;
 }
 
@@ -358,23 +375,61 @@ uint8 ACharacter_Kasane::GetDirectionByHistory()
 	return Result;
 }
 
+FVector ACharacter_Kasane::GetInputDirection()
+{
+	FVector InputDirection(0.f);
+	if (DirectionHistory & (static_cast<uint8>(EBaseDirectionType::Front) & 0b0011))
+	{
+		InputDirection += FVector::ForwardVector;
+	}
+	
+	if (DirectionHistory & (static_cast<uint8>(EBaseDirectionType::Back) & 0b0011))
+	{
+		InputDirection += FVector::BackwardVector;
+	}
+	
+	if (DirectionHistory & (static_cast<uint8>(EBaseDirectionType::Right) & 0b1100))
+	{
+		InputDirection += FVector::RightVector;
+	}
+	
+	if (DirectionHistory & (static_cast<uint8>(EBaseDirectionType::Left) & 0b1100))
+	{
+		InputDirection += FVector::LeftVector;
+	}
+
+	return InputDirection;
+}
+
+FVector ACharacter_Kasane::GetInputDirectionWithLookRotation()
+{
+	if (DirectionHistory == static_cast<uint8>(EBaseDirectionType::Max)) return FVector::ZeroVector;
+	return FRotator(0.f, GetControlRotation().Yaw, 0.f).RotateVector(GetInputDirection());
+}
+
 void ACharacter_Kasane::ActivateDash(bool bIsDashing)
 {
 	GetCharacterMovement()->MaxWalkSpeed = bIsDashing ? 1200.f : 800.f;
 }
+
+UPawnCombatComponent* ACharacter_Kasane::GetPawnCombatComponent() const
+{
+	return  KasaneCombatComponent;	
+}
+
 
 void ACharacter_Kasane::ClearInputHistory()
 {
 	DirectionHistory = static_cast<uint8>(EBaseDirectionType::Max);
 }
 
-void ACharacter_Kasane::ChangeCamera(bool bUseMain)
+void ACharacter_Kasane::ChangeCamera(bool bUseMain, float BlendTime)
 {
 	auto PC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	if (bUseMain)
-		PC->SetViewTargetWithBlend(this, 1.f);
+		PC->SetViewTargetWithBlend(this, BlendTime);
 	else
-		PC->SetViewTargetWithBlend(ComboDirectCameraActor->GetChildActor(), 1.f);
+		PC->SetViewTargetWithBlend(ComboDirectCameraActor->GetChildActor(), BlendTime);
 }
 
 void ACharacter_Kasane::ActivateAfterimage(bool InIsActive)

@@ -40,7 +40,7 @@ class SCARLETNEXUS_API UTargetTrackingSpringArmComponent : public USpringArmComp
 	TArray<AActor*> FoundTargets;
 
 	UPROPERTY(EditDefaultsOnly)
-	FTrackingBoundary TrackingBoundary;
+	FTrackingBoundary DefaultTrackingBoundary;
 	
 	int32 TargetIndex = 0;
 	UPROPERTY()
@@ -51,6 +51,12 @@ class SCARLETNEXUS_API UTargetTrackingSpringArmComponent : public USpringArmComp
 	float ResetTimer = 0.f;
 	bool bUpdateCameraTracking = false;
 
+	bool bOverrideTrackingTarget = false;
+	FTrackingBoundary OverrideTrackingBoundary {0.3, 0.3, 0.3, 0.3};
+	UPROPERTY()
+	AActor* OverrideTargetActor = nullptr;
+
+	bool bFixedTrackingTarget = false;
 	
 	
 
@@ -64,10 +70,23 @@ public:
 	void ChangeTarget(bool bIsLeft = true);
 	void ToggleTargetTracking();
 	void SetTargetTracking(bool IsTargetTracking);
-	void SetTargetTrackingByAttack(AActor* AttackTarget);
 	FORCEINLINE void StartResetTimer() { ResetTimer = 0.f; }
 	AActor* GetTestTarget() const {return FoundTargets.IsEmpty() ? nullptr : FoundTargets.Last();}
 	AActor* GetCurrentTarget();
+	FORCEINLINE AActor* GetOverrideTarget() const { return OverrideTargetActor; };
+
+	UFUNCTION(BlueprintCallable)
+	FORCEINLINE void SetFixedTracking(bool InActive)
+	{
+		bFixedTrackingTarget = InActive;
+		//bEnableCameraRotationLag = !InActive;
+	}
+	UFUNCTION(BlueprintCallable)
+	FORCEINLINE void SetCurrentTrackingTarget(AActor* InTargetActor) {TargetActor = InTargetActor;}
+	UFUNCTION(BlueprintCallable)
+	FORCEINLINE void ActivateOverrideTracking(bool InActivate) { bOverrideTrackingTarget = InActivate; }
+	UFUNCTION(BlueprintCallable)
+	FORCEINLINE void SetOverrideTargetActor(AActor* InTargetActor) { OverrideTargetActor = InTargetActor; }
 };
 
 

@@ -5,8 +5,10 @@
 #include "CoreMinimal.h"
 #include "BaseDebugHelper.h"
 #include "Components/ActorComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "PsychokinesisComponent.generated.h"
 
+class APsychokineticSpecialPropBase;
 class APsychokineticThrowableProp;
 class UDataAsset_PsychMontage;
 
@@ -44,9 +46,15 @@ protected:
 	USphereComponent* DetectionBoundary;
 	
 	UPROPERTY()
-	TArray<APsychokineticPropBase*> PsychTargetCandidates;
+	TArray<APsychokineticPropBase*> PsychThrowableTargetCandidates;
+	TArray<APsychokineticPropBase*> PsychSpecialTargetCandidates;
 	UPROPERTY()
-	APsychokineticPropBase* PsychTarget;
+	APsychokineticPropBase* PsychThrowableTarget;
+	UPROPERTY()
+	APsychokineticPropBase* PsychSpecialTarget;
+	UPROPERTY()
+	APsychokineticPropBase* CurrentPsychTarget;
+	
 	UPROPERTY(EditDefaultsOnly)
 	USkeletalMeshComponent* PsychSkeletalMesh;
 
@@ -54,9 +62,12 @@ protected:
 	
 	
 	float UpdateInterval = 0.2f;
-	FTimerHandle UpdateTimer;
+	FTimerHandle ThrowableUpdateTimer;
+	FTimerHandle SpecialUpdateTimer;
 
-	void UpdateNearestPsychTarget();
+	void UpdateNearestPsychThrowableTarget();
+	void UpdateNearestPsychSpecialTarget();
+	APsychokineticPropBase* UpdateNearestPsychTarget(TArray<APsychokineticPropBase*> PropList) const;
 	void OnUsePsychProp(APsychokineticPropBase* UsedPsychProp);
 	
 	// Called when the game starts
@@ -73,13 +84,19 @@ public:
 	void InitComponents(USphereComponent* InDetectionBoundary, USkeletalMeshComponent* InSkeletalMesh);
 	void UpdatePsychTargetLocation(APsychokineticThrowableProp* Target, float DeltaTime);
 	void AttachPsychTargetToBone(APsychokineticThrowableProp* Target);
-	FOnPsychTargetUpdated OnPsychTargetUpdated;
+	FOnPsychTargetUpdated OnPsychThrowableTargetUpdated;
+	FOnPsychTargetUpdated OnPsychSpecialTargetUpdated;
 
-	void SetPsychTargetInForce(AActor* InActor);
+	UFUNCTION(BlueprintCallable)
+	void OverrideSpecialTarget(AActor* InActor);
+	void OverrideThrowableTarget(AActor* InActor);
 
-	UFUNCTION(BlueprintPure)
-	APsychokineticPropBase* GetPsychTarget() const {return PsychTarget;}
+	FORCEINLINE APsychokineticPropBase* GetPsychThrowableTarget() const {return PsychThrowableTarget;}
+	FORCEINLINE APsychokineticPropBase* GetPsychSpecialTarget() const {return PsychSpecialTarget;}
+	FORCEINLINE void SetCurrentPsychTarget(APsychokineticPropBase* PsychTarget) {  CurrentPsychTarget = PsychTarget; }
+	FORCEINLINE APsychokineticPropBase* GetCurrentPsychTarget() const { return CurrentPsychTarget; }
 
+	UFUNCTION(BlueprintCallable)
 	FORCEINLINE void SetBlockUpdate(bool InBlockUpdate)
 	{
 		Debug::Print(FString::Printf(TEXT("PsychokinesisComponent::SetBlockUpdate - %s"), *FString(InBlockUpdate ? "Block" : "Release")));
@@ -94,6 +111,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void PlayJustDodgePsychMontage();
+
+	UFUNCTION(BlueprintCallable)
+	void CancelPlayingPsychMontage();
 
 	USkeletalMeshComponent* GetPsychSkeletalMesh() const { return PsychSkeletalMesh; }
 	

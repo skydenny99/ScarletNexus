@@ -159,10 +159,12 @@ void UGA_Dodge_Player::OnCancelDodge()
 	DodgeMovementComponent->Velocity = Velocity;
 	DodgeMovementComponent->GravityScale = 3;
 	UBaseFunctionLibrary::RemovePlayGameTagFromActor(DodgeCharacter, BaseGameplayTags::Player_Status_Move_Dodge);
-	if (UBaseFunctionLibrary::NativeActorHasTag(DodgeCharacter, BaseGameplayTags::Player_Status_Move_Dodge_Instant))
+	if (UBaseFunctionLibrary::NativeActorHasTag(DodgeCharacter, BaseGameplayTags::Player_Status_Move_Dodge_Instant_Weapon)
+		|| UBaseFunctionLibrary::NativeActorHasTag(DodgeCharacter, BaseGameplayTags::Player_Status_Move_Dodge_Instant_Psych))
 	{
 		UGameplayStatics::SetGlobalTimeDilation(DodgeCharacter, 1.f);
-		UBaseFunctionLibrary::RemovePlayGameTagFromActor(DodgeCharacter, BaseGameplayTags::Player_Status_Move_Dodge_Instant);
+		UBaseFunctionLibrary::RemovePlayGameTagFromActor(DodgeCharacter, BaseGameplayTags::Player_Status_Move_Dodge_Instant_Weapon);
+		UBaseFunctionLibrary::RemovePlayGameTagFromActor(DodgeCharacter, BaseGameplayTags::Player_Status_Move_Dodge_Instant_Psych);
 	}
 }
 

@@ -5,6 +5,7 @@
 
 #include "BaseDebugHelper.h"
 #include "Actor/PsychokineticPropBase.h"
+#include "Actor/PsychokineticSpecialPropBase.h"
 #include "Actor/PsychokineticThrowableProp.h"
 #include "Character/Character_Kasane.h"
 #include "Components/SphereComponent.h"
@@ -22,9 +23,23 @@ UPsychokinesisComponent::UPsychokinesisComponent()
 }
 
 
-void UPsychokinesisComponent::UpdateNearestPsychTarget()
+void UPsychokinesisComponent::UpdateNearestPsychThrowableTarget()
 {
-	if (PsychTargetCandidates.IsEmpty() || bBlockUpdate) return;
+	if (bBlockUpdate) return;
+	PsychThrowableTarget = UpdateNearestPsychTarget(PsychThrowableTargetCandidates);
+	OnPsychThrowableTargetUpdated.Broadcast(PsychThrowableTarget);
+}
+
+void UPsychokinesisComponent::UpdateNearestPsychSpecialTarget()
+{
+	if (bBlockUpdate) return;
+	PsychSpecialTarget = UpdateNearestPsychTarget(PsychSpecialTargetCandidates);
+	OnPsychSpecialTargetUpdated.Broadcast(PsychSpecialTarget);
+}
+
+APsychokineticPropBase* UPsychokinesisComponent::UpdateNearestPsychTarget(TArray<APsychokineticPropBase*> PropList) const
+{
+	if (PropList.IsEmpty()) return nullptr;
 	APlayerCameraManager* CameraManager = UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0);
 	FVector CharacterLocation = GetOwner()->GetActorLocation();
 	FVector CharacterForward = GetOwner()->GetActorForwardVector();
@@ -34,7 +49,7 @@ void UPsychokinesisComponent::UpdateNearestPsychTarget()
 	APsychokineticPropBase* NearestPsychTarget = nullptr;
 	float CharacterDotProduct = -1;
 	float MinDistanceSquared = std::numeric_limits<float>::infinity();
-	for (auto Candidate : PsychTargetCandidates)
+	for (auto Candidate : PropList)
 	{
 		if (Candidate->IsValidLowLevel() == false) continue;
 		FVector CharacterTargetDistance = Candidate->GetActorLocation() - CharacterLocation;
@@ -65,22 +80,29 @@ void UPsychokinesisComponent::UpdateNearestPsychTarget()
 		}
 		
 	}
-	PsychTarget = NearestPsychTarget;
-	OnPsychTargetUpdated.Broadcast(PsychTarget);
+	return NearestPsychTarget;
 }
 
 void UPsychokinesisComponent::OnUsePsychProp(APsychokineticPropBase* UsedPsychProp)
 {
-	if (UsedPsychProp)
+	if (APsychokineticThrowableProp* ThrowableProp = Cast<APsychokineticThrowableProp>(UsedPsychProp))
 	{
-		PsychTargetCandidates.Remove(UsedPsychProp);
+		PsychThrowableTargetCandidates.Remove(ThrowableProp);
 		bBlockUpdate = false;
-		if (UsedPsychProp == PsychTarget)
-		{
-			PsychTarget = nullptr;
-		}
-		UpdateNearestPsychTarget();
+		UpdateNearestPsychThrowableTarget();
 		//Debug::Print("PsychokinesisComponent::OnUsePsychProp");
+	}
+	else if (APsychokineticSpecialPropBase* SpecialProp = Cast<APsychokineticSpecialPropBase>(UsedPsychProp))
+	{
+		PsychSpecialTargetCandidates.Remove(SpecialProp);
+		bBlockUpdate = false;
+		UpdateNearestPsychSpecialTarget();
+		//Debug::Print("PsychokinesisComponent::OnUsePsychProp");
+	}
+	
+	if (UsedPsychProp == CurrentPsychTarget)
+	{
+		CurrentPsychTarget = nullptr;
 	}
 }
 
@@ -96,10 +118,18 @@ void UPsychokinesisComponent::BeginPlay()
 	{
 		APsychokineticPropBase* Temp = Cast<APsychokineticPropBase>(Actor);
 		if (Temp == nullptr || Temp->IsUsed()) return;
-		PsychTargetCandidates.AddUnique(Temp);
+		if (Cast<APsychokineticThrowableProp>(Temp))
+		{
+			PsychThrowableTargetCandidates.AddUnique(Temp);
+		}
+		else
+		{
+			PsychSpecialTargetCandidates.AddUnique(Temp);
+		}
 		Temp->OnUsePsychProp.BindUObject(this, &UPsychokinesisComponent::OnUsePsychProp);
 	}
-	GetWorld()->GetTimerManager().SetTimer(UpdateTimer, this, &UPsychokinesisComponent::UpdateNearestPsychTarget, 0.1f, true);
+	GetWorld()->GetTimerManager().SetTimer(ThrowableUpdateTimer, this, &UPsychokinesisComponent::UpdateNearestPsychThrowableTarget, 0.1f, true);
+	GetWorld()->GetTimerManager().SetTimer(SpecialUpdateTimer, this, &UPsychokinesisComponent::UpdateNearestPsychSpecialTarget, 0.1f, true);
 }
 
 void UPsychokinesisComponent::PlayGroundPsychMontage(const EPsychType& PsychType, int32 ComboCount)
@@ -119,11 +149,21 @@ void UPsychokinesisComponent::PlayJustDodgePsychMontage()
 	PsychSkeletalMesh->GetAnimInstance()->Montage_Play(PsychMontageData->ObjectJustDodgeMontage);
 }
 
+void UPsychokinesisComponent::CancelPlayingPsychMontage()
+{
+	if (APsychokineticThrowableProp* ThrowableProp = Cast<APsychokineticThrowableProp>(CurrentPsychTarget))
+	{
+		ThrowableProp->OnPsychAttackCancel();
+	}
+	PsychSkeletalMesh->GetAnimInstance()->StopAllMontages(0.f);
+	
+}
+
 void UPsychokinesisComponent::GetProperPsychType(int32 ComboCount, EPsychType& PsychType, UAnimMontage*& ChargeMontage,
                                                  UAnimMontage*& AttackMontage)
 {
 	ACharacter_Kasane* Kasane = Cast<ACharacter_Kasane>(GetOwner());
-	FVector PsychDirection = PsychTarget->GetActorLocation() - Kasane->GetActorLocation();
+	FVector PsychDirection = CurrentPsychTarget->GetActorLocation() - Kasane->GetActorLocation();
 	bool IsRightSide = FVector::DotProduct(PsychDirection, Kasane->GetActorRightVector()) > 0;
 	do
 	{
@@ -155,7 +195,14 @@ void UPsychokinesisComponent::OnOverlapBegin(UPrimitiveComponent* OverlappedComp
 {
 	APsychokineticPropBase* Temp = Cast<APsychokineticPropBase>(OtherActor);
 	if (Temp == nullptr || Temp->IsUsed()) return;
-	PsychTargetCandidates.AddUnique(Temp);
+	if (Cast<APsychokineticThrowableProp>(Temp))
+	{
+		PsychThrowableTargetCandidates.AddUnique(Temp);
+	}
+	else
+	{
+		PsychSpecialTargetCandidates.AddUnique(Temp);
+	}
 	Temp->OnUsePsychProp.BindUObject(this, &UPsychokinesisComponent::OnUsePsychProp);
 }
 
@@ -164,11 +211,23 @@ void UPsychokinesisComponent::OnOverlapEnd(UPrimitiveComponent* OverlappedCompon
 {
 	APsychokineticPropBase* Temp = Cast<APsychokineticPropBase>(OtherActor);
 	if (Temp == nullptr) return;
-	PsychTargetCandidates.Remove(Temp);
-	if (Temp == PsychTarget && bBlockUpdate == false)
+	if (Cast<APsychokineticThrowableProp>(Temp))
 	{
-		PsychTarget = nullptr;
+		PsychThrowableTargetCandidates.Remove(Temp);
+		if (Temp == PsychThrowableTarget && bBlockUpdate == false)
+		{
+			PsychThrowableTarget = nullptr;
+		}
 	}
+	else
+	{
+		PsychSpecialTargetCandidates.Remove(Temp);
+		if (Temp == PsychSpecialTarget && bBlockUpdate == false)
+		{
+			PsychSpecialTarget = nullptr;
+		}
+	}
+	
 }
 
 
@@ -194,10 +253,18 @@ void UPsychokinesisComponent::AttachPsychTargetToBone(APsychokineticThrowablePro
 	Target->Attached();
 }
 
-void UPsychokinesisComponent::SetPsychTargetInForce(AActor* InActor)
+void UPsychokinesisComponent::OverrideSpecialTarget(AActor* InActor)
 {
-	APsychokineticPropBase* Temp = Cast<APsychokineticPropBase>(InActor);
+	APsychokineticPropBase* Temp = Cast<APsychokineticSpecialPropBase>(InActor);
 	if (Temp == nullptr) return;
 	Temp->OnUsePsychProp.BindUObject(this, &UPsychokinesisComponent::OnUsePsychProp);
-	PsychTarget = Temp;
+	PsychSpecialTarget = Temp;
+}
+
+void UPsychokinesisComponent::OverrideThrowableTarget(AActor* InActor)
+{
+	APsychokineticPropBase* Temp = Cast<APsychokineticThrowableProp>(InActor);
+	if (Temp == nullptr) return;
+	Temp->OnUsePsychProp.BindUObject(this, &UPsychokinesisComponent::OnUsePsychProp);
+	PsychThrowableTarget = Temp;
 }

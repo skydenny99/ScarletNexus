@@ -10,11 +10,13 @@ namespace BaseGameplayTags
 	//Movement
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_Move, "InputTag.Move");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_Dodge, "InputTag.Dodge");
+	UE_DEFINE_GAMEPLAY_TAG(InputTag_QuickStanding, "InputTag.QuickStanding");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_Jump, "InputTag.Jump");
 
 	//Attack
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_Attack_Weapon_Normal, "InputTag.Attack.Weapon.Normal");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_Attack_Weapon_Special, "InputTag.Attack.Weapon.Special");
+	UE_DEFINE_GAMEPLAY_TAG(InputTag_Attack_Weapon_Jump, "InputTag.Attack.Weapon.Jump");
 
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_Attack_Psych_Normal, "InputTag.Attack.Psych.Normal");
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_Attack_Psych_Special, "InputTag.Attack.Psych.Special");
@@ -72,6 +74,7 @@ namespace BaseGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Aerial_Weapon, "Player.Ability.Attack.Aerial.Weapon");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Aerial_Weapon_Fire, "Player.Ability.Attack.Aerial.Weapon.Fire");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Aerial_Psych, "Player.Ability.Attack.Aerial.Psych");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Aerial_CutDown, "Player.Ability.Attack.Aerial.CutDown");
 
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Special_Psych, "Player.Ability.Attack.Special.Psych");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Ground_Backstep, "Player.Ability.Attack.Ground.Backstep");
@@ -80,6 +83,9 @@ namespace BaseGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Aerial_DashAttack, "Player.Ability.Attack.Aerial.DashAttack");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Ground_ComboDashAttack, "Player.Ability.Attack.Ground.ComboDashAttack");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Aerial_ComboDashAttack, "Player.Ability.Attack.Aerial.ComboDashAttack");
+
+	
+	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Attack_Ground_Somersault, "Player.Ability.Attack.Ground.Somersault");
 
 	// Ability - Move
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Move_Dash, "Player.Ability.Move.Dash");
@@ -104,17 +110,27 @@ namespace BaseGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_Move_Run, "Player.Status.Move.Run");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_Move_Dash, "Player.Status.Move.Dash");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_Move_Dodge, "Player.Status.Move.Dodge");
-	UE_DEFINE_GAMEPLAY_TAG(Player_Status_Move_Dodge_Instant, "Player.Status.Move.Dodge.Instant");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Status_Move_Dodge_Instant_Weapon, "Player.Status.Move.Dodge.Instant.Weapon");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Status_Move_Dodge_Instant_Psych, "Player.Status.Move.Dodge.Instant.Psych");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_ComboDashAttack, "Player.Status.ComboDashAttack");
 	
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_Charging, "Player.Status.Charging");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_ChargeReady, "Player.Status.ChargeReady");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Status_Gimmick, "Player.Status.Gimmick");
 
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_Move_Aerial, "Player.Status.Move.Aerial");
 
 	// Cooldown
 	UE_DEFINE_GAMEPLAY_TAG(Player_Cooldown_Item_Heal, "Player.Cooldown.Item.Heal");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Cooldown_Item_SAS_Recover, "Player.Cooldown.Item.SAS_Recover");
+
+	// Weapon
+	UE_DEFINE_GAMEPLAY_TAG(Player_Weapon_Kasane_Wp0, "Player.Weapon.Kasane.Wp0");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Weapon_Kasane_Wp1, "Player.Weapon.Kasane.Wp1");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Weapon_Kasane_Wp2, "Player.Weapon.Kasane.Wp2");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Weapon_Kasane_Wp3, "Player.Weapon.Kasane.Wp3");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Weapon_Kasane_Wp4, "Player.Weapon.Kasane.Wp4");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Weapon_Kasane_Wp5, "Player.Weapon.Kasane.Wp5");
 
 #pragma endregion
 
@@ -149,6 +165,8 @@ namespace BaseGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_Combo, "Shared.Event.Combo");
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_Charge_Cancel, "Shared.Event.Charge.Cancel");
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_Charge, "Shared.Event.Charge");
+	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_Gimmick_CanAttack, "Shared.Event.Gimmick.CanAttack");
+	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_Gimmick_CannotAttack, "Shared.Event.Gimmick.CannotAttack");
 	
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_Charge_Confirm, "Shared.Event.Charge.Confirm");
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_ThrowProjectile, "Shared.Event.ThrowProjectile");
@@ -240,7 +258,7 @@ namespace BaseGameplayTags
 	// CommonEnemy
 	UE_DEFINE_GAMEPLAY_TAG(Enemy_Common_Ability_Attack_Melee, "Enemy.Common.Ability.Attack.Melee");
 	UE_DEFINE_GAMEPLAY_TAG(Enemy_Common_Ability_Attack_Ranged, "Enemy.Common.Ability.Attack.Ranged");
-	
+	UE_DEFINE_GAMEPLAY_TAG(Enemy_Common_Ability_threat, "Enemy.Common.Ability.threat");
 
 	
 	UE_DEFINE_GAMEPLAY_TAG(Enemy_Common_Ability_Status_Dead, "Enemy.Common.Ability.Status.Dead");

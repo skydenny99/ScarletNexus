@@ -8,6 +8,9 @@
 #include "BaseDebugHelper.h"
 #include "BaseFunctionLibrary.h"
 #include "BaseGameplayTags.h"
+#include "AbilitySystem/Ability/GameplayAbilityBase.h"
+#include "Actor/GE_Prop.h"
+#include "Character/Character_Kasane.h"
 #include "Components/WidgetComponent.h"
 #include "Components/UI/PropUIComponent.h"
 #include "EntitySystem/MovieSceneEntitySystemRunner.h"
@@ -27,11 +30,13 @@ APsychokineticThrowableProp::APsychokineticThrowableProp()
 	ProjectileMovementComponent->Bounciness = 0.3f;
 
 	MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComponent"));
+	SetRootComponent(MeshComponent);
 	RootComponent = MeshComponent;
 
 	InterectComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("InterectComponent"));
 	InterectComponent->SetupAttachment(MeshComponent);
 	
+	Damage = 10;
 }
 
 void APsychokineticThrowableProp::BeginPlay()
@@ -41,9 +46,41 @@ void APsychokineticThrowableProp::BeginPlay()
 }
 
 
-void APsychokineticThrowableProp::OnStartGrab()
+void APsychokineticThrowableProp::HandleApplyProp(APawn* HitPawn, FGameplayEventData& Payload)
+{
+	
+	// ACharacter_Kasane* Player = Cast<ACharacter_Kasane>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	 const bool bWasApplied = UBaseFunctionLibrary::ApplyGameplayEffectSpecHandleToTargetActor(PropDamageSpecHandle.Data->GetContext().GetInstigator(), HitPawn, PropDamageSpecHandle);
+	if (bWasApplied)
+	 {
+	 	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
+	 		HitPawn,
+	 		BaseGameplayTags::Shared_Event_HitReact_KnockDown,
+	 		Payload
+	 	);
+	 }
+
+	
+}
+
+void APsychokineticThrowableProp::OnStartGrab(bool NeedToClone, bool DoubleClone)
 {
 	MeshComponent->SetCollisionProfileName("PlayerProjectile");
+	CachedLaunchedLocation = GetActorLocation();
+	CachedLaunchedRotation = GetActorRotation();
+	bIsUsed = true;
+	// if SAS: clone activated - Launch Clone
+	if (bCanClonable && NeedToClone)
+	{
+		FTimerHandle TempTimerHandle;
+		GetWorldTimerManager().SetTimer(TempTimerHandle, this, &APsychokineticThrowableProp::CloneLaunch, 0.5f);
+		if (DoubleClone)
+		{
+			FTimerHandle TempTimerHandle2;
+			GetWorldTimerManager().SetTimer(TempTimerHandle2, this, &APsychokineticThrowableProp::CloneLaunch, 0.8f);
+		}
+		
+	}
 }
 
 void APsychokineticThrowableProp::OnHit()
@@ -59,17 +96,21 @@ void APsychokineticThrowableProp::OnMeshHit(UPrimitiveComponent* HitComponent, A
 	FGameplayEventData Data;
 	Data.Instigator = this;
 	Data.Target = OtherActor;
-	
+	APawn* HitPawn = Cast<APawn>(OtherActor);
 	// Hit.GetComponent()->Get
 	switch (Hit.Component->GetCollisionObjectType())
 	{
 	case ECC_GameTraceChannel3:
-			UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(OtherActor, BaseGameplayTags::Shared_Event_HitReact_KnockDown, Data);
-			Debug::Print(TEXT("Hit!!!!!!!!!!!"));
+			// UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(OtherActor, BaseGameplayTags::Shared_Event_HitReact_KnockDown, Data);
+			// UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(OtherActor, BaseGameplayTags::Shared_Event_HitReact_Critical, Data);
+			//Debug::Print(TEXT("Hit!!!!!!!!!!!"));
+
+			HandleApplyProp(HitPawn, Data);
+			Debug::Print(FString::Printf(TEXT("HitPawn: %s"), *HitPawn->GetName()));
+			Debug::Print(FString::Printf(TEXT("Instigator: %s"), *Data.Instigator.GetName()));
+		
 			OnHit();
-		
 		break;
-		
 	default:
 		break;
 	}
@@ -86,34 +127,26 @@ void APsychokineticThrowableProp::OnChargingCancel()
 	}
 }
 
+void APsychokineticThrowableProp::OnPsychAttackCancel()
+{
+	//MeshComponent->SetSimulatePhysics(true);
+	ProjectileMovementComponent->SetUpdatedComponent(RootComponent);
+	ProjectileMovementComponent->Velocity = (GetActorForwardVector() * 500.f);
+	OnHit();
+}
+
 void APsychokineticThrowableProp::FloatingTick(float DeltaTime)
 {
 	SetActorLocation(UKismetMathLibrary::VInterpTo(GetActorLocation(), GetActorLocation() + FVector::UpVector * (FloatingHeight / ChargeTime), DeltaTime, 1.f));
 }
 
-void APsychokineticThrowableProp::Launch(bool NeedToClone, bool DoubleClone)
+void APsychokineticThrowableProp::Launch()
 {
-	CachedLaunchedLocation = GetActorLocation();
-	CachedLaunchedRotation = GetActorRotation();
 	MeshComponent->SetCollisionProfileName("PlayerProjectile");
 	if (bIsAttached)
 	{
 		DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
 	}
-
-	// if SAS: clone activated - Launch Clone
-	if (bCanClonable && NeedToClone)
-	{
-		FTimerHandle TempTimerHandle;
-		GetWorldTimerManager().SetTimer(TempTimerHandle, this, &APsychokineticThrowableProp::CloneLaunch, 0.15f);
-		if (DoubleClone)
-		{
-			FTimerHandle TempTimerHandle2;
-			GetWorldTimerManager().SetTimer(TempTimerHandle2, this, &APsychokineticThrowableProp::CloneLaunch, 0.3f);
-		}
-		
-	}
-
 	
 	ProjectileMovementComponent->ProjectileGravityScale = 0.f;
 
@@ -143,7 +176,6 @@ void APsychokineticThrowableProp::Launch(bool NeedToClone, bool DoubleClone)
 	ProjectileMovementComponent->SetUpdatedComponent(RootComponent);
 	ProjectileMovementComponent->Velocity = (GetActorForwardVector() * ProjectileMovementComponent->MaxSpeed);
 	SetLifeSpan(5.f);
-	bIsUsed = true;
 	OnUsePsychProp.ExecuteIfBound(this);
 }
 
@@ -155,7 +187,7 @@ void APsychokineticThrowableProp::CloneLaunch()
 	APsychokineticThrowableProp* ClonedProp = GetWorld()->SpawnActor<APsychokineticThrowableProp>(GetClass(), SpawnParams);
 	ClonedProp->SetActorLocation(CachedLaunchedLocation);
 	ClonedProp->SetActorRotation(CachedLaunchedRotation);
-	ClonedProp->bIsAttached = false;
+	ClonedProp->bIsAttached = true;
 	ClonedProp->bCanClonable = false;
 	if (CurrentTargetLocation.IsSet())
 	{
@@ -165,7 +197,7 @@ void APsychokineticThrowableProp::CloneLaunch()
 	{
 		ClonedProp->SetTarget(CurrentTarget);
 	}
-	ClonedProp->Launch(false);
+	ClonedProp->Launch();
 }
 
 

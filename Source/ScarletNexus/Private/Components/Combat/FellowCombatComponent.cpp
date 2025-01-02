@@ -16,8 +16,7 @@ void UFellowCombatComponent::OnHitTargetActor(AActor* HitActor)
 		return;
 	}
 
-	OverlappedActors.AddUnique(HitActor);
-
+	
 	FGameplayEventData Data;
 	Data.Instigator = GetOwningPawn();
 	Data.Target = HitActor;

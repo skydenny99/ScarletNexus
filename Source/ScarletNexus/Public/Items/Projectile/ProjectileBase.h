@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "BaseType/BaseEnumType.h"
 #include "Abilities/GameplayAbilityTypes.h"
+#include "Actor/PsychokineticThrowableProp.h"
 
 #include "ProjectileBase.generated.h"
 
@@ -15,7 +16,7 @@ class UBoxComponent;
 class UNiagaraComponent;
 
 UCLASS()
-class SCARLETNEXUS_API AProjectileBase : public AActor
+class SCARLETNEXUS_API AProjectileBase : public APsychokineticThrowableProp
 {
 	GENERATED_BODY()
 	
@@ -33,8 +34,6 @@ protected:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"), Category = "Projectile")
 	UNiagaraComponent* NiagaraComponent;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"), Category = "Projectile")
-	UProjectileMovementComponent* ProjectileMovementComponent;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"), Category = "Projectile")
 	EProjectileDamagePolicy ProjectileDamagePolicy = EProjectileDamagePolicy::OnHit;

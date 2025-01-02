@@ -39,15 +39,6 @@ void UGA_JumpBase::ActivateAbility(const FGameplayAbilitySpecHandle Handle, cons
 		EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 	}
 	
-	if (MovementComponent)
-	{
-		MovementComponent->JumpZVelocity = JumpPower[Kasane->JumpCurrentCount];
-		Kasane->Jump();
-		FTimerDelegate Dele;
-		Dele.BindUObject(this, &UGA_JumpBase::EndAbility, Handle, ActorInfo, ActivationInfo, false, false);
-		GetWorld()->GetTimerManager().SetTimer(ResetJumpTimer, Dele, 0.3f, false);
-		//EndAbility(Handle, ActorInfo, ActivationInfo, false, false);
-	}
 }
 
 
@@ -57,5 +48,18 @@ void UGA_JumpBase::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGa
 	if (MovementComponent)
 	{
 		Kasane->StopJumping();
+	}
+}
+
+void UGA_JumpBase::Jump()
+{
+	if (MovementComponent)
+	{
+		MovementComponent->JumpZVelocity = JumpPower[Kasane->JumpCurrentCount];
+		Kasane->Jump();
+		FTimerDelegate Dele;
+		Dele.BindUObject(this, &UGA_JumpBase::K2_EndAbility);
+		GetWorld()->GetTimerManager().SetTimer(ResetJumpTimer, Dele, 0.3f, false);
+		//EndAbility(Handle, ActorInfo, ActivationInfo, false, false);
 	}
 }

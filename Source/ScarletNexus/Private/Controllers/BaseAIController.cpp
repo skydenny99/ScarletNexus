@@ -41,11 +41,11 @@ ABaseAIController::ABaseAIController(const FObjectInitializer& ObjectInitializer
     
     AISenseConfig_Sight->DetectionByAffiliation.bDetectNeutrals = false;
     
-    AISenseConfig_Sight->SightRadius = 1500.0f;
+    AISenseConfig_Sight->SightRadius = 3500.0f;
     
     AISenseConfig_Sight->LoseSightRadius = 0.f;
    
-    AISenseConfig_Sight->PeripheralVisionAngleDegrees = 80.0f;
+    AISenseConfig_Sight->PeripheralVisionAngleDegrees = 180.0f;
 
     AIPerceptionComponent = CreateDefaultSubobject<UAIPerceptionComponent>("AIPerceptionComponent");
     
@@ -97,6 +97,8 @@ void ABaseAIController::OnEnemyPerceptionUpdated(AActor* Actor, FAIStimulus Stim
             {
                 Debug::Print((TEXT("OnEnemyPerceptionUpdated Call : %s"), Actor->GetName()),FColor::Red);
                 BlackboardComponent->SetValueAsObject(FName(TEXT("TargetActor")), Actor);
+
+                OnEnemyPerceptionUIUpdated.Broadcast();                
             }
         }
     }

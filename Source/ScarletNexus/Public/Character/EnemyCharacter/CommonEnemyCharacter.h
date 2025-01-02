@@ -13,5 +13,8 @@ UCLASS()
 class SCARLETNEXUS_API ACommonEnemyCharacter : public ABaseEnemyCharacter
 {
 	GENERATED_BODY()
+
+
+	virtual FVector GetTargetVector() override;
 	
 };

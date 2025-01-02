@@ -25,6 +25,6 @@ void UANS_SetGravityZero::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSeque
 	if (ACharacter* Character = Cast<ACharacter>(MeshComp->GetOwner()))
 	{
 		Character->GetCharacterMovement()->GravityScale = DefaultGravityScale;
-		Character->GetCharacterMovement()->MovementMode = MOVE_Walking;
+		Character->GetCharacterMovement()->MovementMode = LastPoseWalking ? MOVE_Walking : MOVE_Falling;
 	}
 }

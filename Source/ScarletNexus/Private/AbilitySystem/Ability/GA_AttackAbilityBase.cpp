@@ -8,9 +8,9 @@
 #include "BaseGameplayTags.h"
 #include "Components/ComboSystemComponent.h"
 
-void UGA_AttackAbilityBase::OnGiveAbility(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec)
+void UGA_AttackAbilityBase::OnAvatarSet(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec)
 {
-	Super::OnGiveAbility(ActorInfo, Spec);
+	Super::OnAvatarSet(ActorInfo, Spec);
 	Kasane = Cast<ACharacter_Kasane>(ActorInfo->AvatarActor);
 	check(Kasane);
 	ComboSystem = Kasane->GetComboSystemComponent();
@@ -18,8 +18,8 @@ void UGA_AttackAbilityBase::OnGiveAbility(const FGameplayAbilityActorInfo* Actor
 }
 
 bool UGA_AttackAbilityBase::CanActivateAbility(const FGameplayAbilitySpecHandle Handle,
-	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayTagContainer* SourceTags,
-	const FGameplayTagContainer* TargetTags, FGameplayTagContainer* OptionalRelevantTags) const
+                                               const FGameplayAbilityActorInfo* ActorInfo, const FGameplayTagContainer* SourceTags,
+                                               const FGameplayTagContainer* TargetTags, FGameplayTagContainer* OptionalRelevantTags) const
 {
 	if (Super::CanActivateAbility(Handle, ActorInfo, SourceTags, TargetTags, OptionalRelevantTags))
 	{
@@ -46,7 +46,7 @@ void UGA_AttackAbilityBase::OnEndAbility(UGameplayAbility* Ability)
 	}
 	UBaseFunctionLibrary::AddPlaygameTagToActor(Kasane, BaseGameplayTags::Shared_Status_CanAttack);
 	UBaseFunctionLibrary::AddPlaygameTagToActor(Kasane, BaseGameplayTags::Shared_Status_CanMove);
-	Debug::Print("Ability End");
+	Debug::Print(FString::Printf(TEXT("Ability End: %s"), *Ability->AbilityTags.First().ToString()));
 }
 
 

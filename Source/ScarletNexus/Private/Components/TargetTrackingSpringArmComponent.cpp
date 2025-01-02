@@ -47,11 +47,6 @@ void UTargetTrackingSpringArmComponent::SetTargetTracking(bool IsTargetTracking)
 	}
 }
 
-void UTargetTrackingSpringArmComponent::SetTargetTrackingByAttack(AActor* AttackTarget)
-{
-	TargetActor = AttackTarget;
-}
-
 FRotator UTargetTrackingSpringArmComponent::GetDesiredRotation() const
 {
 	FRotator DesiredRot = GetComponentRotation();
@@ -65,26 +60,51 @@ FRotator UTargetTrackingSpringArmComponent::GetDesiredRotation() const
 		DesiredRot = PawnViewRotation;
 	}
 	
-	if (bUpdateCameraTracking == false || TargetActor == nullptr)
-		return DesiredRot;
+	if (bOverrideTrackingTarget)
+	{
+		if (OverrideTargetActor == nullptr)
+			return DesiredRot;
+	}
+	else
+	{
+		if (bUpdateCameraTracking == false)
+			return DesiredRot;
+		if (TargetActor == nullptr)
+			return DesiredRot;
+	}
 	
-	FVector TargetLocation = TargetActor->GetActorLocation();
-	FVector2D TargetScreenLocation = FVector2D::ZeroVector;
+	const AActor* Target = bOverrideTrackingTarget ? OverrideTargetActor : TargetActor;
+	const auto [BoundaryLeft, BoundaryRight, BoundaryTop, BoundaryBottom]
+	= bOverrideTrackingTarget ? OverrideTrackingBoundary : DefaultTrackingBoundary;
+	
+	const FVector TargetLocation = Target->GetActorLocation();
+	FRotator TargetLookRotator = UKismetMathLibrary::FindLookAtRotation(OwningPawn->GetActorLocation(), TargetLocation);
+	TargetLookRotator.Roll = DesiredRot.Roll;
 	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
-	bool bProjectResult = PlayerController->ProjectWorldLocationToScreen(TargetLocation, TargetScreenLocation);
+	if (bFixedTrackingTarget)
+	{
+		PlayerController->SetControlRotation(TargetLookRotator);
+		return TargetLookRotator;
+	}
+	
+	FVector2D TargetScreenLocation = FVector2D::ZeroVector;
+	const bool bProjectResult = PlayerController->ProjectWorldLocationToScreen(TargetLocation, TargetScreenLocation);
+	int32 ScreenWidth = 0, ScreenHeight = 0;
+	PlayerController->GetViewportSize(ScreenWidth, ScreenHeight);
+	TargetScreenLocation.X /= ScreenWidth;
+	TargetScreenLocation.Y /= ScreenHeight;
 	// if (bProjectResult == false)
 	// 	return DesiredRot;
-	float LeftBoundary = GSystemResolution.ResX * TrackingBoundary.BoundaryLeft;
-	float RightBoundary = GSystemResolution.ResX * (1 - TrackingBoundary.BoundaryRight);
-	float TopBoundary = GSystemResolution.ResY * TrackingBoundary.BoundaryTop;
-	float BottomBoundary = GSystemResolution.ResY * (1 - TrackingBoundary.BoundaryBottom);
 	
-	if (bProjectResult == false || TargetScreenLocation.X < LeftBoundary  || TargetScreenLocation.X > RightBoundary
-		|| TargetScreenLocation.Y < TopBoundary  || TargetScreenLocation.Y > BottomBoundary)
+	// float LeftBoundary = GSystemResolution.ResX * BoundaryLeft;
+	// float RightBoundary = GSystemResolution.ResX * (1 - BoundaryRight);
+	// float TopBoundary = GSystemResolution.ResY * BoundaryTop;
+	// float BottomBoundary = GSystemResolution.ResY * (1 + BoundaryBottom);
+
+	if (bProjectResult == false || TargetScreenLocation.X < BoundaryLeft  || TargetScreenLocation.X > 1 - BoundaryRight
+		|| TargetScreenLocation.Y < BoundaryTop  || TargetScreenLocation.Y > 1 - BoundaryBottom)
 	{
-		FRotator TargetLookRotator = UKismetMathLibrary::FindLookAtRotation(OwningPawn->GetActorLocation(), TargetLocation);
-		TargetLookRotator.Roll = DesiredRot.Roll;
-		TargetLookRotator = FMath::RInterpTo(DesiredRot, TargetLookRotator, GetWorld()->GetDeltaSeconds(), 3.0f);
+		TargetLookRotator = FMath::RInterpTo(DesiredRot, TargetLookRotator, GetWorld()->GetDeltaSeconds(), 8.0f);
 		PlayerController->SetControlRotation(TargetLookRotator);
 		return TargetLookRotator;
 	}
@@ -94,25 +114,31 @@ FRotator UTargetTrackingSpringArmComponent::GetDesiredRotation() const
 void UTargetTrackingSpringArmComponent::TickComponent(float DeltaTime, enum ELevelTick TickType,
 	FActorComponentTickFunction* ThisTickFunction)
 {
-	if (ResetTimer > ResetThreshold)
+	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	if (bOverrideTrackingTarget)
 	{
-		bUpdateCameraTracking = bIsTargetTracking;
+		bUpdateCameraTracking = true;
 	}
 	else
 	{
-		bUpdateCameraTracking = false;
-		ResetTimer += DeltaTime;
+		if (ResetTimer > ResetThreshold)
+		{
+			bUpdateCameraTracking = bIsTargetTracking;
+		}
+		else
+		{
+			bUpdateCameraTracking = false;
+			ResetTimer += DeltaTime;
+		}
 	}
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	
 }
 
 AActor* UTargetTrackingSpringArmComponent::GetCurrentTarget()
 {
-	if (FoundTargets.IsEmpty())
-		return nullptr;
-	if (TargetActor)
-		return TargetActor;
 	SortByDistance();
 	
+	if (TargetActor)
+		return TargetActor;
 	return FoundTargets.IsEmpty() ? nullptr : FoundTargets[0];
 }

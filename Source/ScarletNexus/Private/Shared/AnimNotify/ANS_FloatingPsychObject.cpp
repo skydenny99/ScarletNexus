@@ -14,7 +14,7 @@ void UANS_FloatingPsychObject::NotifyBegin(USkeletalMeshComponent* MeshComp, UAn
 	Super::NotifyBegin(MeshComp, Animation, TotalDuration, EventReference);
 	if (auto Character = Cast<ACharacter_Kasane>(MeshComp->GetOwner()))
 	{
-		ThrowableProp = Cast<APsychokineticThrowableProp>(Character->GetPsychokinesisComponent()->GetPsychTarget());
+		ThrowableProp = Cast<APsychokineticThrowableProp>(Character->GetPsychokinesisComponent()->GetPsychThrowableTarget());
 	}
 }
 

@@ -9,19 +9,13 @@
 #include "Components/PsychokinesisComponent.h"
 
 
-void UGA_GroundPsych::OnGiveAbility(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec)
-{
-	Super::OnGiveAbility(ActorInfo, Spec);
-	Debug::Print(FString::Printf(TEXT("Character Given Name: %s"), *ActorInfo->AvatarActor->GetActorLabel()));
-}
-
 bool UGA_GroundPsych::CanActivateAbility(const FGameplayAbilitySpecHandle Handle,
                                          const FGameplayAbilityActorInfo* ActorInfo, const FGameplayTagContainer* SourceTags,
                                          const FGameplayTagContainer* TargetTags, FGameplayTagContainer* OptionalRelevantTags) const
 {
 	if (Super::CanActivateAbility(Handle, ActorInfo, SourceTags, TargetTags, OptionalRelevantTags))
 	{
-		return UPsychAbilityHelperLibrary::NativeHasPsychokineticPropInRange(Kasane);
+		return CheckCost(Handle, ActorInfo) && UPsychAbilityHelperLibrary::NativeHasPsychokineticThrowablePropInRange(Kasane);
 	}
 	return false;
 }
@@ -32,8 +26,9 @@ void UGA_GroundPsych::PreActivate(const FGameplayAbilitySpecHandle Handle, const
 {
 	Super::PreActivate(Handle, ActorInfo, ActivationInfo, OnGameplayAbilityEndedDelegate, TriggerEventData);
 	ComboSystem->ClearPsychComboTimer();
-	UPsychAbilityHelperLibrary::NativeOnActivatePsychAbility(Kasane);
+	UPsychAbilityHelperLibrary::NativeOnActivateNormalPsychAbility(Kasane);
 }
+
 
 void UGA_GroundPsych::OnEndAbility(UGameplayAbility* Ability)
 {
@@ -41,7 +36,8 @@ void UGA_GroundPsych::OnEndAbility(UGameplayAbility* Ability)
 	Kasane->GetPsychokinesisComponent()->SetBlockUpdate(false);
 }
 
-void UGA_GroundPsych::CancelChargingProjectile()
+UGameplayEffect* UGA_GroundPsych::GetCostGameplayEffect() const
 {
-	UPsychAbilityHelperLibrary::NativeOnChargingCancelPsychAbility(Kasane);
+	UGameplayEffect* CostGameplayEffect = UPsychAbilityHelperLibrary::CreatePsychCostGameplayEffect(Kasane, Kasane->GetPsychokinesisComponent()->GetPsychThrowableTarget());
+	return CostGameplayEffect == nullptr ? Super::GetCostGameplayEffect() : CostGameplayEffect;
 }

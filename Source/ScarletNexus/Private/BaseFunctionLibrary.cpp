@@ -52,7 +52,6 @@ void UBaseFunctionLibrary::BP_HasTag(AActor* Actor, FGameplayTag Tag, EBaseConfi
 
 UPawnCombatComponent* UBaseFunctionLibrary::NativeGetPawnCombatComponentFromActor(AActor* Actor)
 {
-	check(Actor);
 	if (IPawnCombatInterface* PawnCombatInterFace = Cast<IPawnCombatInterface>(Actor))
 	{
 		return PawnCombatInterFace->GetPawnCombatComponent();
@@ -122,4 +121,28 @@ bool UBaseFunctionLibrary::ApplyGameplayEffectSpecHandleToTargetActor(AActor* In
 	FActiveGameplayEffectHandle ActiveGameplayEffectHandle = SourceASC->ApplyGameplayEffectSpecToTarget(*OutSpecHandle.Data,TargetASC);
 	
 	return ActiveGameplayEffectHandle.WasSuccessfullyApplied();
+}
+
+AActor* UBaseFunctionLibrary::GetNearestActorFromTarget(TArray<AActor*> Candidates, AActor* TargetActor)
+{
+	if (Candidates.IsEmpty()) return nullptr;
+	Candidates.Sort([TargetActor] (const AActor& left, const AActor& right)
+	{
+		return FVector::DistSquared2D(TargetActor->GetActorLocation(), left.GetActorLocation())
+		< FVector::DistSquared2D(TargetActor->GetActorLocation(), right.GetActorLocation());
+	});
+	return Candidates[0];
+}
+
+bool UBaseFunctionLibrary::TryCancelAllAbilityByTag(AActor* Actor, FGameplayTag Tag)
+{
+	UBaseAbilitySystemComponent* ASC = NativeGetAbilitySystemComponentFromActor(Actor);
+	TArray<FGameplayAbilitySpecHandle> Handles;
+	ASC->FindAllAbilitiesWithTags(Handles, Tag.GetSingleTagContainer(), true);
+	if (Handles.IsEmpty()) return false;
+	for (auto& Handle : Handles)
+	{
+		ASC->CancelAbilityHandle(Handle);
+	}
+	return true;
 }

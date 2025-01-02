@@ -26,6 +26,7 @@ AProjectileBase::AProjectileBase()
 	CollsionBoxComponent->SetCollisionResponseToChannel(ECC_Pawn, ECR_Block);
 	CollsionBoxComponent->SetCollisionResponseToChannel(ECC_WorldDynamic, ECR_Block);
 	CollsionBoxComponent->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Block);
+	CollsionBoxComponent->SetCollisionResponseToChannel(ECC_GameTraceChannel7, ECR_Overlap);
 
 	CollsionBoxComponent->OnComponentHit.AddUniqueDynamic(this, &AProjectileBase::OnProjectileHit);
 	CollsionBoxComponent->OnComponentBeginOverlap.AddUniqueDynamic(this, &AProjectileBase::OnProjectileBeginOverlap);
@@ -33,7 +34,7 @@ AProjectileBase::AProjectileBase()
 	NiagaraComponent = CreateDefaultSubobject<UNiagaraComponent>(TEXT("NiagaraComponent"));
 	NiagaraComponent->SetupAttachment(GetRootComponent());
 
-	ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovementComponent"));
+	//ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovementComponent"));
 	ProjectileMovementComponent->InitialSpeed = 700.0f;
 	ProjectileMovementComponent->MaxSpeed = 800.0f;
 	ProjectileMovementComponent->Velocity = FVector(1.0f, 0.0f, 0.0f);
@@ -66,7 +67,7 @@ void AProjectileBase::HandleApplyProjectile(APawn* HitPawn, FGameplayEventData& 
 	{
 		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
 			HitPawn,
-			BaseGameplayTags::Shared_Event_HitReact_Normal,
+			BaseGameplayTags::Shared_Event_HitReact_Critical,
 			Payload
 		);
 	}

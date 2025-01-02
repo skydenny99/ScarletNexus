@@ -3,10 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayEffectTypes.h"
 #include "Actor/PsychokineticPropBase.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "PsychokineticThrowableProp.generated.h"
 
+class UGameplayEffect;
 class UWidgetComponent;
 class UProjectileMovementComponent;
 /**
@@ -22,6 +24,10 @@ public:
 
 	virtual void BeginPlay() override;
 
+	UPROPERTY(EditAnywhere)
+	float Damage;
+
+
 protected:
 	int32 CurrentControlNum = 0;
 	int32 MaxControlNum = 5;
@@ -35,7 +41,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly)
 	float FloatingHeight = 150.f;
 	
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"), Category = "Projectile")
 	UProjectileMovementComponent* ProjectileMovementComponent;
 
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
@@ -48,6 +54,14 @@ protected:
 	FRotator CachedLaunchedRotation;
 	bool bIsAttached = false;
 
+	UPROPERTY(BlueprintReadOnly, Category="Projectile", meta = (ExposeOnSpawn = true))
+	FGameplayEffectSpecHandle PropDamageSpecHandle;
+	
+	UFUNCTION()
+	void HandleApplyProp(APawn* HitPawn, FGameplayEventData& Payload);
+
+
+
 public:
 	FORCEINLINE void Attached() { bIsAttached = true; }
 	FORCEINLINE bool IsAttached() const { return bIsAttached; }
@@ -57,10 +71,16 @@ public:
 		CurrentTarget = Target;
 	}
 	FORCEINLINE void SetTarget(const FVector& TargetVector) {CurrentTargetLocation = TargetVector;}
+	FORCEINLINE void SetDamageHandle(const FGameplayEffectSpecHandle& Handle) {PropDamageSpecHandle = Handle;}
 
+
+
+
+	UFUNCTION(BlueprintCallable)
+	float GetDamage() {return Damage;}
 	
 
-	void OnStartGrab();
+	void OnStartGrab(bool NeedToClone, bool DoubleClone);
 	
 	// void OnComponentHit()override;
 	
@@ -78,9 +98,10 @@ public:
 	);
 	
 	void OnChargingCancel();
+	void OnPsychAttackCancel();
 
 	void FloatingTick(float DeltaTime);
-	void Launch(bool NeedToClone, bool DoubleClone = false);
+	void Launch();
 	void CloneLaunch();
 	
 };

@@ -14,7 +14,10 @@ class SCARLETNEXUS_API UANS_SetGravityZero : public UAnimNotifyState
 {
 	GENERATED_BODY()
 protected:
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditAnywhere)
+	bool LastPoseWalking = true;
+	
+	UPROPERTY(EditAnywhere)
 	float DefaultGravityScale = 3.f;
 	
 public:
