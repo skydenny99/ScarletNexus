@@ -9,6 +9,8 @@
 //Boss
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FInitBossNameDelegate,FString,NewName);
 
+/*//Notice
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnNoticeDelegate);*/
 /**
  * 
  */
@@ -27,4 +29,7 @@ public:
 	//Boss
 	UPROPERTY(BlueprintAssignable)
 	FInitBossNameDelegate OnInitBossName;
+
+	/*UPROPERTY(BlueprintAssignable)
+	FOnNoticeDelegate OnNotice;*/
 };
