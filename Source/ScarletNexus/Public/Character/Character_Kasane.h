@@ -54,7 +54,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category="Battle")
 	USphereComponent* JustDodgeBoundary;
 
-	UPROPERTY(EditDefaultsOnly, Category="Battle")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Battle")
 	USASManageComponent* SASManageComponent;
 
 	UPROPERTY(EditDefaultsOnly, Category="Psych")

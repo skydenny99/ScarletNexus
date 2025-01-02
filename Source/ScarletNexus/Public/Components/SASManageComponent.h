@@ -8,6 +8,7 @@
 #include "Components/ActorComponent.h"
 #include "SASManageComponent.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSASTriggerDelegate, FGameplayTag, SASInputTag);
 
 class UDataAsset_SASAbility;
 class ACharacter_Kasane;
@@ -38,6 +39,9 @@ protected:
 	
 	void ToggleSASAbility(FGameplayTag InInputTag);
 	void CancelAllSASAbilities();
+
+	UPROPERTY(BlueprintAssignable)
+	FOnSASTriggerDelegate OnSASTrigger;
 
 public:
 	void InitReferences(ACharacter_Kasane* InKasane);
