@@ -26,15 +26,29 @@ UPsychokinesisComponent::UPsychokinesisComponent()
 void UPsychokinesisComponent::UpdateNearestPsychThrowableTarget()
 {
 	if (bBlockUpdate) return;
+	if (PsychThrowableTarget)
+	{
+		PsychThrowableTarget->OnChangePsychTarget(false);
+	}
 	PsychThrowableTarget = UpdateNearestPsychTarget(PsychThrowableTargetCandidates);
-	OnPsychThrowableTargetUpdated.Broadcast(PsychThrowableTarget);
+	if (PsychThrowableTarget)
+	{
+		PsychThrowableTarget->OnChangePsychTarget(true);
+	}
 }
 
 void UPsychokinesisComponent::UpdateNearestPsychSpecialTarget()
 {
 	if (bBlockUpdate) return;
+	if (PsychSpecialTarget)
+	{
+		PsychSpecialTarget->OnChangePsychTarget(false);
+	}
 	PsychSpecialTarget = UpdateNearestPsychTarget(PsychSpecialTargetCandidates);
-	OnPsychSpecialTargetUpdated.Broadcast(PsychSpecialTarget);
+	if (PsychSpecialTarget)
+	{
+		PsychSpecialTarget->OnChangePsychTarget(true);
+	}
 }
 
 APsychokineticPropBase* UPsychokinesisComponent::UpdateNearestPsychTarget(TArray<APsychokineticPropBase*> PropList) const
@@ -216,8 +230,11 @@ void UPsychokinesisComponent::OnOverlapEnd(UPrimitiveComponent* OverlappedCompon
 		PsychThrowableTargetCandidates.Remove(Temp);
 		if (Temp == PsychThrowableTarget && bBlockUpdate == false)
 		{
+			if (PsychThrowableTarget)
+			{
+				PsychThrowableTarget->OnChangePsychTarget(false);
+			}
 			PsychThrowableTarget = nullptr;
-			OnPsychThrowableTargetUpdated.Broadcast(PsychThrowableTarget);
 		}
 	}
 	else
@@ -225,8 +242,11 @@ void UPsychokinesisComponent::OnOverlapEnd(UPrimitiveComponent* OverlappedCompon
 		PsychSpecialTargetCandidates.Remove(Temp);
 		if (Temp == PsychSpecialTarget && bBlockUpdate == false)
 		{
+			if (PsychSpecialTarget)
+			{
+				PsychSpecialTarget->OnChangePsychTarget(false);
+			}
 			PsychSpecialTarget = nullptr;
-			OnPsychSpecialTargetUpdated.Broadcast(PsychSpecialTarget);
 		}
 	}
 	
@@ -260,8 +280,16 @@ void UPsychokinesisComponent::OverrideSpecialTarget(AActor* InActor)
 	APsychokineticPropBase* Temp = Cast<APsychokineticSpecialPropBase>(InActor);
 	if (Temp == nullptr) return;
 	Temp->OnUsePsychProp.BindUObject(this, &UPsychokinesisComponent::OnUsePsychProp);
+	
+	if (PsychSpecialTarget)
+	{
+		PsychSpecialTarget->OnChangePsychTarget(false);
+	}
 	PsychSpecialTarget = Temp;
-	OnPsychSpecialTargetUpdated.Broadcast(PsychSpecialTarget);
+	if (PsychSpecialTarget)
+	{
+		PsychSpecialTarget->OnChangePsychTarget(true);
+	}
 }
 
 void UPsychokinesisComponent::OverrideThrowableTarget(AActor* InActor)
@@ -269,6 +297,14 @@ void UPsychokinesisComponent::OverrideThrowableTarget(AActor* InActor)
 	APsychokineticPropBase* Temp = Cast<APsychokineticThrowableProp>(InActor);
 	if (Temp == nullptr) return;
 	Temp->OnUsePsychProp.BindUObject(this, &UPsychokinesisComponent::OnUsePsychProp);
+	
+	if (PsychThrowableTarget)
+	{
+		PsychThrowableTarget->OnChangePsychTarget(false);
+	}
 	PsychThrowableTarget = Temp;
-	OnPsychThrowableTargetUpdated.Broadcast(PsychThrowableTarget);
+	if (PsychThrowableTarget)
+	{
+		PsychThrowableTarget->OnChangePsychTarget(true);
+	}
 }

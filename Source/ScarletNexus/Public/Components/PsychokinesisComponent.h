@@ -25,7 +25,7 @@ enum class EPsychType : uint8
 
 class APsychokineticPropBase;
 class USphereComponent;
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPsychPropChangedDelegate, APsychokineticPropBase*, PsychProp);
+DECLARE_DELEGATE_TwoParams(FOnPsychPropChangedDelegate, APsychokineticPropBase*, bool);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class SCARLETNEXUS_API UPsychokinesisComponent : public UActorComponent
@@ -37,9 +37,7 @@ public:
 	UPsychokinesisComponent();
 
 protected:
-	UPROPERTY(BlueprintAssignable)
 	FOnPsychPropChangedDelegate OnPsychThrowableTargetUpdated;
-	UPROPERTY(BlueprintAssignable)
 	FOnPsychPropChangedDelegate OnPsychSpecialTargetUpdated;
 	
 	bool bBlockUpdate = false;

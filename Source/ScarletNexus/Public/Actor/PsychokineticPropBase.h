@@ -40,5 +40,8 @@ public:
 	FORCEINLINE bool IsUsed() const { return bIsUsed; }
 
 	UFUNCTION(BlueprintImplementableEvent)
+	void OnChangePsychTarget(bool IsActive);
+	
+	UFUNCTION(BlueprintImplementableEvent)
 	void OnUpdatePsychChargeGauge(float Gauge);
 };
