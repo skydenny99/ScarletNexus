@@ -28,8 +28,6 @@ public:
 	virtual void BeginPlay() override;
 
 protected:
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"), Category = "Projectile")
-	UBoxComponent* CollsionBoxComponent;
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"), Category = "Projectile")
 	UNiagaraComponent* NiagaraComponent;

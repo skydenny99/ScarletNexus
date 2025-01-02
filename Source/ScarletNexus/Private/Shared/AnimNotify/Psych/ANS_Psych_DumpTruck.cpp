@@ -43,7 +43,7 @@ void UANS_Psych_DumpTruck::NotifyTick(USkeletalMeshComponent* MeshComp, UAnimSeq
 		
 		if (CurrentFrames < RotatingTotalFrames)
 		{
-			FRotator NewRot = FMath::RInterpTo(Truck->GetActorRotation(), FRotator(0, 0, -90), FrameDeltaTime, 5.f);
+			FRotator NewRot = FMath::RInterpTo(Truck->GetActorRotation(), FRotator(0, 0, 90), FrameDeltaTime, 5.f);
 			Truck->SetActorRotation(NewRot);
 		}
 	}

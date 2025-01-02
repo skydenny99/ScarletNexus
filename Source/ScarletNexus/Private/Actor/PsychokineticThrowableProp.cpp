@@ -11,6 +11,7 @@
 #include "AbilitySystem/Ability/GameplayAbilityBase.h"
 #include "Actor/GE_Prop.h"
 #include "Character/Character_Kasane.h"
+#include "Components/BoxComponent.h"
 #include "Components/WidgetComponent.h"
 #include "Components/UI/PropUIComponent.h"
 #include "EntitySystem/MovieSceneEntitySystemRunner.h"
@@ -29,9 +30,9 @@ APsychokineticThrowableProp::APsychokineticThrowableProp()
 	ProjectileMovementComponent->bShouldBounce = true;
 	ProjectileMovementComponent->Bounciness = 0.3f;
 
-	MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComponent"));
-	SetRootComponent(MeshComponent);
-	RootComponent = MeshComponent;
+	CollisionBoxComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("CollisionBoxComponent"));
+	SetRootComponent(CollisionBoxComponent);
+	CollisionBoxComponent->SetCollisionProfileName("BlockAllDynamic");
 
 	InterectComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("InterectComponent"));
 	InterectComponent->SetupAttachment(MeshComponent);
@@ -42,7 +43,7 @@ APsychokineticThrowableProp::APsychokineticThrowableProp()
 void APsychokineticThrowableProp::BeginPlay()
 {
 	Super::BeginPlay();
-	MeshComponent->OnComponentHit.AddDynamic(this, &APsychokineticThrowableProp::OnMeshHit);
+	CollisionBoxComponent->OnComponentHit.AddDynamic(this, &APsychokineticThrowableProp::OnMeshHit);
 }
 
 
@@ -65,7 +66,9 @@ void APsychokineticThrowableProp::HandleApplyProp(APawn* HitPawn, FGameplayEvent
 
 void APsychokineticThrowableProp::OnStartGrab(bool NeedToClone, bool DoubleClone)
 {
-	MeshComponent->SetCollisionProfileName("PlayerProjectile");
+	ProjectileMovementComponent->SetUpdatedComponent(nullptr);
+	ProjectileMovementComponent->Velocity = FVector::ZeroVector;
+	CollisionBoxComponent->SetCollisionProfileName("PlayerProjectile");
 	CachedLaunchedLocation = GetActorLocation();
 	CachedLaunchedRotation = GetActorRotation();
 	bIsUsed = true;
@@ -86,7 +89,7 @@ void APsychokineticThrowableProp::OnStartGrab(bool NeedToClone, bool DoubleClone
 void APsychokineticThrowableProp::OnHit()
 {
 	ProjectileMovementComponent->ProjectileGravityScale = 1.f;
-	MeshComponent->SetCollisionProfileName("EndProjectile");
+	CollisionBoxComponent->SetCollisionProfileName("EndProjectile");
 	SetLifeSpan(1.f);
 }
 
@@ -142,7 +145,7 @@ void APsychokineticThrowableProp::FloatingTick(float DeltaTime)
 
 void APsychokineticThrowableProp::Launch()
 {
-	MeshComponent->SetCollisionProfileName("PlayerProjectile");
+	CollisionBoxComponent->SetCollisionProfileName("PlayerProjectile");
 	if (bIsAttached)
 	{
 		DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);

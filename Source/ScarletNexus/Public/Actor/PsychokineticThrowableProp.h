@@ -8,6 +8,7 @@
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "PsychokineticThrowableProp.generated.h"
 
+class UBoxComponent;
 class UGameplayEffect;
 class UWidgetComponent;
 class UProjectileMovementComponent;
@@ -35,8 +36,8 @@ protected:
 	UPROPERTY(EditDefaultsOnly)
 	bool bCanClonable = true;
 	
-	UPROPERTY(EditDefaultsOnly)
-	UStaticMeshComponent* MeshComponent;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"), Category = "Projectile")
+	UBoxComponent* CollisionBoxComponent;
 	
 	UPROPERTY(EditDefaultsOnly)
 	float FloatingHeight = 150.f;
