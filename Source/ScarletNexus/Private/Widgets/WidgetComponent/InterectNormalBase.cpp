@@ -24,6 +24,11 @@ void UInterectNormalBase::NativeOnInitialized()
 	PsychBlinkInstance->SetScalarParameterValue("isActivate",1.0f);*/
 }
 
+void UInterectNormalBase::InitKeySprite(bool bIsRightMouse)
+{
+	InitClickSprite(bIsRightMouse);
+}
+
 void UInterectNormalBase::PlayBlinkAnim()
 {
 	PlayAnimation(Blink);

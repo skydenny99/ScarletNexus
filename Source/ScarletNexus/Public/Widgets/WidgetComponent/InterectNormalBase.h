@@ -59,7 +59,10 @@ public:
 	virtual void NativeOnInitialized() override;
 
 	UFUNCTION(BlueprintImplementableEvent)
-	void InitClickSprite(bool bIsNormal);
+	void InitClickSprite(bool bIsRightMouse);
+
+	UFUNCTION(BlueprintCallable)
+	void InitKeySprite(bool bIsRightMouse);
 
 	UFUNCTION(BlueprintCallable)
 	void PlayBlinkAnim();
