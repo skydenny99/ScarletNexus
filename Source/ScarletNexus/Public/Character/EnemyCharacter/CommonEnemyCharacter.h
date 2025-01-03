@@ -6,6 +6,7 @@
 #include "Character/EnemyCharacter/BaseEnemyCharacter.h"
 #include "CommonEnemyCharacter.generated.h"
 
+class AEnemyCore;
 /**
  * 
  */
@@ -14,7 +15,19 @@ class SCARLETNEXUS_API ACommonEnemyCharacter : public ABaseEnemyCharacter
 {
 	GENERATED_BODY()
 
+public:
+	ACommonEnemyCharacter();
 
+protected:
+	UPROPERTY()
+	UChildActorComponent* EnemyCoreChildComponent;
+	
+	virtual void BeginPlay() override;
+public:
+
+	UFUNCTION(BlueprintCallable, Category="EnemyCore")
+	void ActivateEnemyCore(bool bIsActive);
+	
 	virtual FVector GetTargetVector() override;
 	
 };

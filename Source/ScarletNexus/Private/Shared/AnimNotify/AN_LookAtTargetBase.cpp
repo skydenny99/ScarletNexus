@@ -3,6 +3,7 @@
 
 #include "Shared/AnimNotify/AN_LookAtTargetBase.h"
 
+#include "GameFramework/Character.h"
 #include "Kismet/KismetMathLibrary.h"
 
 void UAN_LookAtTargetBase::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation,
@@ -15,5 +16,14 @@ void UAN_LookAtTargetBase::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenc
 		FRotator NewRot = UKismetMathLibrary::FindLookAtRotation(Owner->GetActorLocation(), Target->GetActorLocation());
 		NewRot = FRotator(0, NewRot.Yaw, 0);
 		Owner->SetActorRotation(NewRot);
+		if (bUpdateControlRotation)
+		{
+			if (ACharacter* Character = Cast<ACharacter>(Owner))
+			{
+				FRotator ContRot = Character->GetControlRotation();
+				ContRot.Yaw = NewRot.Yaw;
+				Character->GetController()->SetControlRotation(ContRot);
+			}
+		}
 	}
 }

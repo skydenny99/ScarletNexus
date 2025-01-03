@@ -115,7 +115,7 @@ void UTargetTrackingSpringArmComponent::TickComponent(float DeltaTime, enum ELev
 	FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-	if (bOverrideTrackingTarget)
+	if (bOverrideTrackingTarget || bFixedTrackingTarget)
 	{
 		bUpdateCameraTracking = true;
 	}
