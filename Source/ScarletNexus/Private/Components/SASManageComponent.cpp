@@ -105,6 +105,7 @@ void USASManageComponent::OnSASInputTriggered(FGameplayTag InInputTag)
 	else
 	{
 		ToggleSASAbility(InInputTag);
+		OnSASTrigger.Broadcast(InInputTag);
 	}
 }
 

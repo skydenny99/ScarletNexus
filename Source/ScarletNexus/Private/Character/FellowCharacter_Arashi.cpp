@@ -8,8 +8,8 @@
 #include "DataAsset/DataAsset_StartupBase.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "BaseDebugHelper.h"
-
-
+#include "NiagaraComponent.h"
+#include "NiagaraFunctionLibrary.h"
 
 
 AFellowCharacter_Arashi::AFellowCharacter_Arashi()
@@ -59,14 +59,44 @@ AFellowCharacter_Arashi::AFellowCharacter_Arashi()
 
 	
 	BaseAbilitySystemComponent = CreateDefaultSubobject<UBaseAbilitySystemComponent>(TEXT("AbilitySystemComponent"));
-
-
-
+	
+	
 }
 
 bool AFellowCharacter_Arashi::AllowSetTimeDilation(const ETimeDilationReason& Reason)
 {
 	return Reason != ETimeDilationReason::SAS_Accel;
 }
+
+void AFellowCharacter_Arashi::SetArashiAfterEffect(const ETimeDilationReason& Reason, float TimeDilation)
+{
+	if (TimeDilation != 1)
+	{
+		AfterimageEffectComponent = UNiagaraFunctionLibrary::SpawnSystemAttached(
+			AfterImageEffectSystem,
+			GetMesh(),
+			NAME_None,
+			FVector(0.f,0.f,0.f),
+			FRotator(0.f,0.f,0.f),
+			EAttachLocation::Type::SnapToTarget,
+			false);
+	}
+	else
+	{
+		if (AfterimageEffectComponent)
+		{
+			AfterimageEffectComponent->DestroyComponent();
+		}
+	}
+		
+		
+	
+}
+void AFellowCharacter_Arashi::BeginPlay()
+{
+	Super::BeginPlay();
+	OnChangeCustomTimeDilationDelegate.AddUObject(this, &AFellowCharacter_Arashi::SetArashiAfterEffect);
+}
+
 
 

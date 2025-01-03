@@ -14,6 +14,7 @@ class UBaseAbilitySystemComponent;
 class UDataAsset_StartupBase;
 class UBaseAttributeSet;
 
+DECLARE_MULTICAST_DELEGATE_TwoParams(FOnChangeCustomTimeDilationDelegate, const ETimeDilationReason&, float)
 
 UCLASS()
 class SCARLETNEXUS_API ABaseCharacter : public ACharacter, public IAbilitySystemInterface, public IPawnCombatInterface, public IPawnUIInterface
@@ -49,6 +50,8 @@ protected:
 	// UI
 	virtual UPawnUIComponent* GetPawnUIComponent() const override;
 	virtual UPlayerUIComponent* GetPlayerUIComponent() const override;
+
+	FOnChangeCustomTimeDilationDelegate OnChangeCustomTimeDilationDelegate;
 	
 public:
 	FORCEINLINE UBaseAbilitySystemComponent* GetBaseAbilitySystemComponent() const { return BaseAbilitySystemComponent; }

@@ -7,8 +7,8 @@
 #include "FellowCharacter_Arashi.generated.h"
 
 
-
-
+class UNiagaraComponent;
+class UNiagaraSystem;
 
 /**
  * 
@@ -20,10 +20,21 @@ class SCARLETNEXUS_API AFellowCharacter_Arashi : public AFellowCharacter
 
 public:
 	AFellowCharacter_Arashi();
+	
+	UPROPERTY()
+	UNiagaraComponent* AfterimageEffectComponent = nullptr;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "SAS")
+	UNiagaraSystem* AfterImageEffectSystem = nullptr;
 
 protected:
+	virtual void BeginPlay() override;
 	virtual bool AllowSetTimeDilation(const ETimeDilationReason& Reason) override;
-	
 
+	UFUNCTION(BlueprintCallable)
+	void SetArashiAfterEffect(const ETimeDilationReason& Reason, float TimeDilation);
+	
 	
 };
+
+

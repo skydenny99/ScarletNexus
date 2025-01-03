@@ -6,6 +6,7 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "BaseDebugHelper.h"
 #include "BaseFunctionLibrary.h"
+#include "BaseGameplayTags.h"
 #include "AbilitySystem/BaseAbilitySystemComponent.h"
 #include "AbilitySystem/Attribute/PlayerAttributeSet.h"
 #include "Character/Character_Kasane.h"
@@ -50,7 +51,7 @@ bool UGA_SASAbilityBase::CanActivateAbility(const FGameplayAbilitySpecHandle Han
 	if (IsCurrentFound == false || IsMaxFound == false) return false;
 	if (Super::CanActivateAbility(Handle, ActorInfo, SourceTags, TargetTags, OptionalRelevantTags))
 	{
-		return (CurrentValue / MaxValue) >= AllowActivateGaugeRate;
+		return ((CurrentValue / MaxValue) >= AllowActivateGaugeRate) && UBaseFunctionLibrary::NativeActorHasTag(Kasane, BaseGameplayTags::Shared_Status_CanAttack);
 	}
 	return false;
 }

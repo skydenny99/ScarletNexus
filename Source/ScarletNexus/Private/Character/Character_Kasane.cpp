@@ -499,4 +499,7 @@ void ACharacter_Kasane::BeginPlay()
 	Super::BeginPlay();
 	ComboDirectCameraActor->CreateChildActor();
 	ActivateCloneSkeletalMesh(false);
+
+	BaseAbilitySystemComponent->TryActivateAbilityByTag(BaseGameplayTags::Shared_Ability_SpawnWeapon);
+
 }

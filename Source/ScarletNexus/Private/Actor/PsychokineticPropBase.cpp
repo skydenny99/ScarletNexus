@@ -14,6 +14,8 @@ APsychokineticPropBase::APsychokineticPropBase()
 
 	InterectComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("InterectComponent"));
 	InterectComponent->SetupAttachment(RootComponent);
+	InterectComponent->SetRelativeLocation(FVector::ZeroVector);
+	InterectComponent->SetWidgetSpace(EWidgetSpace::Screen);
 }
 
 void APsychokineticPropBase::DissolveProp()

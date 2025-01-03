@@ -12,6 +12,7 @@
 #include "Actor/GE_Prop.h"
 #include "Character/Character_Kasane.h"
 #include "Components/BoxComponent.h"
+#include "Components/WidgetComponent.h"
 #include "Components/UI/PropUIComponent.h"
 #include "EntitySystem/MovieSceneEntitySystemRunner.h"
 #include "GameFramework/ProjectileMovementComponent.h"
@@ -31,6 +32,8 @@ APsychokineticThrowableProp::APsychokineticThrowableProp()
 
 	CollisionBoxComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("CollisionBoxComponent"));
 	SetRootComponent(CollisionBoxComponent);
+	InterectComponent->SetupAttachment(RootComponent);
+	InterectComponent->SetRelativeLocation(FVector::ZeroVector);
 	CollisionBoxComponent->SetCollisionProfileName("BlockAllDynamic");
 	
 	Damage = 10;
@@ -45,7 +48,6 @@ void APsychokineticThrowableProp::BeginPlay()
 
 void APsychokineticThrowableProp::HandleApplyProp(APawn* HitPawn, FGameplayEventData& Payload)
 {
-	
 	// ACharacter_Kasane* Player = Cast<ACharacter_Kasane>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	 const bool bWasApplied = UBaseFunctionLibrary::ApplyGameplayEffectSpecHandleToTargetActor(PropDamageSpecHandle.Data->GetContext().GetInstigator(), HitPawn, PropDamageSpecHandle);
 	if (bWasApplied)
@@ -56,8 +58,6 @@ void APsychokineticThrowableProp::HandleApplyProp(APawn* HitPawn, FGameplayEvent
 	 		Payload
 	 	);
 	 }
-
-	
 }
 
 void APsychokineticThrowableProp::OnStartGrab(bool NeedToClone, bool DoubleClone)
