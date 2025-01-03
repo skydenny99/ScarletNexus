@@ -95,6 +95,8 @@ public:
 
 	bool TryActivateAbilityByInputTag(FGameplayTag tag);
 	void TryActivateChargeAbility();
+
+	UFUNCTION(BlueprintCallable)
 	bool TryCancelAttackAbility();
 	
 	UFUNCTION()
