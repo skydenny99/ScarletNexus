@@ -436,6 +436,67 @@ void ACharacter_Kasane::ChangeCamera(bool bUseMain, float BlendTime)
 		PC->SetViewTargetWithBlend(ComboDirectCameraActor->GetChildActor(), BlendTime);
 }
 
+void ACharacter_Kasane::ActivateWeaponTrail(bool InIsActive, int32 Count)
+{
+	if (WeaponBasicTrailSystem == nullptr || WeaponFireTrailSystem == nullptr) return;
+	if (WeaponFireEffects.IsEmpty()) return;
+	if (InIsActive)
+	{
+		bool IsCloned = UBaseFunctionLibrary::NativeActorHasTag(this, BaseGameplayTags::Player_Status_SAS_Clone);
+		for (int32 i = 0; i < MaxTrailEffects; i++)
+		{
+			if (i < Count)
+			{
+				if (UBaseFunctionLibrary::NativeActorHasTag(this, BaseGameplayTags::Player_Status_SAS_Elemental_Fire))
+				{
+					WeaponFireEffects[i]->Activate();
+					WeaponBasicEffects[i]->Deactivate();
+					if (IsCloned)
+					{
+						WeaponFireEffects[i+MaxTrailEffects]->Activate();
+						WeaponFireEffects[i+MaxTrailEffects*2]->Activate();
+						WeaponBasicEffects[i+MaxTrailEffects]->Deactivate();
+						WeaponBasicEffects[i+MaxTrailEffects*2]->Deactivate();
+					}
+				}
+				else
+				{
+					WeaponBasicEffects[i]->Activate();
+					WeaponFireEffects[i]->Deactivate();
+					if (IsCloned)
+					{
+						WeaponBasicEffects[i+MaxTrailEffects]->Activate();
+						WeaponBasicEffects[i+MaxTrailEffects*2]->Activate();
+						WeaponFireEffects[i+MaxTrailEffects]->Deactivate();
+						WeaponFireEffects[i+MaxTrailEffects*2]->Deactivate();
+					}
+				}
+			}
+			else
+			{
+				WeaponBasicEffects[i]->Deactivate();
+				WeaponFireEffects[i]->Deactivate();
+				
+				if (IsCloned)
+				{
+					WeaponBasicEffects[i+MaxTrailEffects]->Deactivate();
+					WeaponBasicEffects[i+MaxTrailEffects*2]->Deactivate();
+					WeaponFireEffects[i+MaxTrailEffects]->Deactivate();
+					WeaponFireEffects[i+MaxTrailEffects*2]->Deactivate();
+				}
+			}
+		}
+	}
+	else
+	{
+		for (int32 i = 0; i < MaxTrailEffects * 3; i++)
+		{
+			WeaponBasicEffects[i]->Deactivate();
+			WeaponFireEffects[i]->Deactivate();
+		}
+	}
+}
+
 void ACharacter_Kasane::ActivateAfterimage(bool InIsActive)
 {
 	if (AfterImageEffectSystem == nullptr) return;
@@ -502,4 +563,38 @@ void ACharacter_Kasane::BeginPlay()
 
 	BaseAbilitySystemComponent->TryActivateAbilityByTag(BaseGameplayTags::Shared_Ability_SpawnWeapon);
 
+	const TArray TempBodies({GetMesh(), LeftCloneComponent, RightCloneComponent});
+	for (auto TempBody : TempBodies)
+	{
+		for (int i = 1; i <=6; i++)
+		{
+			if (WeaponBasicTrailSystem)
+			{
+				auto WeaponBasic = UNiagaraFunctionLibrary::SpawnSystemAttached(
+					WeaponBasicTrailSystem,
+					TempBody,
+					FName(FString::Printf(TEXT("Weapon0%d"), i)),
+					FVector(0.f,0.f,0.f),
+					FRotator(0.f,0.f,-90.f),
+					EAttachLocation::Type::SnapToTarget,
+					false);
+				WeaponBasicEffects.Add(WeaponBasic);
+				WeaponBasic->Deactivate();
+			}
+
+			if (WeaponFireTrailSystem)
+			{
+				auto WeaponFire = UNiagaraFunctionLibrary::SpawnSystemAttached(
+					WeaponFireTrailSystem,
+					TempBody,
+					FName(FString::Printf(TEXT("Weapon0%d"), i)),
+					FVector(0.f,0.f,0.f),
+					FRotator(0.f,0.f,-90.f),
+					EAttachLocation::Type::SnapToTarget,
+					false);
+				WeaponFireEffects.Add(WeaponFire);
+				WeaponFire->Deactivate();
+			}
+		}
+	}
 }

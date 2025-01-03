@@ -317,6 +317,7 @@ bool UComboSystemComponent::CheckJustDodge() // 최적화 필요
 		{
 			UPsychAbilityHelperLibrary::NativeOverrideThrowablePsychObject(Kasane, NearestProjectile);
 			UBaseFunctionLibrary::AddPlaygameTagToActor(Kasane, BaseGameplayTags::Player_Status_Move_Dodge_Instant_Psych);
+			UBaseFunctionLibrary::AddPlaygameTagToActor(Kasane, BaseGameplayTags::Player_Status_Move_Dodge_Instant_Weapon);
 			UGameplayStatics::SetGlobalTimeDilation(Kasane, GlobalTimeDilation);
 			Debug::Print(FString::Printf(TEXT("Set Nearest Projectile: %s"), *NearestProjectile->GetActorLabel()));
 			return true;

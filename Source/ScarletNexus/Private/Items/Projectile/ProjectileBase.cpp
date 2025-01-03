@@ -20,15 +20,15 @@ AProjectileBase::AProjectileBase()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 
-	CollisionBoxComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-	CollisionBoxComponent->SetCollisionObjectType(ECC_GameTraceChannel6);
-	CollisionBoxComponent->SetCollisionResponseToChannel(ECC_Pawn, ECR_Block);
-	CollisionBoxComponent->SetCollisionResponseToChannel(ECC_WorldDynamic, ECR_Block);
-	CollisionBoxComponent->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Block);
-	CollisionBoxComponent->SetCollisionResponseToChannel(ECC_GameTraceChannel7, ECR_Overlap);
+	BoxComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	BoxComponent->SetCollisionObjectType(ECC_GameTraceChannel6);
+	BoxComponent->SetCollisionResponseToChannel(ECC_Pawn, ECR_Block);
+	BoxComponent->SetCollisionResponseToChannel(ECC_WorldDynamic, ECR_Block);
+	BoxComponent->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Block);
+	BoxComponent->SetCollisionResponseToChannel(ECC_GameTraceChannel7, ECR_Overlap);
 
-	CollisionBoxComponent->OnComponentHit.AddUniqueDynamic(this, &AProjectileBase::OnProjectileHit);
-	CollisionBoxComponent->OnComponentBeginOverlap.AddUniqueDynamic(this, &AProjectileBase::OnProjectileBeginOverlap);
+	BoxComponent->OnComponentHit.AddUniqueDynamic(this, &AProjectileBase::OnProjectileHit);
+	BoxComponent->OnComponentBeginOverlap.AddUniqueDynamic(this, &AProjectileBase::OnProjectileBeginOverlap);
 	
 	NiagaraComponent = CreateDefaultSubobject<UNiagaraComponent>(TEXT("NiagaraComponent"));
 	NiagaraComponent->SetupAttachment(GetRootComponent());

@@ -35,9 +35,6 @@ protected:
 	UPROPERTY(EditDefaultsOnly)
 	bool bCanClonable = true;
 	
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"), Category = "Projectile")
-	UBoxComponent* CollisionBoxComponent;
-	
 	UPROPERTY(EditDefaultsOnly)
 	float FloatingHeight = 150.f;
 	
