@@ -30,11 +30,9 @@ APsychokineticThrowableProp::APsychokineticThrowableProp()
 	ProjectileMovementComponent->bShouldBounce = true;
 	ProjectileMovementComponent->Bounciness = 0.3f;
 
-	CollisionBoxComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("CollisionBoxComponent"));
-	SetRootComponent(CollisionBoxComponent);
 	InterectComponent->SetupAttachment(RootComponent);
 	InterectComponent->SetRelativeLocation(FVector::ZeroVector);
-	CollisionBoxComponent->SetCollisionProfileName("BlockAllDynamic");
+	BoxComponent->SetCollisionProfileName("BlockAllDynamic");
 	
 	Damage = 10;
 }
@@ -42,7 +40,7 @@ APsychokineticThrowableProp::APsychokineticThrowableProp()
 void APsychokineticThrowableProp::BeginPlay()
 {
 	Super::BeginPlay();
-	CollisionBoxComponent->OnComponentHit.AddDynamic(this, &APsychokineticThrowableProp::OnMeshHit);
+	BoxComponent->OnComponentHit.AddDynamic(this, &APsychokineticThrowableProp::OnMeshHit);
 }
 
 
@@ -64,7 +62,7 @@ void APsychokineticThrowableProp::OnStartGrab(bool NeedToClone, bool DoubleClone
 {
 	ProjectileMovementComponent->SetUpdatedComponent(nullptr);
 	ProjectileMovementComponent->Velocity = FVector::ZeroVector;
-	CollisionBoxComponent->SetCollisionProfileName("PlayerProjectile");
+	BoxComponent->SetCollisionProfileName("PlayerProjectile");
 	CachedLaunchedLocation = GetActorLocation();
 	CachedLaunchedRotation = GetActorRotation();
 	bIsUsed = true;
@@ -85,7 +83,7 @@ void APsychokineticThrowableProp::OnStartGrab(bool NeedToClone, bool DoubleClone
 void APsychokineticThrowableProp::OnHit()
 {
 	ProjectileMovementComponent->ProjectileGravityScale = 1.f;
-	CollisionBoxComponent->SetCollisionProfileName("EndProjectile");
+	BoxComponent->SetCollisionProfileName("EndProjectile");
 	SetLifeSpan(1.f);
 }
 
@@ -141,7 +139,7 @@ void APsychokineticThrowableProp::FloatingTick(float DeltaTime)
 
 void APsychokineticThrowableProp::Launch()
 {
-	CollisionBoxComponent->SetCollisionProfileName("PlayerProjectile");
+	BoxComponent->SetCollisionProfileName("PlayerProjectile");
 	if (bIsAttached)
 	{
 		DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
