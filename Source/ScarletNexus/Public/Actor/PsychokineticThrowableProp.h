@@ -97,6 +97,9 @@ public:
 	void FloatingTick(float DeltaTime);
 	void Launch();
 	void CloneLaunch();
+
+	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "On Spawn Hit FX"))
+	void BP_OnSpawnHitFX(const FVector HitLocation);
 	
 };
 

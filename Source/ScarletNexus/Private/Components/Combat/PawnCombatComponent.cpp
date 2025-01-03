@@ -10,8 +10,13 @@
 void UPawnCombatComponent::RegisterSpawnedWeapon(FGameplayTag WeaponTag, AWeaponBase* Weapon,
 	bool bRegisterAsEquippedWeapon)
 {
-	checkf(!CharacterCarriedWeaponMap.Contains(WeaponTag), TEXT("%s has already been carried as a weapon"), *WeaponTag.ToString());
-	check(Weapon);
+	//checkf(!CharacterCarriedWeaponMap.Contains(WeaponTag), TEXT("%s has already been carried as a weapon"), *WeaponTag.ToString());
+	//check(Weapon);
+	if (CharacterCarriedWeaponMap.Contains(WeaponTag))
+	{
+		return;
+	}
+	
 	CharacterCarriedWeaponMap.Emplace(WeaponTag, Weapon);
 
 
@@ -42,8 +47,13 @@ void UPawnCombatComponent::RegisterKasaneSpawnedWeapon(FGameplayTag WeaponTag, A
 	// 장착한 무기로 등록
 	if (bRegisterAsEquippedWeapon)
 	{
-		checkf(!CharacterCarriedWeaponMap.Contains(WeaponTag), TEXT("%s has already been carried as a weapon"), *WeaponTag.ToString());
-		check(Weapon);
+		//checkf(!CharacterCarriedWeaponMap.Contains(WeaponTag), TEXT("%s has already been carried as a weapon"), *WeaponTag.ToString());
+		//check(Weapon);
+
+		if (CharacterCarriedWeaponMap.Contains(WeaponTag))
+		{
+			return;
+		}
 		CharacterCarriedWeaponMap.Emplace(WeaponTag, Weapon);
 
 		Weapon->OnWeaponHitTarget.BindUObject(this, &ThisClass::OnHitTargetActor);

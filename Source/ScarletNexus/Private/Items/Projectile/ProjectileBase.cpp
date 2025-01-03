@@ -100,6 +100,7 @@ void AProjectileBase::OnProjectileHit(UPrimitiveComponent* HitComponent, AActor*
 	
 	//Apply projectile Damage ::TODO
 	HandleApplyProjectile(HitPawn, Data);
+	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(HitPawn, BaseGameplayTags::Shared_Event_HitReact_KnockDown, Data);
 	
 	Destroy();
 	

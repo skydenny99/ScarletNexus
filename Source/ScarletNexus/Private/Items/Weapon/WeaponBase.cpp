@@ -36,18 +36,21 @@ AWeaponBase::AWeaponBase()
 void AWeaponBase::OnCollisionBoxBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	const AActor* HitActor = SweepResult.HitObjectHandle.FetchActor();
-	if (HitActor)
-	{
-		// BP
-		BP_OnSpawnHitFX(HitActor);
-	}
+	
+	BP_OnSpawnHitFX(this);
+	Debug::Print(FString::Printf(TEXT("GetInstigator %s"),*this->GetName() ));
+	// const AActor* HitActor = SweepResult.HitObjectHandle.FetchActor();
+	// if (HitActor)
+	// {
+	// 	// BP
+	// 	BP_OnSpawnHitFX(HitActor);
+	// }
 	
 	
 	//GetInstigator 이벤트를 발생시킨 포인터 누가 대미지를 입혔는가 T 클래스 반환 (주체대상)
 	APawn* WeaponOwningPawn = GetInstigator<APawn>();
 
-	checkf(WeaponOwningPawn, TEXT("Forget to Assign an instigator as the owning pawn of the weapon: %s"), *GetName());
+	// checkf(WeaponOwningPawn, TEXT("Forget to Assign an instigator as the owning pawn of the weapon: %s"), *GetName());
 
 	if (APawn* HitPawn = Cast<APawn>(OtherActor))
 	{
