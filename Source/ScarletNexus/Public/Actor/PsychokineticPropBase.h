@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "PsychokineticPropBase.generated.h"
 
+class UBoxComponent;
 class APsychokineticPropBase;
 class UWidgetComponent;
 
@@ -21,6 +22,9 @@ public:
 	APsychokineticPropBase();
 
 protected:
+	UPROPERTY(EditAnywhere, Category = "Collision")
+	UBoxComponent* BoxComponent;
+	
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
 	UWidgetComponent* InterectComponent;
 
