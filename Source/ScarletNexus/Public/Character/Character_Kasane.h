@@ -128,6 +128,16 @@ private:
 	void PushInput(EBaseDirectionType Direction);
 	void ClearInputHistory();
 
+	// Weapon Trail
+	UPROPERTY(EditDefaultsOnly, Category = "Effect")
+	UNiagaraSystem* WeaponBasicTrailSystem;
+	UPROPERTY(EditDefaultsOnly, Category = "Effect")
+	UNiagaraSystem* WeaponFireTrailSystem;
+	
+	TArray<UNiagaraComponent*> WeaponBasicEffects;
+	TArray<UNiagaraComponent*> WeaponFireEffects;
+	const int32 MaxTrailEffects = 6;
+	
 	// SAS variables
 	UPROPERTY(EditDefaultsOnly)
 	USkeletalMeshComponent* LeftCloneComponent = nullptr;
@@ -135,7 +145,7 @@ private:
 	USkeletalMeshComponent* RightCloneComponent = nullptr;
 	UPROPERTY()
 	UNiagaraComponent* AfterimageEffectComponent = nullptr;
-	UPROPERTY(EditDefaultsOnly, Category = "SAS")
+	UPROPERTY(EditDefaultsOnly, Category = "Effect")
 	UNiagaraSystem* AfterImageEffectSystem = nullptr;
 	
 public:
@@ -169,6 +179,9 @@ public:
 	FORCEINLINE UCameraComponent* GetMainCamera() const { return MainCamera; }
 	FORCEINLINE AActor* GetComboDirectCameraActor() const { return ComboDirectCameraActor->GetChildActor(); }
 
+	// Weapon Effect
+	UFUNCTION(BlueprintCallable)
+	void ActivateWeaponTrail(bool InIsActive, int32 Count);
 
 	// SAS functions
 	UFUNCTION(BlueprintCallable)
