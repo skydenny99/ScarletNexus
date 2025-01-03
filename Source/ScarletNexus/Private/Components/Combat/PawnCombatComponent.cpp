@@ -32,27 +32,27 @@ void UPawnCombatComponent::RegisterSpawnedWeapon(FGameplayTag WeaponTag, AWeapon
 void UPawnCombatComponent::RegisterKasaneSpawnedWeapon(FGameplayTag WeaponTag, AWeaponBase* Weapon,
 	bool bRegisterAsEquippedWeapon)
 {
-	// 무기가 6개 이상 등록되지 않도록 제한
-	const int32 MaxWeapons = 6;
-	if (CharacterCarriedWeaponMap.Num() >= MaxWeapons)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Cannot register more than %d weapons."), MaxWeapons);
-		return;
-	}
-
-	checkf(!CharacterCarriedWeaponMap.Contains(WeaponTag), TEXT("%s has already been carried as a weapon"), *WeaponTag.ToString());
-	check(Weapon);
-	CharacterCarriedWeaponMap.Emplace(WeaponTag, Weapon);
-
-	Weapon->OnWeaponHitTarget.BindUObject(this, &ThisClass::OnHitTargetActor);
-	Weapon->OnWeaponPulledFromTarget.BindUObject(this, &ThisClass::OnWeaponPulledFromTargetActor);
-
+	// 무기가 18개 이상 등록되지 않도록 제한
+	// const int32 MaxWeapons = 18;
+	// if (CharacterCarriedWeaponMap.Num() >= MaxWeapons)
+	// {
+	// 	UE_LOG(LogTemp, Warning, TEXT("Cannot register more than %d weapons."), MaxWeapons);
+	// 	return;
+	// }
 	// 장착한 무기로 등록
 	if (bRegisterAsEquippedWeapon)
 	{
-		if (CurrentEquippedWeaponTags.Num() >= MaxWeapons)
+		checkf(!CharacterCarriedWeaponMap.Contains(WeaponTag), TEXT("%s has already been carried as a weapon"), *WeaponTag.ToString());
+		check(Weapon);
+		CharacterCarriedWeaponMap.Emplace(WeaponTag, Weapon);
+
+		Weapon->OnWeaponHitTarget.BindUObject(this, &ThisClass::OnHitTargetActor);
+		Weapon->OnWeaponPulledFromTarget.BindUObject(this, &ThisClass::OnWeaponPulledFromTargetActor);
+
+	
+		if (CurrentEquippedWeaponTags.Num() >= 18)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Cannot equip more than %d weapons."), MaxWeapons);
+			UE_LOG(LogTemp, Warning, TEXT("Cannot equip more than %d weapons."), 18);
 		}
 		else
 		{
@@ -60,6 +60,15 @@ void UPawnCombatComponent::RegisterKasaneSpawnedWeapon(FGameplayTag WeaponTag, A
 			Debug::Print(WeaponString);
 			CurrentEquippedWeaponTags.AddUnique(WeaponTag);
 		}
+	}
+	else
+	{
+		CurrentEquippedWeaponTags.Remove(WeaponTag);
+		// CurrentEquippedWeaponTags.
+		
+		const FString WeaponString = FString::Printf(TEXT("%s has been Unregistered using the tag: %s"), *Weapon->GetName(), *WeaponTag.ToString());
+		Debug::Print(WeaponString);
+		Weapon->Destroy();
 	}
 
 	// const FString WeaponString = FString::Printf(TEXT("%s has been registered using the tag: %s"), *Weapon->GetName(), *WeaponTag.ToString());

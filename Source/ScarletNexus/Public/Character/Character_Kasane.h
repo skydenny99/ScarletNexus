@@ -129,9 +129,9 @@ private:
 	void ClearInputHistory();
 
 	// SAS variables
-	UPROPERTY()
+	UPROPERTY(EditDefaultsOnly)
 	USkeletalMeshComponent* LeftCloneComponent = nullptr;
-	UPROPERTY()
+	UPROPERTY(EditDefaultsOnly)
 	USkeletalMeshComponent* RightCloneComponent = nullptr;
 	UPROPERTY()
 	UNiagaraComponent* AfterimageEffectComponent = nullptr;
@@ -175,7 +175,11 @@ public:
 	void ActivateAfterimage(bool InIsActive);
 	virtual UPawnCombatComponent* GetPawnCombatComponent() const override;
 
-	
+	UFUNCTION(BlueprintCallable)
+	USkeletalMeshComponent* GetLeftSkeletalmesh() {return LeftCloneComponent; }
+
+	UFUNCTION(BlueprintCallable)
+	USkeletalMeshComponent* GetRightSkeletalmesh() {return RightCloneComponent; }
 	
 	
 	UFUNCTION(BlueprintCallable)

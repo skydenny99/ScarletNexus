@@ -132,6 +132,20 @@ namespace BaseGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(Player_Weapon_Kasane_Wp4, "Player.Weapon.Kasane.Wp4");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Weapon_Kasane_Wp5, "Player.Weapon.Kasane.Wp5");
 
+	UE_DEFINE_GAMEPLAY_TAG(Player_Weapon_Kasane_L_Wp0, "Player.Weapon.Kasane.L.Wp0");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Weapon_Kasane_L_Wp1, "Player.Weapon.Kasane.L.Wp1");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Weapon_Kasane_L_Wp2, "Player.Weapon.Kasane.L.Wp2");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Weapon_Kasane_L_Wp3, "Player.Weapon.Kasane.L.Wp3");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Weapon_Kasane_L_Wp4, "Player.Weapon.Kasane.L.Wp4");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Weapon_Kasane_L_Wp5, "Player.Weapon.Kasane.L.Wp5");
+
+	UE_DEFINE_GAMEPLAY_TAG(Player_Weapon_Kasane_R_Wp0, "Player.Weapon.Kasane.R.Wp0");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Weapon_Kasane_R_Wp1, "Player.Weapon.Kasane.R.Wp1");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Weapon_Kasane_R_Wp2, "Player.Weapon.Kasane.R.Wp2");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Weapon_Kasane_R_Wp3, "Player.Weapon.Kasane.R.Wp3");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Weapon_Kasane_R_Wp4, "Player.Weapon.Kasane.R.Wp4");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Weapon_Kasane_R_Wp5, "Player.Weapon.Kasane.R.Wp5");
+
 #pragma endregion
 
 #pragma region Unlock
