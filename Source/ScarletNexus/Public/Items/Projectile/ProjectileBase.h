@@ -7,6 +7,7 @@
 #include "BaseType/BaseEnumType.h"
 #include "Abilities/GameplayAbilityTypes.h"
 #include "Actor/PsychokineticThrowableProp.h"
+#include "Subsystem/TimeControlSubsystem.h"
 
 #include "ProjectileBase.generated.h"
 
@@ -54,5 +55,7 @@ protected:
 	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "On Spawn Projectile Hit FX"))
 	void BP_OnSpawnProjectileHitFX(const FVector& HitLocation);
 
+	
+	void SetCustomTimeDilation(const ETimeDilationReason& Reason, float TimeDilation);
 	
 };

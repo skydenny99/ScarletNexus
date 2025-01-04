@@ -22,9 +22,11 @@ ABaseCharacter::ABaseCharacter()
 
 void ABaseCharacter::SetCustomTimeDilation(const ETimeDilationReason& Reason, float TimeDilation)
 {
+	Debug::Print("CustomTimeDilation");
 	if (AllowSetTimeDilation(Reason))
 	{
 		CustomTimeDilation = TimeDilation;
+		Debug::Print("CustomTimeDilation");
 	}
 	OnChangeCustomTimeDilationDelegate.Broadcast(Reason, TimeDilation);
 }
@@ -41,6 +43,7 @@ void ABaseCharacter::BeginPlay()
 	if (auto TimeSubsystem = GetWorld()->GetSubsystem<UTimeControlSubsystem>())
 	{
 		TimeSubsystem->TimeDilationDelegate.AddUObject(this, &ABaseCharacter::SetCustomTimeDilation);
+		SetCustomTimeDilation(TimeSubsystem->GetCurrentTimeDilationReason(), TimeSubsystem->GetCurrentCustomTimeDilation());
 	}
 }
 

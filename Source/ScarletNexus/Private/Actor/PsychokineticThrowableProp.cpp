@@ -140,6 +140,7 @@ void APsychokineticThrowableProp::FloatingTick(float DeltaTime)
 
 void APsychokineticThrowableProp::Launch()
 {
+	CustomTimeDilation = 1.f;
 	BoxComponent->SetCollisionProfileName("PlayerProjectile");
 	if (bIsAttached)
 	{

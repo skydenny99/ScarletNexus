@@ -22,7 +22,12 @@ void UTimeControlSubsystem::OnWorldBeginPlay(UWorld& InWorld)
 
 void UTimeControlSubsystem::SetCustomTimeDilation(ETimeDilationReason Reason, float TimeDilation)
 {
-	TimeDilationDelegate.Broadcast(Reason, TimeDilation);
+	CurrentTimeDilationReason = Reason;
+	CurrentCustomTimeDilation = TimeDilation;
+	if (TimeDilationDelegate.IsBound())
+	{
+		TimeDilationDelegate.Broadcast(Reason, TimeDilation);
+	}
 }
 
 void UTimeControlSubsystem::SetupWorldTimeDilation(const FName& DilationName, float TimeDilation)

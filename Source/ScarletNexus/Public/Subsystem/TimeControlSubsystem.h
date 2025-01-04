@@ -7,6 +7,8 @@
 #include "TimeControlSubsystem.generated.h"
 
 
+class ITimeControlInterface;
+
 UENUM(BlueprintType)
 enum class ETimeDilationReason : uint8
 {
@@ -24,6 +26,10 @@ class SCARLETNEXUS_API UTimeControlSubsystem : public UWorldSubsystem
 {
 	GENERATED_BODY()
 protected:
+
+	ETimeDilationReason CurrentTimeDilationReason;
+	float CurrentCustomTimeDilation = 1.f;
+	
 	TMap<FName, float> WorldTimeDilationMap;
 	float CurrentWorldTimeDilation;
 	virtual bool DoesSupportWorldType(const EWorldType::Type WorldType) const override;
@@ -34,6 +40,8 @@ public:
 	
 	UFUNCTION(BlueprintCallable, Category = "TimeControl")
 	void SetCustomTimeDilation(ETimeDilationReason Reason, float TimeDilation);
+	float GetCurrentCustomTimeDilation() const {return CurrentCustomTimeDilation;};
+	ETimeDilationReason GetCurrentTimeDilationReason() const {return CurrentTimeDilationReason;};
 	
 	UFUNCTION(BlueprintCallable, Category = "TimeControl")
 	void SetupWorldTimeDilation(const FName& DilationName, float TimeDilation);

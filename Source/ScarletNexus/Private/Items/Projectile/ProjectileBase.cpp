@@ -13,7 +13,7 @@
 #include "BaseDebugHelper.h"
 
 
-
+class UTimeControlSubsystem;
 // Sets default values
 AProjectileBase::AProjectileBase()
 {
@@ -56,6 +56,11 @@ void AProjectileBase::BeginPlay()
 		// CollsionBoxComponent->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
 	}
 	
+	if (auto TimeSubsystem = GetWorld()->GetSubsystem<UTimeControlSubsystem>())
+	{
+		TimeSubsystem->TimeDilationDelegate.AddUObject(this, &AProjectileBase::SetCustomTimeDilation);
+		SetCustomTimeDilation(TimeSubsystem->GetCurrentTimeDilationReason(), TimeSubsystem->GetCurrentCustomTimeDilation());
+	}
 }
 
 void AProjectileBase::HandleApplyProjectile(APawn* HitPawn, FGameplayEventData& Payload)
@@ -112,6 +117,11 @@ void AProjectileBase::OnProjectileBeginOverlap(UPrimitiveComponent* OverlappedCo
 {
 
 	Debug::Print(GetName() + TEXT(" Projectile BeginOverlap "), FColor::White);
+}
+
+void AProjectileBase::SetCustomTimeDilation(const ETimeDilationReason& _, float TimeDilation)
+{
+	CustomTimeDilation = TimeDilation;
 }
 
 
