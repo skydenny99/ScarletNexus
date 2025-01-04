@@ -82,6 +82,7 @@ void APsychokineticThrowableProp::OnStartGrab(bool NeedToClone, bool DoubleClone
 
 void APsychokineticThrowableProp::OnHit()
 {
+	if (bIsDestroyable == false) return;
 	ProjectileMovementComponent->ProjectileGravityScale = 1.f;
 	BoxComponent->SetCollisionProfileName("EndProjectile");
 	SetLifeSpan(1.f);
@@ -176,6 +177,7 @@ void APsychokineticThrowableProp::Launch()
 	ProjectileMovementComponent->Velocity = (GetActorForwardVector() * ProjectileMovementComponent->MaxSpeed);
 	SetLifeSpan(5.f);
 	OnUsePsychProp.ExecuteIfBound(this);
+	bIsDestroyable = true;
 }
 
 void APsychokineticThrowableProp::CloneLaunch()
