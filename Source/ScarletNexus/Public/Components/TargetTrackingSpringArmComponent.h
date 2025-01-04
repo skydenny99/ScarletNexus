@@ -73,6 +73,7 @@ public:
 	FORCEINLINE void StartResetTimer() { ResetTimer = 0.f; }
 	AActor* GetTestTarget() const {return FoundTargets.IsEmpty() ? nullptr : FoundTargets.Last();}
 	AActor* GetCurrentTarget();
+	FORCEINLINE AActor* GetTargetActor() const {return TargetActor;}
 	FORCEINLINE AActor* GetOverrideTarget() const { return OverrideTargetActor; };
 
 	UFUNCTION(BlueprintCallable)

@@ -281,7 +281,7 @@ void ACharacter_Kasane::OnInputLookTriggered(const FInputActionValue& Value)
 void ACharacter_Kasane::OnTargetingInputTriggered(const FInputActionValue& Value)
 {
 	CameraBoom->ToggleTargetTracking();
-	PlayerUIComponent->OnTargetting.Broadcast(CameraBoom->GetCurrentTarget());
+	PlayerUIComponent->OnTargetting.Broadcast(CameraBoom->GetTargetActor());
 }
 
 UPawnUIComponent* ACharacter_Kasane::GetPawnUIComponent() const
