@@ -53,7 +53,11 @@ void USASManageComponent::ToggleSASAbility(FGameplayTag InInputTag)
 	else
 	{
 		Debug::Print("SAS Ability not is activated", FColor::Red);
-		if (BaseAbilitySystemComponent->TryActivateAbility(AbilitySpecs[AbilityTag].Handle) == false)
+		if (BaseAbilitySystemComponent->TryActivateAbility(AbilitySpecs[AbilityTag].Handle))
+		{
+			OnSASTrigger.Broadcast(InInputTag);
+		}
+		else
 		{
 			Debug::Print("SAS Ability try failed", FColor::Red);
 		}
@@ -105,7 +109,6 @@ void USASManageComponent::OnSASInputTriggered(FGameplayTag InInputTag)
 	else
 	{
 		ToggleSASAbility(InInputTag);
-		OnSASTrigger.Broadcast(InInputTag);
 	}
 }
 
