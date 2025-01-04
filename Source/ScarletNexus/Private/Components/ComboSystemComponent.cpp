@@ -318,7 +318,10 @@ bool UComboSystemComponent::CheckJustDodge() // 최적화 필요
 			UPsychAbilityHelperLibrary::NativeOverrideThrowablePsychObject(Kasane, NearestProjectile);
 			UBaseFunctionLibrary::AddPlaygameTagToActor(Kasane, BaseGameplayTags::Player_Status_Move_Dodge_Instant_Psych);
 			UBaseFunctionLibrary::AddPlaygameTagToActor(Kasane, BaseGameplayTags::Player_Status_Move_Dodge_Instant_Weapon);
-			UGameplayStatics::SetGlobalTimeDilation(Kasane, GlobalTimeDilation);
+			if (auto TimeSubsystem = GetWorld()->GetSubsystem<UTimeControlSubsystem>())
+			{
+				TimeSubsystem->SetupWorldTimeDilation("JustDodge", GlobalTimeDilation);
+			}
 			Debug::Print(FString::Printf(TEXT("Set Nearest Projectile: %s"), *NearestProjectile->GetActorLabel()));
 			return true;
 		}
@@ -331,7 +334,10 @@ bool UComboSystemComponent::CheckJustDodge() // 최적화 필요
 		if (OverlappedActor == GetOwner()) continue;
 		Debug::Print("Found EnemyAttack");
 		UBaseFunctionLibrary::AddPlaygameTagToActor(Kasane, BaseGameplayTags::Player_Status_Move_Dodge_Instant_Weapon);
-		UGameplayStatics::SetGlobalTimeDilation(Kasane, GlobalTimeDilation); // 저스트 회피 성공 시 느려짐
+		if (auto TimeSubsystem = GetWorld()->GetSubsystem<UTimeControlSubsystem>())
+		{
+			TimeSubsystem->SetupWorldTimeDilation("JustDodge", GlobalTimeDilation);
+		}
 		return true;
 	}
 	return false;
