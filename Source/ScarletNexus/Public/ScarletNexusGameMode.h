@@ -69,7 +69,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void BP_BindHealthPointWithAttributChangeDelegate(AActor* InActor, const FGameplayAttribute InCurrentAttribute, FOnfloatValueChanged OnFloatValueChanged);
-	
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnFinalStage();
 	/*
 	UFUNCTION(BlueprintCallable)
 	void BP_BindDebuffWithAttributeChanageDelegate(AActor* InActor, const FGameplayAttribute InCurrentAttribute, FOnDebuffChanged OnDebuffChanged);

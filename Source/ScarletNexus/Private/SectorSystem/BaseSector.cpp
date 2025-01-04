@@ -10,6 +10,7 @@
 #include "Character/Character_Kasane.h"
 
 #include "BaseDebugHelper.h"
+#include "ScarletNexusGameMode.h"
 #include "Components/TargetTrackingSpringArmComponent.h"
 #include "Field/FieldSystemNodes.h"
 
@@ -142,6 +143,14 @@ void ABaseSector::SpawnEnemy(const int32 Stage)
 	if (Kasane)
 	{
 		Kasane->GetTargetTrackingComponent()->SetFoundTargets(Enemies);
+	}
+
+	if (Stage == StageInfos.Num() - 1)
+	{
+		if (auto Mode = Cast<AScarletNexusGameMode>(UGameplayStatics::GetGameMode(GetWorld())))
+		{
+			Mode->OnFinalStage();
+		}
 	}
 }
 
