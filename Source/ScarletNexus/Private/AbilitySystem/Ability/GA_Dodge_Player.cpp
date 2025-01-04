@@ -162,7 +162,10 @@ void UGA_Dodge_Player::OnCancelDodge()
 	if (UBaseFunctionLibrary::NativeActorHasTag(DodgeCharacter, BaseGameplayTags::Player_Status_Move_Dodge_Instant_Weapon)
 		|| UBaseFunctionLibrary::NativeActorHasTag(DodgeCharacter, BaseGameplayTags::Player_Status_Move_Dodge_Instant_Psych))
 	{
-		UGameplayStatics::SetGlobalTimeDilation(DodgeCharacter, 1.f);
+		if (auto TimeSubSystem = GetWorld()->GetSubsystem<UTimeControlSubsystem>())
+		{
+			TimeSubSystem->ReleaseWorldTimeDilation("JustDodge");
+		}
 		UBaseFunctionLibrary::RemovePlayGameTagFromActor(DodgeCharacter, BaseGameplayTags::Player_Status_Move_Dodge_Instant_Weapon);
 		UBaseFunctionLibrary::RemovePlayGameTagFromActor(DodgeCharacter, BaseGameplayTags::Player_Status_Move_Dodge_Instant_Psych);
 	}
