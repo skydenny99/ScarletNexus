@@ -30,7 +30,7 @@ APsychokineticThrowableProp::APsychokineticThrowableProp()
 	ProjectileMovementComponent->bShouldBounce = true;
 	ProjectileMovementComponent->Bounciness = 0.3f;
 
-	InterectComponent->SetupAttachment(RootComponent);
+	InterectComponent->SetupAttachment(BoxComponent);
 	InterectComponent->SetRelativeLocation(FVector::ZeroVector);
 	BoxComponent->SetCollisionProfileName("BlockAllDynamic");
 	
