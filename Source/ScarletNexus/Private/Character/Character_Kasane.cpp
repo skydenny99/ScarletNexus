@@ -281,15 +281,9 @@ void ACharacter_Kasane::OnInputLookTriggered(const FInputActionValue& Value)
 void ACharacter_Kasane::OnTargetingInputTriggered(const FInputActionValue& Value)
 {
 	CameraBoom->ToggleTargetTracking();
-	PlayerUIComponent->OnTargetting.Broadcast(CameraBoom->GetTargetActor());
 }
 
 UPawnUIComponent* ACharacter_Kasane::GetPawnUIComponent() const
-{
-	return PlayerUIComponent;
-}
-
-UPlayerUIComponent* ACharacter_Kasane::GetPlayerUIComponent() const
 {
 	return PlayerUIComponent;
 }
@@ -535,6 +529,14 @@ void ACharacter_Kasane::ActivateCloneSkeletalMesh(bool InIsActive, int32 InCount
 	RightCloneComponent->SetHiddenInGame(NeedToActivateRightClone, true);
 }
 
+void ACharacter_Kasane::OnUpdateTarget(AActor* InTargetActor)
+{
+	if (PlayerUIComponent)
+	{
+		PlayerUIComponent->OnTargetting.Broadcast(InTargetActor);
+	}
+}
+
 void ACharacter_Kasane::OnChangeItemInputTriggered(const FInputActionValue& Value)
 {
 	if (InventoryComponent == nullptr) return;
@@ -556,6 +558,7 @@ void ACharacter_Kasane::BeginPlay()
 	ActivateCloneSkeletalMesh(false);
 
 	BaseAbilitySystemComponent->TryActivateAbilityByTag(BaseGameplayTags::Shared_Ability_SpawnWeapon);
+	CameraBoom->OnTargetUpdated.BindUObject(this, &ACharacter_Kasane::OnUpdateTarget);
 
 	const TArray TempBodies({GetMesh(), LeftCloneComponent, RightCloneComponent});
 	for (auto TempBody : TempBodies)

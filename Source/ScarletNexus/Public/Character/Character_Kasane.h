@@ -96,7 +96,6 @@ protected:
 
 	//UI
 	virtual UPawnUIComponent* GetPawnUIComponent() const override;
-	virtual UPlayerUIComponent* GetPlayerUIComponent() const override;
 	virtual bool AllowSetTimeDilation(const ETimeDilationReason& Reason) override;
 
 	// Combat Component
@@ -169,8 +168,8 @@ public:
 	UFUNCTION(BlueprintPure)
 	FORCEINLINE UInventoryComponent* GetInventoryComponent() const { return InventoryComponent; };
 
-	//UFUNCTION(BlueprintPure)
-	//FORCEINLINE UPlayerUIComponent* GetPlayerUIComponent() const { return PlayerUIComponent; };
+	UFUNCTION(BlueprintPure)
+	FORCEINLINE UPlayerUIComponent* GetPlayerUIComponent() const { return PlayerUIComponent; };
 	
 	UFUNCTION(BlueprintPure)
 	FORCEINLINE UTargetTrackingSpringArmComponent* GetTargetTrackingComponent() const { return CameraBoom; }
@@ -197,5 +196,7 @@ public:
 	
 	UFUNCTION(BlueprintCallable)
 	void ActivateCloneSkeletalMesh(bool InIsActive, int32 InCount = 2);
+
+	void OnUpdateTarget(AActor* InTargetActor);
 };
 

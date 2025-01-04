@@ -65,6 +65,8 @@ protected:
 	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	
 public:
+	FOnTargetUpdated OnTargetUpdated;
+	
 	FORCEINLINE void SetFoundTargets(const TArray<AActor*>& Targets) { FoundTargets = Targets; }
 	void SortByDistance();
 	void ChangeTarget(bool bIsLeft = true);
@@ -75,6 +77,7 @@ public:
 	AActor* GetCurrentTarget();
 	FORCEINLINE AActor* GetTargetActor() const {return TargetActor;}
 	FORCEINLINE AActor* GetOverrideTarget() const { return OverrideTargetActor; };
+	FORCEINLINE bool IsTargetTracking() const { return bIsTargetTracking; }
 
 	UFUNCTION(BlueprintCallable)
 	FORCEINLINE void SetFixedTracking(bool InActive)
@@ -83,7 +86,7 @@ public:
 		//bEnableCameraRotationLag = !InActive;
 	}
 	UFUNCTION(BlueprintCallable)
-	FORCEINLINE void SetCurrentTrackingTarget(AActor* InTargetActor) {TargetActor = InTargetActor;}
+	void SetCurrentTrackingTarget(AActor* InTargetActor);
 	UFUNCTION(BlueprintCallable)
 	FORCEINLINE void ActivateOverrideTracking(bool InActivate) { bOverrideTrackingTarget = InActivate; }
 	UFUNCTION(BlueprintCallable)

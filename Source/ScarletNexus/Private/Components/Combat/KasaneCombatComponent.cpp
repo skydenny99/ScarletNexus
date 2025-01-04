@@ -7,6 +7,9 @@
 #include "BaseDebugHelper.h"
 #include "BaseGameplayTags.h"
 #include "Abilities/GameplayAbilityTypes.h"
+#include "Character/Character_Kasane.h"
+#include "Components/TargetTrackingSpringArmComponent.h"
+#include "Components/UI/PlayerUIComponent.h"
 
 
 void UKasaneCombatComponent::OnHitTargetActor(AActor* HitActor)
@@ -29,6 +32,16 @@ void UKasaneCombatComponent::OnHitTargetActor(AActor* HitActor)
 	FGameplayEventData Data;
 	Data.Instigator = GetOwningPawn();
 	Data.Target = HitActor;
+	if (ACharacter_Kasane* Kasane = Cast<ACharacter_Kasane>(GetOwningPawn()))
+	{
+		UTargetTrackingSpringArmComponent* TrackingTargetComp = Kasane->GetTargetTrackingComponent();
+		if (TrackingTargetComp && TrackingTargetComp->IsTargetTracking() == false)
+		{
+			TrackingTargetComp->SetCurrentTrackingTarget(HitActor);
+			TrackingTargetComp->ToggleTargetTracking();
+			Kasane->GetPlayerUIComponent()->OnTargetting.Broadcast(TrackingTargetComp->GetTargetActor());
+		}
+	}
 
 	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(GetOwningPawn(), BaseGameplayTags::Shared_Event_Hit_Normal, Data);
 	

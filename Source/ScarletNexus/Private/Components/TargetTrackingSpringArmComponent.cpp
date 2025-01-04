@@ -25,6 +25,7 @@ void UTargetTrackingSpringArmComponent::ChangeTarget(bool bIsLeft)
 	if (FoundTargets.IsEmpty()) return;
 	TargetIndex = (TargetIndex + (bIsLeft ? -1 : 1) + FoundTargets.Num()) % FoundTargets.Num();
 	TargetActor = FoundTargets[TargetIndex];
+	OnTargetUpdated.ExecuteIfBound(TargetActor);
 }
 
 void UTargetTrackingSpringArmComponent::ToggleTargetTracking()
@@ -40,6 +41,7 @@ void UTargetTrackingSpringArmComponent::SetTargetTracking(bool IsTargetTracking)
 		SortByDistance();
 		TargetIndex = 0;
 		TargetActor = FoundTargets[TargetIndex];
+		OnTargetUpdated.ExecuteIfBound(TargetActor);
 	}
 	else
 	{
@@ -149,8 +151,29 @@ void UTargetTrackingSpringArmComponent::OnEnemyDead(AActor* InTargetActor)
 		TargetActor = nullptr;
 	}
 	FoundTargets.Remove(InTargetActor);
-	if (FoundTargets.IsEmpty() || TargetIndex >= FoundTargets.Num())
+	if (TargetIndex >= FoundTargets.Num())
 	{
 		TargetIndex = 0;
 	}
+	
+	if (FoundTargets.IsEmpty() == false)
+	{
+		TargetActor = FoundTargets[TargetIndex];
+	}
+	else
+	{
+		TargetActor = nullptr;
+	}
+	
+	OnTargetUpdated.ExecuteIfBound(TargetActor);
+}
+
+void UTargetTrackingSpringArmComponent::SetCurrentTrackingTarget(AActor* InTargetActor)
+{
+	TargetActor = InTargetActor;
+	if (FoundTargets.Contains(TargetActor))
+	{
+		TargetIndex = FoundTargets.Find(TargetActor);
+	}
+	OnTargetUpdated.ExecuteIfBound(TargetActor);
 }
