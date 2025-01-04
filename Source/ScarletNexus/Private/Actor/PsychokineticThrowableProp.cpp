@@ -103,8 +103,8 @@ void APsychokineticThrowableProp::OnMeshHit(UPrimitiveComponent* HitComponent, A
 			//Debug::Print(TEXT("Hit!!!!!!!!!!!"));
 
 			HandleApplyProp(HitPawn, Data);
-			Debug::Print(FString::Printf(TEXT("HitPawn: %s"), *HitPawn->GetName()));
-			Debug::Print(FString::Printf(TEXT("Instigator: %s"), *Data.Instigator.GetName()));
+			//Debug::Print(FString::Printf(TEXT("HitPawn: %s"), *HitPawn->GetName()));
+			//Debug::Print(FString::Printf(TEXT("Instigator: %s"), *Data.Instigator.GetName()));
 		
 			BP_OnSpawnHitFX(Hit.Location);
 			OnHit();

@@ -57,7 +57,7 @@ void ABaseSector::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* Ot
 {
 	if (Cast<ACharacter_Kasane>(OtherActor) != nullptr)
 	{
-		Debug::Print("OnOverlap");
+		//Debug::Print("OnOverlap");
 
 		ToggleWall();
 		SpawnEnemy(StageNum);
@@ -99,7 +99,7 @@ void ABaseSector::ToggleWall()
 {
 	if (bIsActive == false)
 	{
-		Debug::Print("ActivateWall");
+		//Debug::Print("ActivateWall");
 		for (int i = 0; i < WallArray.Num(); i++)
 		{
 			WallArray[i]->GetStaticMesh()->SetHiddenInGame(false);
@@ -109,7 +109,7 @@ void ABaseSector::ToggleWall()
 	}
 	else
 	{
-		Debug::Print("UnActivateWall");
+		//Debug::Print("UnActivateWall");
 		for (int i = 0; i < WallArray.Num(); i++)
 		{
 			WallArray[i]->GetStaticMesh()->SetHiddenInGame(true);
@@ -127,7 +127,7 @@ void ABaseSector::SpawnEnemy(const int32 Stage)
 	ACharacter_Kasane* Kasane = Cast<ACharacter_Kasane>( UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
 	for (auto StageInfo : TargetStageInfo->SpawnEnemyInTargetPos)
 	{
-		Debug::Print(StageInfo.Value->GetName());
+		//Debug::Print(StageInfo.Value->GetName());
 		AActor* L_Enemy = GetWorld()->SpawnActor<AActor>(StageInfo.Value,SpawnPos[StageInfo.Key]->GetComponentTransform());
 		if (L_Enemy)
 		{
@@ -156,7 +156,7 @@ void ABaseSector::SpawnEnemy(const int32 Stage)
 
 inline void ABaseSector::OnRemoveEnemy(AActor* DestroyedActor)
 {
-	Debug::Print("OnRemoveEnemy");
+	//Debug::Print("OnRemoveEnemy");
 	
 	Enemies.Remove(DestroyedActor);
 	if (Enemies.IsEmpty())
@@ -167,11 +167,11 @@ inline void ABaseSector::OnRemoveEnemy(AActor* DestroyedActor)
 
 void ABaseSector::NextStage()
 {
-	Debug::Print("NextStage");
+	//Debug::Print("NextStage");
 	StageNum++;
 	if (StageNum == 4)
 	{
-		Debug::Print("EndStage");
+		//Debug::Print("EndStage");
 		ToggleWall();
 		return;
 	}

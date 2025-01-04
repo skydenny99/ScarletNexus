@@ -47,7 +47,7 @@ void ABaseEnemyCharacter::PossessedBy(AController* NewController)
 		{
 			LoadedData->GiveStartupAbilities(BaseAbilitySystemComponent);
 			
-			Debug::Print(TEXT("Enemy Start Up Data Loaded"), FColor::Green);
+			//Debug::Print(TEXT("Enemy Start Up Data Loaded"), FColor::Green);
 		}
 	}
 }

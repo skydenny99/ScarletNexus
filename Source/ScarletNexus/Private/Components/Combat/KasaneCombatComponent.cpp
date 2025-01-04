@@ -15,7 +15,7 @@
 void UKasaneCombatComponent::OnHitTargetActor(AActor* HitActor)
 {
     // 카사네 히트 로직
-    Debug::Print(GetOwningPawn()->GetActorLabel() + " Hit!!!!! " + HitActor->GetActorLabel(), FColor::Black);
+    //Debug::Print(GetOwningPawn()->GetActorLabel() + " Hit!!!!! " + HitActor->GetActorLabel(), FColor::Black);
 
 	
 	// HitActor가 이미 처리된 적이 있는지 확인
@@ -48,7 +48,7 @@ void UKasaneCombatComponent::OnHitTargetActor(AActor* HitActor)
 	// 처리 횟수가 KasaneHitnumber를 초과하면 리턴
 	if (KasaneHitActorCounts[HitActor] > KasaneHitnumber)
 	{
-		Debug::Print("Kasane Hit Return!");
+		//Debug::Print("Kasane Hit Return!");
 		return;
 	}
 }

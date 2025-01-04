@@ -148,7 +148,7 @@ private:
 	UNiagaraSystem* AfterImageEffectSystem = nullptr;
 	
 public:
-	FORCEINLINE uint8 GetDirectionByHistory();
+	uint8 GetDirectionByHistory();
 	UFUNCTION(BlueprintPure)
 	FVector GetInputDirection();
 	UFUNCTION(BlueprintPure)

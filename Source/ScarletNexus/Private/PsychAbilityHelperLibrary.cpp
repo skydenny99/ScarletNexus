@@ -162,7 +162,7 @@ void UPsychAbilityHelperLibrary::SetBlockUpdateTarget(const ACharacter_Kasane* K
 	if (Kasane == nullptr) return;
 	if (UPsychokinesisComponent* PsychokinesisComponent = Kasane->GetPsychokinesisComponent())
 	{
-		Debug::Print(FString::Printf(TEXT("%s"), *FString(InBlock ? "BlockUpdateTarget true" : "BlockUpdateTarget false")));
+		//Debug::Print(FString::Printf(TEXT("%s"), *FString(InBlock ? "BlockUpdateTarget true" : "BlockUpdateTarget false")));
 		PsychokinesisComponent->SetBlockUpdate(InBlock);
 	}
 }

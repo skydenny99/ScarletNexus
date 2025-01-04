@@ -26,7 +26,7 @@ APsychokineticPropBase::APsychokineticPropBase()
 
 void APsychokineticPropBase::DissolveProp()
 {
-	Debug::Print("DissolveProp");
+	//Debug::Print("DissolveProp");
 	Destroy();
 }
 

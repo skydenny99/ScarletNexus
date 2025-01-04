@@ -25,7 +25,7 @@ FGameplayAttribute UGA_SASAbilityBase::GetCurrentAttribute() const
 	if (MaxGaugeAttribute == UPlayerAttributeSet::GetMaxStealthGaugeAttribute())
 		return UPlayerAttributeSet::GetCurrentStealthGaugeAttribute();
 	
-	Debug::Print("UGA_SASAbilityBase::GetAttribute(): Unknown Attribute", FColor::Red);
+	//Debug::Print("UGA_SASAbilityBase::GetAttribute(): Unknown Attribute", FColor::Red);
 	return UPlayerAttributeSet::GetCurrentAccelGaugeAttribute();
 }
 

@@ -45,12 +45,12 @@ bool UInventoryComponent::HasItem(const FName& ItemName, FInventoryItemInfo& Fou
 
 void UInventoryComponent::ChangeIndex(bool InIsLeft)
 {
-	Debug::Print(FString::Printf(TEXT("Current Inventory: %d"), Inventory.Num()));
+	//Debug::Print(FString::Printf(TEXT("Current Inventory: %d"), Inventory.Num()));
 	if (Inventory.IsEmpty()) return;
 	int32 LastIndex = CurrentIndex;
 	CurrentIndex = (CurrentIndex + (InIsLeft ? -1 : 1) + Inventory.Num()) % Inventory.Num();
 	OnChangeSelectedItemDelegate.Broadcast(LastIndex, CurrentIndex, InIsLeft);
-	Debug::Print(FString::Printf(TEXT("Current Item: %s"), *Inventory[CurrentIndex].ItemName.ToString()));
+	//Debug::Print(FString::Printf(TEXT("Current Item: %s"), *Inventory[CurrentIndex].ItemName.ToString()));
 }
 
 FUsableItemInfo UInventoryComponent::GetCurrentSelectedItemInfo() const

@@ -97,8 +97,8 @@ void AProjectileBase::OnProjectileHit(UPrimitiveComponent* HitComponent, AActor*
 	Data.Instigator = this;
 	Data.Target = HitPawn;
 	
-	Debug::Print(GetName() + TEXT(" Projectile Hit Pawn ") + HitPawn->GetName(), FColor::Black);
-	Debug::Print(GetName() + TEXT(" Projectile Hit Pawn ") + HitPawn->GetName(), FColor::Green);
+	//Debug::Print(GetName() + TEXT(" Projectile Hit Pawn ") + HitPawn->GetName(), FColor::Black);
+	//Debug::Print(GetName() + TEXT(" Projectile Hit Pawn ") + HitPawn->GetName(), FColor::Green);
 	
 
 	// Data.Target 무적태그 확인
@@ -116,7 +116,7 @@ void AProjectileBase::OnProjectileBeginOverlap(UPrimitiveComponent* OverlappedCo
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 
-	Debug::Print(GetName() + TEXT(" Projectile BeginOverlap "), FColor::White);
+	//Debug::Print(GetName() + TEXT(" Projectile BeginOverlap "), FColor::White);
 }
 
 void AProjectileBase::SetCustomTimeDilation(const ETimeDilationReason& _, float TimeDilation)

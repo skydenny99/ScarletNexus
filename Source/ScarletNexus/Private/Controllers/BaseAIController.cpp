@@ -27,7 +27,7 @@ ABaseAIController::ABaseAIController(const FObjectInitializer& ObjectInitializer
     }
     else
     {
-        Debug::Print(TEXT("CrowdFollowingComponent 초기화 실패."));
+        //Debug::Print(TEXT("CrowdFollowingComponent 초기화 실패."));
     }
     
     
@@ -95,7 +95,7 @@ void ABaseAIController::OnEnemyPerceptionUpdated(AActor* Actor, FAIStimulus Stim
         {
             if (Stimulus.WasSuccessfullySensed()&& Actor)
             {
-                Debug::Print((TEXT("OnEnemyPerceptionUpdated Call : %s"), Actor->GetName()),FColor::Red);
+                //Debug::Print((TEXT("OnEnemyPerceptionUpdated Call : %s"), Actor->GetName()),FColor::Red);
                 BlackboardComponent->SetValueAsObject(FName(TEXT("TargetActor")), Actor);
 
                 OnEnemyPerceptionUIUpdated.Broadcast();                
@@ -127,7 +127,7 @@ void ABaseAIController::BeginPlay()
         CrowdFollowingComponent->SetCrowdCollisionQueryRange(CollsionQueryRange);
     }
     
-    Debug::Print(TEXT("BeginPlay Call"),FColor::Red);
+    //Debug::Print(TEXT("BeginPlay Call"),FColor::Red);
 
 
     // 블랙보드가 유효하지 않으면 초기화

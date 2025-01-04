@@ -48,11 +48,11 @@ void UGEExCalc_PsychoDamage::Execute_Implementation(const FGameplayEffectCustomE
 	float SourceAttack = 0.f;
 	
 	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(GetPsychoDamageCapture().AttackDef, EvaluateParams, SourceAttack);
-	Debug::Print(TEXT("SourceAttack"), SourceAttack);
+	//Debug::Print(TEXT("SourceAttack"), SourceAttack);
 
 	float SourcePower = 0.f;
 	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(GetPsychoDamageCapture().PowerDef, EvaluateParams, SourcePower);
-	Debug::Print(TEXT("SourcePower"), SourcePower);
+	//Debug::Print(TEXT("SourcePower"), SourcePower);
 
 	float BaseDamage = 0.f;
 
@@ -61,11 +61,11 @@ void UGEExCalc_PsychoDamage::Execute_Implementation(const FGameplayEffectCustomE
 		if (TagMagnitude.Key.MatchesTagExact(BaseGameplayTags::Shared_SetByCaller_BaseDamage))
 		{
 			BaseDamage = TagMagnitude.Value;
-			Debug::Print(TEXT("BaseDamage"), BaseDamage);
+			//Debug::Print(TEXT("BaseDamage"), BaseDamage);
 		}
 	}
 	const float FinalDamage = SourceAttack + BaseDamage + SourcePower;
-	Debug::Print(TEXT("FinalDamage"), FinalDamage);
+	//Debug::Print(TEXT("FinalDamage"), FinalDamage);
 
 
 	if (FinalDamage > 0.f)

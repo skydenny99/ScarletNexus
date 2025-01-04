@@ -59,7 +59,7 @@ void UBossUIBase::UpdateHp(const float TopProgress, const float DeltaSec)
 	}
 }
 
-inline void UBossUIBase::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
+void UBossUIBase::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 {
 	Super::NativeTick(MyGeometry, InDeltaTime);
 

@@ -19,7 +19,7 @@ UEnemyAttributeSet::UEnemyAttributeSet()
 	InitEnemyAttack(1.f);
 	InitDamageTaken(1.f);
 
-	Debug::Print(TEXT("Enemy InitAttribute"));
+	//Debug::Print(TEXT("Enemy InitAttribute"));
 }
 
 void UEnemyAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data)

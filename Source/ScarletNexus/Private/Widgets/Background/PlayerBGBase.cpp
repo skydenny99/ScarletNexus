@@ -17,7 +17,7 @@ void UPlayerBGBase::NativeOnInitialized()
 	FString A = UKismetSystemLibrary::MakeLiteralString("Kasane Randle");
 	T_PlayerName->SetText(UKismetTextLibrary::Conv_StringToText(A.TrimQuotes()));
 
-	Debug::Print(TEXT("NativeONPlayerBGBase::NativeOnInitialize"));
+	//Debug::Print(TEXT("NativeONPlayerBGBase::NativeOnInitialize"));
 	// OnOwningPlayerUIComponentInitialized();
 }
 
@@ -42,7 +42,7 @@ void UPlayerBGBase::OnOwningPlayerUIComponentInitialized(UPlayerUIComponent* Pla
 {
 	// Super::OnOwningPlayerUIComponentInitialized(PlayerUIComponent);
 
-	Debug::Print(TEXT("Player UI Component Initialized!!!!!!!!!!!!!!!!!!!!!"));
+	//Debug::Print(TEXT("Player UI Component Initialized!!!!!!!!!!!!!!!!!!!!!"));
 	
 	PlayerUIComponent->OnDebuffChanged.AddDynamic(this,&UPlayerBGBase::UpdateDebuff);
 	PlayerUIComponent->OnInitPlayer.AddDynamic(this,&UPlayerBGBase::Init);

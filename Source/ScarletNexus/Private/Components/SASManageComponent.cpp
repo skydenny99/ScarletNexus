@@ -41,25 +41,25 @@ void USASManageComponent::ToggleSASAbility(FGameplayTag InInputTag)
 	
 	if (AbilityTag.IsValid() == false || AbilitySpecs.Contains(AbilityTag) == false)
 	{
-		Debug::Print("SAS Ability not found", FColor::Red);
+		//Debug::Print("SAS Ability not found", FColor::Red);
 		return;
 	}
 	
 	if (BaseAbilitySystemComponent->IsAbilityActive(AbilitySpecs[AbilityTag].Handle))
 	{
-		Debug::Print("SAS Ability is activated", FColor::Red);
+		//Debug::Print("SAS Ability is activated", FColor::Red);
 		BaseAbilitySystemComponent->CancelAbilityHandle(AbilitySpecs[AbilityTag].Handle);
 	}
 	else
 	{
-		Debug::Print("SAS Ability not is activated", FColor::Red);
+		//Debug::Print("SAS Ability not is activated", FColor::Red);
 		if (BaseAbilitySystemComponent->TryActivateAbility(AbilitySpecs[AbilityTag].Handle))
 		{
 			OnSASTrigger.Broadcast(InInputTag);
 		}
 		else
 		{
-			Debug::Print("SAS Ability try failed", FColor::Red);
+			//Debug::Print("SAS Ability try failed", FColor::Red);
 		}
 	}
 }

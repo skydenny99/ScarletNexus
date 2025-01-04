@@ -100,7 +100,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	FORCEINLINE void SetBlockUpdate(bool InBlockUpdate)
 	{
-		Debug::Print(FString::Printf(TEXT("PsychokinesisComponent::SetBlockUpdate - %s"), *FString(InBlockUpdate ? "Block" : "Release")));
+		//Debug::Print(FString::Printf(TEXT("PsychokinesisComponent::SetBlockUpdate - %s"), *FString(InBlockUpdate ? "Block" : "Release")));
 		bBlockUpdate = InBlockUpdate;
 	}
 

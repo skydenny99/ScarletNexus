@@ -53,7 +53,7 @@ void UPlayerAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffect
 		const float NewCurrentHp = FMath::Clamp(GetCurrentHp(), 0.0f, GetMaxHp());
 		SetCurrentHp(NewCurrentHp);
 		PawnUIComponent->OnCurrentHpValueChanged.Broadcast(NewCurrentHp);
-		Debug::Print(FString::Printf(TEXT("HP = %f"),NewCurrentHp));
+		//Debug::Print(FString::Printf(TEXT("HP = %f"),NewCurrentHp));
 		
 	}
 	
@@ -73,7 +73,7 @@ void UPlayerAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffect
 		
 
 		const FString DebugString = FString::Printf(TEXT("Before Hp: %f, Damage: %f, NewCurrentHp : %f"), BeforeHp, Damage, NewCurrentHp);
-		Debug::Print(DebugString, FColor::Green);
+		//Debug::Print(DebugString, FColor::Green);
 	}
 
 	if (Data.EvaluatedData.Attribute == GetCurrentPsychGaugeAttribute())

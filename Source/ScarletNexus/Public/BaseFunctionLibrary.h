@@ -21,7 +21,6 @@ class SCARLETNEXUS_API UBaseFunctionLibrary : public UBlueprintFunctionLibrary
 	GENERATED_BODY()
 
 public:
-	// UBlueprintFunctionLibrary�� ���� �����̹Ƿ� public�� static���� �����ؾ���. ���ͷ� ������ �����Ƽ�ý��� ������Ʈ ��������.
 	static UBaseAbilitySystemComponent* NativeGetAbilitySystemComponentFromActor(AActor* Actor);
 
 	UFUNCTION(BlueprintCallable, Category = "FunctionLibrary")

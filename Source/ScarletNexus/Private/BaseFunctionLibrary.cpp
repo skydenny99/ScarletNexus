@@ -100,16 +100,8 @@ EBaseAIDirectionType UBaseFunctionLibrary::ComputeAIDirection(AActor* Target, AA
 	{
 		return EBaseAIDirectionType::Left; // 왼쪽
 	}
-	else
-	{
-		return EBaseAIDirectionType::Backward; // 후면
-	}
+	return EBaseAIDirectionType::Backward; // 후면
 
-	// 기본값
-	return EBaseAIDirectionType::None;
-
-
-	
 }
 
 bool UBaseFunctionLibrary::ApplyGameplayEffectSpecHandleToTargetActor(AActor* Instigator, AActor* TargetActor,
