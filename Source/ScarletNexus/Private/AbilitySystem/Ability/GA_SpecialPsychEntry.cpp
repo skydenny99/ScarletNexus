@@ -12,7 +12,7 @@ bool UGA_SpecialPsychEntry::CanActivateAbility(const FGameplayAbilitySpecHandle 
 {
 	if (Super::CanActivateAbility(Handle, ActorInfo, SourceTags, TargetTags, OptionalRelevantTags))
 	{
-		if (UPsychAbilityHelperLibrary::NativeHasPsychokineticSpecialPropInRange(Kasane) == false)
+		//if (UPsychAbilityHelperLibrary::NativeHasPsychokineticSpecialPropInRange(Kasane) == false)
 			//Debug::Print("PsychokineticSpecialPropInRange No Prop");
 		return CheckCost(Handle, ActorInfo) && UPsychAbilityHelperLibrary::NativeHasPsychokineticSpecialPropInRange(Kasane);
 	}

@@ -6,6 +6,7 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "BaseDebugHelper.h"
 #include "BaseGameplayTags.h"
+#include "PsychAbilityHelperLibrary.h"
 #include "Abilities/GameplayAbilityTypes.h"
 #include "Character/Character_Kasane.h"
 #include "Components/TargetTrackingSpringArmComponent.h"
@@ -22,6 +23,7 @@ void UKasaneCombatComponent::OnHitTargetActor(AActor* HitActor)
 	if (!KasaneHitActorCounts.Contains(HitActor))
 	{
 		KasaneHitActorCounts.Add(HitActor, 0);
+		UPsychAbilityHelperLibrary::ApplyPsychRecoverGameplayEffect(Cast<ACharacter_Kasane>(GetOwningPawn()));
 	}
 
 	// 처리 횟수 증가

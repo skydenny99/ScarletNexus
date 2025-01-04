@@ -47,4 +47,8 @@ public:
 	static UGameplayEffect* CreatePsychCostGameplayEffect(const ACharacter_Kasane* Kasane, APsychokineticPropBase* Target);
 	UFUNCTION(BlueprintCallable, Category = "FunctionLibrary")
 	static void ApplyPsychCostGameplayEffect(const ACharacter_Kasane* Kasane);
+
+	
+	UFUNCTION(BlueprintCallable, Category = "FunctionLibrary")
+	static void ApplyPsychRecoverGameplayEffect(const ACharacter_Kasane* Kasane);
 };
