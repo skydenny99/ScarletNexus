@@ -12,6 +12,15 @@ class ABaseSectorWall;
 class UMaterialInterface;
 class UBoxComponent;
 
+USTRUCT(BlueprintType)
+struct FStageInfo : public FTableRowBase
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditDefaultsOnly)
+	TMap<int32, TSubclassOf<AActor>> SpawnEnemyInTargetPos;
+};
+
 UCLASS()
 class SCARLETNEXUS_API ABaseSector : public AActor
 {
@@ -48,13 +57,14 @@ private:
 	TArray<USceneComponent*> SpawnPos;
 
 	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<AActor> Enemy;
+	UDataTable* StageInfoTable;
+	
 
 	UPROPERTY(VisibleAnywhere)
 	TArray<AActor*> Enemies;
 
 	bool bIsActive = true;
-	int32 StageNum = 1;
+	int32 StageNum = 0;
 	int StagePosNum[3][3] = {{0,1,2},{3,4,5},{6,7,8}};
 	
 protected:
@@ -62,6 +72,7 @@ protected:
 	virtual void OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
 	
 public:
+	
 	UFUNCTION(BlueprintCallable, Category="BaseSector")
 	void SpawnWall();
 

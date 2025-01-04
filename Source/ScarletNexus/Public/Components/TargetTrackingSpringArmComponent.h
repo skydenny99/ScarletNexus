@@ -87,6 +87,9 @@ public:
 	FORCEINLINE void ActivateOverrideTracking(bool InActivate) { bOverrideTrackingTarget = InActivate; }
 	UFUNCTION(BlueprintCallable)
 	FORCEINLINE void SetOverrideTargetActor(AActor* InTargetActor) { OverrideTargetActor = InTargetActor; }
+
+	UFUNCTION()
+	void OnEnemyDead(AActor* InTargetActor);
 };
 
 

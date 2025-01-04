@@ -136,9 +136,21 @@ void UTargetTrackingSpringArmComponent::TickComponent(float DeltaTime, enum ELev
 
 AActor* UTargetTrackingSpringArmComponent::GetCurrentTarget()
 {
-	SortByDistance();
-	
 	if (TargetActor)
 		return TargetActor;
+	SortByDistance();
 	return FoundTargets.IsEmpty() ? nullptr : FoundTargets[0];
+}
+
+void UTargetTrackingSpringArmComponent::OnEnemyDead(AActor* InTargetActor)
+{
+	if (InTargetActor == TargetActor)
+	{
+		TargetActor = nullptr;
+	}
+	FoundTargets.Remove(InTargetActor);
+	if (FoundTargets.IsEmpty() || TargetIndex >= FoundTargets.Num())
+	{
+		TargetIndex = 0;
+	}
 }

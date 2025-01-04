@@ -280,13 +280,7 @@ void ACharacter_Kasane::OnInputLookTriggered(const FInputActionValue& Value)
 
 void ACharacter_Kasane::OnTargetingInputTriggered(const FInputActionValue& Value)
 {
-	Debug::Print("Targeting Input");
-	TArray<AActor*> TargetActors;
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ACharacter::StaticClass(), TargetActors);
-	TargetActors.Remove(this);
-	CameraBoom->SetFoundTargets(TargetActors);
 	CameraBoom->ToggleTargetTracking();
-
 	PlayerUIComponent->OnTargetting.Broadcast(CameraBoom->GetCurrentTarget());
 }
 

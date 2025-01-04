@@ -10,6 +10,7 @@
 #include "Character/Character_Kasane.h"
 
 #include "BaseDebugHelper.h"
+#include "Components/TargetTrackingSpringArmComponent.h"
 #include "Field/FieldSystemNodes.h"
 
 // Sets default values
@@ -119,22 +120,28 @@ void ABaseSector::ToggleWall()
 
 void ABaseSector::SpawnEnemy(const int32 Stage)
 {
-	for (int i = 0; i < SpawnPos.Num(); i++)
+	TArray<FStageInfo*> StageInfos;
+	StageInfoTable->GetAllRows("", StageInfos);
+	const FStageInfo* TargetStageInfo = StageInfos[Stage];
+	ACharacter_Kasane* Kasane = Cast<ACharacter_Kasane>( UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
+	for (auto StageInfo : TargetStageInfo->SpawnEnemyInTargetPos)
 	{
-		/*
-		FString temp = "SpawnEnemy";
-		temp.AppendInt(i);
-		Debug::Print(*temp);
-		*/
-		for (int j = 0; j < 3; j++)
+		Debug::Print(StageInfo.Value->GetName());
+		AActor* L_Enemy = GetWorld()->SpawnActor<AActor>(StageInfo.Value,SpawnPos[StageInfo.Key]->GetComponentTransform());
+		if (L_Enemy)
 		{
-			if (i == StagePosNum[Stage-1][j])
+			L_Enemy->OnDestroyed.AddDynamic(this,&ABaseSector::OnRemoveEnemy);
+			Enemies.Add(L_Enemy);
+			if (Kasane)
 			{
-				AActor* L_Enemy = GetWorld()->SpawnActor<AActor>(Enemy,SpawnPos[i]->GetComponentTransform());
-				L_Enemy->OnDestroyed.AddDynamic(this,&ABaseSector::OnRemoveEnemy);
-				Enemies.Add(L_Enemy);
+				L_Enemy->OnDestroyed.AddDynamic(Kasane->GetTargetTrackingComponent(),&UTargetTrackingSpringArmComponent::OnEnemyDead);
 			}
 		}
+		
+	}
+	if (Kasane)
+	{
+		Kasane->GetTargetTrackingComponent()->SetFoundTargets(Enemies);
 	}
 }
 
