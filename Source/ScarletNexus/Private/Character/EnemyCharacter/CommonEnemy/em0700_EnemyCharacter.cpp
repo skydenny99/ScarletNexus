@@ -8,6 +8,8 @@
 #include "DataAsset/DataAsset_StartupBase.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "BaseDebugHelper.h"
+#include "NiagaraComponent.h"
+#include "NiagaraFunctionLibrary.h"
 #include "Components/WidgetComponent.h"
 
 Aem0700_EnemyCharacter::Aem0700_EnemyCharacter()
@@ -46,5 +48,21 @@ Aem0700_EnemyCharacter::Aem0700_EnemyCharacter()
 	LockOnComponent->SetupAttachment(MainBody, FName("Hips"));
 	BrainCrashComponent->SetupAttachment(MainBody, FName("Hips"));
 
+	AfterimageEffectComponent = CreateDefaultSubobject<UNiagaraComponent>(TEXT("AfterimageEffectComponent"));
+	
+}
+
+void Aem0700_EnemyCharacter::BeginPlay()
+{
+	Super::BeginPlay();
+
+	AfterimageEffectComponent = UNiagaraFunctionLibrary::SpawnSystemAttached(
+			AfterImageEffectSystem,
+			MainBody,
+			FName("Hips"),
+			FVector(0.f,0.f,0.f),
+			FRotator(0.f,0.f,0.f),
+			EAttachLocation::Type::SnapToTarget,
+			false);
 	
 }

@@ -6,6 +6,8 @@
 #include "Character/EnemyCharacter/CommonEnemyCharacter.h"
 #include "em0700_EnemyCharacter.generated.h"
 
+class UNiagaraSystem;
+class UNiagaraComponent;
 /**
  * 
  */
@@ -17,4 +19,12 @@ class SCARLETNEXUS_API Aem0700_EnemyCharacter : public ACommonEnemyCharacter
 public:
 	Aem0700_EnemyCharacter();
 	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UNiagaraComponent* AfterimageEffectComponent = nullptr;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "SAS")
+	UNiagaraSystem* AfterImageEffectSystem = nullptr;
+
+	
+	virtual void BeginPlay() override;
 };
