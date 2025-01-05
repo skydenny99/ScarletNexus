@@ -52,7 +52,7 @@ void UPlayerAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffect
 	{
 		const float NewCurrentHp = FMath::Clamp(GetCurrentHp(), 0.0f, GetMaxHp());
 		SetCurrentHp(NewCurrentHp);
-		PawnUIComponent->OnCurrentHpValueChanged.Broadcast(NewCurrentHp);
+		
 		//Debug::Print(FString::Printf(TEXT("HP = %f"),NewCurrentHp));
 		
 	}
@@ -69,7 +69,7 @@ void UPlayerAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffect
 		// HP
 		const float NewCurrentHp = FMath::Clamp(BeforeHp - (Damage - CashedDefence), 0.0f, GetMaxHp());
 		SetCurrentHp(NewCurrentHp);
-		
+		PawnUIComponent->OnCurrentHpValueChanged.Broadcast(NewCurrentHp);
 		
 
 		const FString DebugString = FString::Printf(TEXT("Before Hp: %f, Damage: %f, NewCurrentHp : %f"), BeforeHp, Damage, NewCurrentHp);
