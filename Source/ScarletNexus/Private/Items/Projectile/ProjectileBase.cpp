@@ -42,7 +42,7 @@ AProjectileBase::AProjectileBase()
 	//수명
 	InitialLifeSpan = 4.0f;
 	bCanClonable = false;
-
+	bIsUsed = true;
 	
 }
 

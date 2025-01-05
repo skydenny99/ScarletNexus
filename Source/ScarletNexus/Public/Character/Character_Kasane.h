@@ -177,6 +177,7 @@ public:
 	void ChangeCamera(bool bUseMain = true, float BlendTime = 1.f);
 	FORCEINLINE UCameraComponent* GetMainCamera() const { return MainCamera; }
 	FORCEINLINE AActor* GetComboDirectCameraActor() const { return ComboDirectCameraActor->GetChildActor(); }
+	void ResetComboDirectCameraSetting();
 
 	// Weapon Effect
 	UFUNCTION(BlueprintCallable)

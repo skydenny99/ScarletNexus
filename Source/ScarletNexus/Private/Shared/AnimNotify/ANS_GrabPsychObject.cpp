@@ -7,7 +7,9 @@
 #include "BaseGameplayTags.h"
 #include "Actor/PsychokineticThrowableProp.h"
 #include "Character/Character_Kasane.h"
+#include "Character/EnemyCharacter/BaseEnemyCharacter.h"
 #include "Components/PsychokinesisComponent.h"
+#include "Components/TargetTrackingSpringArmComponent.h"
 
 void UANS_GrabPsychObject::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation,
                                        float TotalDuration, const FAnimNotifyEventReference& EventReference)
@@ -22,6 +24,12 @@ void UANS_GrabPsychObject::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSe
 			ThrowableProp->OnStartGrab(
 			UBaseFunctionLibrary::NativeActorHasTag(Character, BaseGameplayTags::Player_Status_SAS_Clone),
 			true);
+			AActor* TargetActor = Character->GetTargetTrackingComponent()->GetCurrentTarget();
+			ThrowableProp->SetTarget(TargetActor);
+			if(ABaseEnemyCharacter* EnemyCharacter = Cast<ABaseEnemyCharacter>(TargetActor))
+			{
+				ThrowableProp->SetTarget(EnemyCharacter->GetTargetVector());
+			}
 		}
 	}
 }

@@ -32,3 +32,13 @@ void UANS_CameraLookAtBase::NotifyTick(USkeletalMeshComponent* MeshComp, UAnimSe
 	}
 	
 }
+
+void UANS_CameraLookAtBase::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation,
+	const FAnimNotifyEventReference& EventReference)
+{
+	Super::NotifyEnd(MeshComp, Animation, EventReference);
+	if (ACharacter_Kasane* Kasane = Cast<ACharacter_Kasane>(MeshComp->GetOwner()))
+	{
+		Kasane->ResetComboDirectCameraSetting();
+	}
+}

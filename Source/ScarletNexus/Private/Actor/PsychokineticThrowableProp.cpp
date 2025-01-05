@@ -117,6 +117,7 @@ void APsychokineticThrowableProp::OnMeshHit(UPrimitiveComponent* HitComponent, A
 
 void APsychokineticThrowableProp::OnChargingCancel()
 {
+	bIsUsed = false;
 	CurrentTargetLocation.Reset();
 	ProjectileMovementComponent->SetUpdatedComponent(RootComponent);
 	CurrentControlNum++;

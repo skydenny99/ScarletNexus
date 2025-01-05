@@ -424,6 +424,12 @@ void ACharacter_Kasane::ChangeCamera(bool bUseMain, float BlendTime)
 		PC->SetViewTargetWithBlend(ComboDirectCameraActor->GetChildActor(), BlendTime);
 }
 
+void ACharacter_Kasane::ResetComboDirectCameraSetting()
+{
+	ComboDirectCameraActor->GetChildActor()->SetActorRelativeLocation(FVector::ZeroVector);
+	ComboDirectCameraActor->GetChildActor()->SetActorRelativeRotation(FRotator::ZeroRotator);
+}
+
 void ACharacter_Kasane::ActivateWeaponTrail(bool InIsActive, int32 Count)
 {
 	if (WeaponBasicTrailSystem == nullptr || WeaponFireTrailSystem == nullptr) return;

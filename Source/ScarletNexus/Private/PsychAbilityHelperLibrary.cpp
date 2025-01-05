@@ -214,3 +214,23 @@ void UPsychAbilityHelperLibrary::ApplyPsychRecoverGameplayEffect(const ACharacte
 	ASC->ApplyGameplayEffectToSelf(CostGameplayEffect, 1.f, ASC->MakeEffectContext());
 }
 
+void UPsychAbilityHelperLibrary::InitOnGrabThrowableProp(ACharacter_Kasane* Kasane)
+{
+	if (Kasane == nullptr) return;
+	UTargetTrackingSpringArmComponent* TargetTracking = Kasane->GetTargetTrackingComponent();
+	UPsychokinesisComponent* PsychokinesisComponent = Kasane->GetPsychokinesisComponent();
+	if (auto ThrowableProp = Cast<APsychokineticThrowableProp>(PsychokinesisComponent->GetPsychThrowableTarget()))
+	{
+		ThrowableProp->OnStartGrab(
+		UBaseFunctionLibrary::NativeActorHasTag(Kasane, BaseGameplayTags::Player_Status_SAS_Clone),
+		true);
+		AActor* TargetActor = TargetTracking->GetCurrentTarget();
+		ThrowableProp->SetTarget(TargetActor);
+		if(ABaseEnemyCharacter* EnemyCharacter = Cast<ABaseEnemyCharacter>(TargetActor))
+		{
+			ThrowableProp->SetTarget(EnemyCharacter->GetTargetVector());
+		}
+	}
+}
+
+
