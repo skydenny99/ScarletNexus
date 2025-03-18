@@ -16,7 +16,7 @@ bool UGA_AerialPsych::CanActivateAbility(const FGameplayAbilitySpecHandle Handle
 {
 	if (Super::CanActivateAbility(Handle, ActorInfo, SourceTags, TargetTags, OptionalRelevantTags))
 	{
-		return CheckCost(Handle, ActorInfo) && ComboSystem->PsychAerialCombo.CurrentComboCount < ComboSystem->PsychAerialCombo.MaxComboCount
+		return CheckCost(Handle, ActorInfo) && ComboSystem && ComboSystem->PsychAerialCombo.CurrentComboCount < ComboSystem->PsychAerialCombo.MaxComboCount
 		&& UPsychAbilityHelperLibrary::NativeHasPsychokineticThrowablePropInRange(Kasane);
 	}
 	return false;
@@ -33,7 +33,10 @@ void UGA_AerialPsych::PreActivate(const FGameplayAbilitySpecHandle Handle, const
 void UGA_AerialPsych::OnEndAbility(UGameplayAbility* Ability)
 {
 	Super::OnEndAbility(Ability);
-	Kasane->GetPsychokinesisComponent()->SetBlockUpdate(false);
+	if (IsValid(Kasane))
+	{
+		Kasane->GetPsychokinesisComponent()->SetBlockUpdate(false);
+	}
 }
 
 UGameplayEffect* UGA_AerialPsych::GetCostGameplayEffect() const

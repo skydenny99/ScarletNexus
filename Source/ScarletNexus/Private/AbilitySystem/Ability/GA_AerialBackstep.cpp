@@ -11,7 +11,7 @@ bool UGA_AerialBackstep::CanActivateAbility(const FGameplayAbilitySpecHandle Han
 {
 	if (Super::CanActivateAbility(Handle, ActorInfo, SourceTags, TargetTags, OptionalRelevantTags))
 	{
-		return ComboSystem->BackstepAerialCombo.CurrentComboCount < ComboSystem->BackstepAerialCombo.MaxComboCount;
+		return ComboSystem && (ComboSystem->BackstepAerialCombo.CurrentComboCount < ComboSystem->BackstepAerialCombo.MaxComboCount);
 	}
 	return false;
 }

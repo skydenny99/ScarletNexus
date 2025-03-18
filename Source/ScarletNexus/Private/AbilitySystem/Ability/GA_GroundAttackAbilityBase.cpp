@@ -10,5 +10,8 @@ void UGA_GroundAttackAbilityBase::ActivateAbility(const FGameplayAbilitySpecHand
                                                   const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
-	ComboSystem->ResetAerialCombo();
+	if (ComboSystem)
+	{
+		ComboSystem->ResetAerialCombo();
+	}
 }

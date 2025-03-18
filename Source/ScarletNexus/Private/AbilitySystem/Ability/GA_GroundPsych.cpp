@@ -25,7 +25,10 @@ void UGA_GroundPsych::PreActivate(const FGameplayAbilitySpecHandle Handle, const
 	FOnGameplayAbilityEnded::FDelegate* OnGameplayAbilityEndedDelegate, const FGameplayEventData* TriggerEventData)
 {
 	Super::PreActivate(Handle, ActorInfo, ActivationInfo, OnGameplayAbilityEndedDelegate, TriggerEventData);
-	ComboSystem->ClearPsychComboTimer();
+	if (ComboSystem)
+	{
+		ComboSystem->ClearPsychComboTimer();
+	}
 	UPsychAbilityHelperLibrary::NativeOnActivateNormalPsychAbility(Kasane);
 }
 
@@ -33,7 +36,10 @@ void UGA_GroundPsych::PreActivate(const FGameplayAbilitySpecHandle Handle, const
 void UGA_GroundPsych::OnEndAbility(UGameplayAbility* Ability)
 {
 	Super::OnEndAbility(Ability);
-	Kasane->GetPsychokinesisComponent()->SetBlockUpdate(false);
+	if (IsValid(Kasane))
+	{
+		Kasane->GetPsychokinesisComponent()->SetBlockUpdate(false);
+	}
 }
 
 UGameplayEffect* UGA_GroundPsych::GetCostGameplayEffect() const
