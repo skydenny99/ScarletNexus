@@ -56,8 +56,7 @@ void UComboSystemComponent::GrantAttackAbilites(UAbilitySystemComponent* ASC, in
 		Spec.Level = Level;
 		ASC->GiveAbility(Spec);
 		AbilitySpecs.Add(Spec.Ability->AbilityTags.First(), Spec);
-		//Debug::Print(FString::Printf(TEXT("%s Ability Granted"), *Spec.Ability->AbilityTags.First().ToString()), FColor::Green);
-	}
+		}
 	UBaseFunctionLibrary::AddPlaygameTagToActor(Kasane, BaseGameplayTags::Shared_Status_CanAttack);
 }
 
@@ -157,7 +156,6 @@ void UComboSystemComponent::TryActivateChargeAbility()
 	EventData.Instigator = Kasane;
 	EventData.InstigatorTags.AddTag(ActionElapsedTime >= ChargeCompletionTime ? BaseGameplayTags::Shared_Event_Charge_Confirm : BaseGameplayTags::Shared_Event_Charge_Cancel);
 	
-	//Debug::Print(FString::Printf(TEXT("Character Target Name: %s"), *Kasane->GetActorLabel()));
 	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(Kasane, BaseGameplayTags::Shared_Event_Charge, EventData);
 
 	bIsCharging = false;
@@ -288,14 +286,14 @@ void UComboSystemComponent::ProcessInputAction(FGameplayTag InputTag, ETriggerEv
 	}
 }
 
-bool UComboSystemComponent::CheckJustDodge() // 최적화 필요
+bool UComboSystemComponent::CheckJustDodge()
 {
 	const float GlobalTimeDilation = .1f;
 	if (JustDodgeBoundary == nullptr) return false;
 
 	TSet<AActor*> OverlappedActors;
 
-	JustDodgeBoundary->GetOverlappingActors(OverlappedActors, AProjectileBase::StaticClass()); // BaseProjectile::StaticClass();
+	JustDodgeBoundary->GetOverlappingActors(OverlappedActors, AProjectileBase::StaticClass()); 
 	if (OverlappedActors.IsEmpty() == false)
 	{
 		AActor* NearestProjectile = nullptr;

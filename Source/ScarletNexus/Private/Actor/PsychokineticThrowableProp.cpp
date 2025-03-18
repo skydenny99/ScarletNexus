@@ -169,11 +169,7 @@ void APsychokineticThrowableProp::Launch()
 	}
 	const FRotator LookAtRot = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), TargetLocation);
 	SetActorRotation(LookAtRot);
-	// Debug::Print(FString::Printf(TEXT("TargetLocation, %f, %f ,%f"), TargetLocation.X, TargetLocation.Y, TargetLocation.Z ));
 
-	
-
-	
 	ProjectileMovementComponent->SetUpdatedComponent(RootComponent);
 	ProjectileMovementComponent->Velocity = (GetActorForwardVector() * ProjectileMovementComponent->MaxSpeed);
 	SetLifeSpan(5.f);

@@ -51,7 +51,7 @@ void UPsychokinesisComponent::UpdateNearestPsychSpecialTarget()
 	}
 }
 
-APsychokineticPropBase* UPsychokinesisComponent::UpdateNearestPsychTarget(TArray<APsychokineticPropBase*> PropList) const
+APsychokineticPropBase* UPsychokinesisComponent::UpdateNearestPsychTarget(const TArray<APsychokineticPropBase*>& PropList) const
 {
 	if (PropList.IsEmpty()) return nullptr;
 	APlayerCameraManager* CameraManager = UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0);

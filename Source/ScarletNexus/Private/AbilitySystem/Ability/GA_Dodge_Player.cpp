@@ -91,12 +91,10 @@ void UGA_Dodge_Player::GetCharacterDodgeDirection(EBaseDirectionType& DirectionR
 		if (VerticalDot > 0.f) // Forward
 		{
 			DirectionResult = EBaseDirectionType::Front;
-			//Debug::Print("Forward");
 		}
 		else // Backward
 		{
 			DirectionResult = EBaseDirectionType::Back;
-			//Debug::Print("Back");
 			LookDirection = UKismetMathLibrary::RotateAngleAxis(LookDirection, 180, FVector::UpVector);
 		}
 	}
@@ -105,13 +103,11 @@ void UGA_Dodge_Player::GetCharacterDodgeDirection(EBaseDirectionType& DirectionR
 		if (HorizontalDot > 0.f) // Right
 		{
 			DirectionResult = EBaseDirectionType::Right;
-			//Debug::Print("Right");	
 			LookDirection = UKismetMathLibrary::RotateAngleAxis(LookDirection, -90, FVector::UpVector);
 		}
 		else // Left
 		{
 			DirectionResult = EBaseDirectionType::Left;
-			//Debug::Print("Left");
 			LookDirection = UKismetMathLibrary::RotateAngleAxis(LookDirection, 90, FVector::UpVector);
 		}
 	}

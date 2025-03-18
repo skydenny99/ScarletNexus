@@ -20,7 +20,6 @@ UGameplayEffect* UGA_SpecialPsych::GetCostGameplayEffect() const
 void UGA_SpecialPsych::OnAvatarSet(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec)
 {
 	Super::OnAvatarSet(ActorInfo, Spec);
-	// UBaseFunctionLibrary::AddPlaygameTagToActor(Kasane, BaseGameplayTags::Shared_Status_CanAttack);
 	auto ASC = Kasane->GetBaseAbilitySystemComponent();
 	if (ASC->TryActivateAbility(Spec.Handle))
 	{

@@ -19,7 +19,9 @@ class SCARLETNEXUS_API UUnlockSystemComponent : public UActorComponent
 	GENERATED_BODY()
 
 	FGameplayTagContainer UnlockedTags;
+	UPROPERTY()
 	UDataAsset_UnlockAbility* DataAsset_UnlockAbility;
+	UPROPERTY()
 	UAbilitySystemComponent* AbilitySystemComponent;
 	
 public:

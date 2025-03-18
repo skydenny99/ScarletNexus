@@ -95,13 +95,6 @@ FRotator UTargetTrackingSpringArmComponent::GetDesiredRotation() const
 	PlayerController->GetViewportSize(ScreenWidth, ScreenHeight);
 	TargetScreenLocation.X /= ScreenWidth;
 	TargetScreenLocation.Y /= ScreenHeight;
-	// if (bProjectResult == false)
-	// 	return DesiredRot;
-	
-	// float LeftBoundary = GSystemResolution.ResX * BoundaryLeft;
-	// float RightBoundary = GSystemResolution.ResX * (1 - BoundaryRight);
-	// float TopBoundary = GSystemResolution.ResY * BoundaryTop;
-	// float BottomBoundary = GSystemResolution.ResY * (1 + BoundaryBottom);
 
 	if (bProjectResult == false || TargetScreenLocation.X < BoundaryLeft  || TargetScreenLocation.X > 1 - BoundaryRight
 		|| TargetScreenLocation.Y < BoundaryTop  || TargetScreenLocation.Y > 1 - BoundaryBottom)

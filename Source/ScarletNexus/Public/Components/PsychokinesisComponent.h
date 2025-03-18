@@ -70,7 +70,7 @@ protected:
 
 	void UpdateNearestPsychThrowableTarget();
 	void UpdateNearestPsychSpecialTarget();
-	APsychokineticPropBase* UpdateNearestPsychTarget(TArray<APsychokineticPropBase*> PropList) const;
+	APsychokineticPropBase* UpdateNearestPsychTarget(const TArray<APsychokineticPropBase*>& PropList) const;
 	void OnUsePsychProp(APsychokineticPropBase* UsedPsychProp);
 	
 	// Called when the game starts
