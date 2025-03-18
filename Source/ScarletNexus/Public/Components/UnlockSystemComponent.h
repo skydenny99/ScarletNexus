@@ -29,6 +29,6 @@ public:
 	// Sets default values for this component's properties
 	UUnlockSystemComponent();
 
-	void InitUnlockData(UAbilitySystemComponent* ASC, FGameplayTagContainer Tags);
+	void InitUnlockData(UAbilitySystemComponent* ASC, const FGameplayTagContainer& Tags);
 	void ApplyUnlockData();
 };

@@ -81,17 +81,17 @@ public:
 	UInventoryComponent();
 
 	//inventory
-	TArray<FInventoryItemInfo> GetInventoryItems() const {return Inventory;}
+	const TArray<FInventoryItemInfo>& GetInventoryItems() const {return Inventory;}
 
 	//item
-	FUsableItemInfo GetItemInfo(const FName& ItemName) const;
+	const FUsableItemInfo& GetItemInfo(const FName& ItemName) const;
 	
-	bool CanUseItem();
+	bool CanUseItem() const;
 	bool HasItem(const FName& ItemName, FInventoryItemInfo& FoundItemInfo) const;
 	void ChangeIndex(bool InIsLeft);
 
 	UFUNCTION(BlueprintPure, Category="Inventory")
-	FUsableItemInfo GetCurrentSelectedItemInfo() const;
+	const FUsableItemInfo& GetCurrentSelectedItemInfo() const;
 
 	UFUNCTION(BlueprintCallable, category="Inventory")
 	void UseCurrentSelectedItem(AActor* Target);

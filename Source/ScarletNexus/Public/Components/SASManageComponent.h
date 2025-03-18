@@ -37,7 +37,7 @@ protected:
 	TArray<FGameplayTag> CurrentSASAbilityTags;
 	TMap<FGameplayTag, FGameplayAbilitySpec> AbilitySpecs;
 	
-	void ToggleSASAbility(FGameplayTag InInputTag);
+	void ToggleSASAbility(const FGameplayTag& InInputTag);
 	void CancelAllSASAbilities();
 
 	UPROPERTY(BlueprintAssignable)
@@ -46,6 +46,6 @@ protected:
 public:
 	void InitReferences(ACharacter_Kasane* InKasane);
 	void GrantSASAbilites(int32 Level = 1);
-	void OnSASInputTriggered(FGameplayTag InInputTag);
+	void OnSASInputTriggered(const FGameplayTag& InInputTag);
 
 };
