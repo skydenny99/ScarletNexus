@@ -39,7 +39,7 @@ int UItemBGBase::Side(const int Index,const int Lenght, const bool bIsLeft)
 
 void UItemBGBase::UpdateBefore(int32 OldIndex ,bool bIsLeft)
 {
-	TArray<FInventoryItemInfo> Items = InventoryComponent->GetInventoryItems();
+	const TArray<FInventoryItemInfo>& Items = InventoryComponent->GetInventoryItems();
 	const int Index = Side(OldIndex,Items.Num(),bIsLeft);
 	CachedCurrentIndex = Index;
 
@@ -74,7 +74,7 @@ void UItemBGBase::UpdateBefore(int32 OldIndex ,bool bIsLeft)
 
 void UItemBGBase::UpdateAfter(int32 CurrentIndex)
 {
-	TArray<FInventoryItemInfo> Items = InventoryComponent->GetInventoryItems();
+	const TArray<FInventoryItemInfo>& Items = InventoryComponent->GetInventoryItems();
 
 	LeftMaterialInstance = UKismetMaterialLibrary::CreateDynamicMaterialInstance(GetWorld(),InventoryComponent->GetItemInfo(Items[Side(CurrentIndex,Items.Num(),true)].ItemName).ItemMaterial);
 	MiddleMaterialInstance = UKismetMaterialLibrary::CreateDynamicMaterialInstance(GetWorld(),InventoryComponent->GetItemInfo(Items[CurrentIndex].ItemName).ItemMaterial);
@@ -87,7 +87,7 @@ void UItemBGBase::UpdateAfter(int32 CurrentIndex)
 
 void UItemBGBase::Init(int32 CurrentIndex)
 {
-	TArray<FInventoryItemInfo> Items = InventoryComponent->GetInventoryItems();
+	const TArray<FInventoryItemInfo>& Items = InventoryComponent->GetInventoryItems();
 	const int LIndex = Side(CurrentIndex,Items.Num(),true);
 	const int RIndex = Side(CurrentIndex,Items.Num(),false);
 
@@ -112,8 +112,7 @@ void UItemBGBase::Init(int32 CurrentIndex)
 
 void UItemBGBase::UpdateQuantity(int32 CurrentIndex)
 {
-	
-	TArray<FInventoryItemInfo> Items = InventoryComponent->GetInventoryItems();
+	const TArray<FInventoryItemInfo>& Items = InventoryComponent->GetInventoryItems();
 	const int LIndex = Side(CurrentIndex,Items.Num(),true);
 	const int RIndex = Side(CurrentIndex,Items.Num(),false);
 	

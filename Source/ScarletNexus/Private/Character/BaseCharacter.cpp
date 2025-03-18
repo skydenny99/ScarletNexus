@@ -22,11 +22,9 @@ ABaseCharacter::ABaseCharacter()
 
 void ABaseCharacter::SetCustomTimeDilation(const ETimeDilationReason& Reason, float TimeDilation)
 {
-	Debug::Print("CustomTimeDilation");
 	if (AllowSetTimeDilation(Reason))
 	{
 		CustomTimeDilation = TimeDilation;
-		Debug::Print("CustomTimeDilation");
 	}
 	OnChangeCustomTimeDilationDelegate.Broadcast(Reason, TimeDilation);
 }

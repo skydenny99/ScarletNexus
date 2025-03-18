@@ -11,7 +11,7 @@ void UANS_ChangeCamera::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSeque
 	Super::NotifyBegin(MeshComp, Animation, TotalDuration, EventReference);
 	if (ACharacter_Kasane* Character = Cast<ACharacter_Kasane>(MeshComp->GetOwner()))
 	{
-		Character->ChangeCamera(false);
+		Character->ChangeCamera(false, .3f);
 	}
 	
 }
@@ -23,6 +23,8 @@ void UANS_ChangeCamera::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequenc
 	if (ACharacter_Kasane* Character = Cast<ACharacter_Kasane>(MeshComp->GetOwner()))
 	{
 		Character->ChangeCamera(true, .3f);
-		Character->GetController()->SetControlRotation(Character->GetComboDirectCameraActor()->GetActorRotation());
+		FRotator CamRot = Character->GetComboDirectCameraActor()->GetActorRotation();
+		FRotator NewRot = FRotator(CamRot.Pitch, CamRot.Yaw, 0);
+		Character->GetController()->SetControlRotation(NewRot);
 	}
 }

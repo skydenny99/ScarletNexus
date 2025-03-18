@@ -46,7 +46,7 @@ void UGEExecCalc_EnemyTakeDamage::Execute_Implementation(
 	float SourceAttack = 0.f;
 	
 	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(GetEnemyDamageCapture().EnemyAttackDef, EvaluateParams, SourceAttack);
-	Debug::Print(TEXT("Enemy SourceAttack"), SourceAttack);
+	//Debug::Print(TEXT("Enemy SourceAttack"), SourceAttack);
 
 	float BaseDamage = 0.f;
 
@@ -55,12 +55,12 @@ void UGEExecCalc_EnemyTakeDamage::Execute_Implementation(
 		if (TagMagnitude.Key.MatchesTagExact(BaseGameplayTags::Shared_SetByCaller_BaseDamage))
 		{
 			BaseDamage = TagMagnitude.Value;
-			Debug::Print(TEXT("Enemy BaseDamage"), BaseDamage);
+			//Debug::Print(TEXT("Enemy BaseDamage"), BaseDamage);
 		}
 	}
 
 	const float FinalDamage = SourceAttack + BaseDamage;
-	Debug::Print(TEXT("Enemy FinalDamage : SourceAttack + BaseDamage"), FinalDamage);
+	//Debug::Print(TEXT("Enemy FinalDamage : SourceAttack + BaseDamage"), FinalDamage);
 
 
 	if (FinalDamage > 0.f)

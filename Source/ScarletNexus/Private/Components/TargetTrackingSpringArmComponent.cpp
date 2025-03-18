@@ -13,7 +13,7 @@ void UTargetTrackingSpringArmComponent::SortByDistance()
 	if (FoundTargets.IsEmpty()) return;
 	FoundTargets.Sort([this] (const AActor& left, const AActor& right)
 	{
-		AActor* Owner = this->GetOwner();
+		const AActor* Owner = this->GetOwner();
 		return FVector::DistSquared2D(Owner->GetActorLocation(), left.GetActorLocation())
 		< FVector::DistSquared2D(Owner->GetActorLocation(), right.GetActorLocation());
 	});
@@ -53,8 +53,7 @@ FRotator UTargetTrackingSpringArmComponent::GetDesiredRotation() const
 {
 	FRotator DesiredRot = GetComponentRotation();
 	APawn* OwningPawn = Cast<APawn>(GetOwner());
-	if (OwningPawn == nullptr)
-		return DesiredRot;
+	if (IsValid(OwningPawn) == false) return DesiredRot;
 	
 	const FRotator PawnViewRotation = OwningPawn->GetViewRotation();
 	if (DesiredRot != PawnViewRotation)
@@ -64,20 +63,15 @@ FRotator UTargetTrackingSpringArmComponent::GetDesiredRotation() const
 	
 	if (bOverrideTrackingTarget)
 	{
-		if (OverrideTargetActor == nullptr)
-			return DesiredRot;
+		if (IsValid(OverrideTargetActor)) return DesiredRot;
 	}
 	else
 	{
-		if (bUpdateCameraTracking == false)
-			return DesiredRot;
-		if (TargetActor == nullptr)
-			return DesiredRot;
+		if (bUpdateCameraTracking == false || IsValid(TargetActor))	return DesiredRot;
 	}
 	
 	const AActor* Target = bOverrideTrackingTarget ? OverrideTargetActor : TargetActor;
-	const auto [BoundaryLeft, BoundaryRight, BoundaryTop, BoundaryBottom]
-	= bOverrideTrackingTarget ? OverrideTrackingBoundary : DefaultTrackingBoundary;
+	const FTrackingBoundary CurrentBoundary = bOverrideTrackingTarget ? OverrideTrackingBoundary : DefaultTrackingBoundary;
 	
 	const FVector TargetLocation = Target->GetActorLocation();
 	FRotator TargetLookRotator = UKismetMathLibrary::FindLookAtRotation(OwningPawn->GetActorLocation(), TargetLocation);
@@ -93,18 +87,11 @@ FRotator UTargetTrackingSpringArmComponent::GetDesiredRotation() const
 	const bool bProjectResult = PlayerController->ProjectWorldLocationToScreen(TargetLocation, TargetScreenLocation);
 	int32 ScreenWidth = 0, ScreenHeight = 0;
 	PlayerController->GetViewportSize(ScreenWidth, ScreenHeight);
-	TargetScreenLocation.X /= ScreenWidth;
-	TargetScreenLocation.Y /= ScreenHeight;
-	// if (bProjectResult == false)
-	// 	return DesiredRot;
-	
-	// float LeftBoundary = GSystemResolution.ResX * BoundaryLeft;
-	// float RightBoundary = GSystemResolution.ResX * (1 - BoundaryRight);
-	// float TopBoundary = GSystemResolution.ResY * BoundaryTop;
-	// float BottomBoundary = GSystemResolution.ResY * (1 + BoundaryBottom);
+	TargetScreenLocation.X /= FMath::Max(ScreenWidth, 1);
+	TargetScreenLocation.Y /= FMath::Max(ScreenHeight, 1);
 
-	if (bProjectResult == false || TargetScreenLocation.X < BoundaryLeft  || TargetScreenLocation.X > 1 - BoundaryRight
-		|| TargetScreenLocation.Y < BoundaryTop  || TargetScreenLocation.Y > 1 - BoundaryBottom)
+	if (bProjectResult == false || TargetScreenLocation.X < CurrentBoundary.BoundaryLeft  || TargetScreenLocation.X > 1 - CurrentBoundary.BoundaryRight
+		|| TargetScreenLocation.Y < CurrentBoundary.BoundaryTop  || TargetScreenLocation.Y > 1 - CurrentBoundary.BoundaryBottom)
 	{
 		TargetLookRotator = FMath::RInterpTo(DesiredRot, TargetLookRotator, GetWorld()->GetDeltaSeconds(), 8.0f);
 		PlayerController->SetControlRotation(TargetLookRotator);
@@ -138,8 +125,10 @@ void UTargetTrackingSpringArmComponent::TickComponent(float DeltaTime, enum ELev
 
 AActor* UTargetTrackingSpringArmComponent::GetCurrentTarget()
 {
-	if (TargetActor)
+	if (IsValid(TargetActor))
+	{
 		return TargetActor;
+	}
 	SortByDistance();
 	return FoundTargets.IsEmpty() ? nullptr : FoundTargets[0];
 }

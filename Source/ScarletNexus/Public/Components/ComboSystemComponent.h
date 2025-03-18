@@ -93,7 +93,7 @@ public:
 	void GrantAttackAbilites(UAbilitySystemComponent* ASC, int32 Level = 1);
 	void UpdateInfoByUnlock();
 
-	bool TryActivateAbilityByInputTag(FGameplayTag tag);
+	bool TryActivateAbilityByInputTag(const FGameplayTag& InputTag);
 	void TryActivateChargeAbility();
 
 	UFUNCTION(BlueprintCallable)
@@ -103,7 +103,7 @@ public:
 	void OnMovementModeChange(ACharacter* Character, EMovementMode PrevMovementMode, uint8 PreviousCustomMode);
 	
 
-	void ProcessInputAction(FGameplayTag InputTag, ETriggerEvent TriggerEvent, const FInputActionInstance& Instance);
+	void ProcessInputAction(const FGameplayTag& InputTag, ETriggerEvent TriggerEvent, const FInputActionInstance& Instance);
 	bool CheckJustDodge();
 
 	UFUNCTION(BlueprintCallable, Category="Combo")

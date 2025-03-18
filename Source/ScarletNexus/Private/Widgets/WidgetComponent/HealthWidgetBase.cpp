@@ -33,7 +33,7 @@ void UHealthWidgetBase::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
 
-	Debug::Print(TEXT("NativeHealthwidgetBase--------------"));
+	//Debug::Print(TEXT("NativeHealthwidgetBase--------------"));
 }
 
 void UHealthWidgetBase::SetHealthGauge(const float SetPercent)

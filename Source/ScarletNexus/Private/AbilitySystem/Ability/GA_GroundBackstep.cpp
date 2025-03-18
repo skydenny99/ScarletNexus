@@ -10,7 +10,7 @@ bool UGA_GroundBackstep::CanActivateAbility(const FGameplayAbilitySpecHandle Han
 {
 	if (Super::CanActivateAbility(Handle, ActorInfo, SourceTags, TargetTags, OptionalRelevantTags))
 	{
-		return ComboSystem->BackstepGroundCombo.CurrentComboCount < ComboSystem->BackstepGroundCombo.MaxComboCount;
+		return ComboSystem && (ComboSystem->BackstepGroundCombo.CurrentComboCount < ComboSystem->BackstepGroundCombo.MaxComboCount);
 	}
 	return false;
 }

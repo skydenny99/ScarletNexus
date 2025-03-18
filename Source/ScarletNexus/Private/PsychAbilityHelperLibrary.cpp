@@ -162,7 +162,7 @@ void UPsychAbilityHelperLibrary::SetBlockUpdateTarget(const ACharacter_Kasane* K
 	if (Kasane == nullptr) return;
 	if (UPsychokinesisComponent* PsychokinesisComponent = Kasane->GetPsychokinesisComponent())
 	{
-		Debug::Print(FString::Printf(TEXT("%s"), *FString(InBlock ? "BlockUpdateTarget true" : "BlockUpdateTarget false")));
+		//Debug::Print(FString::Printf(TEXT("%s"), *FString(InBlock ? "BlockUpdateTarget true" : "BlockUpdateTarget false")));
 		PsychokinesisComponent->SetBlockUpdate(InBlock);
 	}
 }
@@ -191,3 +191,46 @@ void UPsychAbilityHelperLibrary::ApplyPsychCostGameplayEffect(const ACharacter_K
 		ASC->ApplyGameplayEffectToSelf(CostGameplayEffect, 1.f, ASC->MakeEffectContext());
 	}
 }
+
+void UPsychAbilityHelperLibrary::ApplyPsychRecoverGameplayEffect(const ACharacter_Kasane* Kasane)
+{
+	if (Kasane == nullptr) return;
+	FGameplayTag LastAttackType = Kasane->GetComboSystemComponent()->GetAttackType();
+	if (LastAttackType.IsValid() == false) return;
+	
+	UGameplayEffect* CostGameplayEffect = NewObject<UGameplayEffect>(GetTransientPackage(), FName("PsychRecover"));
+	CostGameplayEffect->DurationPolicy = EGameplayEffectDurationType::Instant;
+
+	int32 Idx = CostGameplayEffect->Modifiers.Num();
+	CostGameplayEffect->Modifiers.SetNum(Idx + 1);
+
+	FGameplayModifierInfo& InfoCost = CostGameplayEffect->Modifiers[Idx];
+	int32 RecoverAmount = (LastAttackType == BaseGameplayTags::Player_Ability_Attack_Aerial_Backstep
+		|| LastAttackType == BaseGameplayTags::Player_Ability_Attack_Ground_Backstep) ? 50 : 10;
+	InfoCost.ModifierMagnitude = FScalableFloat(RecoverAmount);
+	InfoCost.ModifierOp = EGameplayModOp::Additive;
+	InfoCost.Attribute = UPlayerAttributeSet::GetCurrentPsychGaugeAttribute();
+	auto ASC = Kasane->GetBaseAbilitySystemComponent();
+	ASC->ApplyGameplayEffectToSelf(CostGameplayEffect, 1.f, ASC->MakeEffectContext());
+}
+
+void UPsychAbilityHelperLibrary::InitOnGrabThrowableProp(ACharacter_Kasane* Kasane)
+{
+	if (Kasane == nullptr) return;
+	UTargetTrackingSpringArmComponent* TargetTracking = Kasane->GetTargetTrackingComponent();
+	UPsychokinesisComponent* PsychokinesisComponent = Kasane->GetPsychokinesisComponent();
+	if (auto ThrowableProp = Cast<APsychokineticThrowableProp>(PsychokinesisComponent->GetPsychThrowableTarget()))
+	{
+		ThrowableProp->OnStartGrab(
+		UBaseFunctionLibrary::NativeActorHasTag(Kasane, BaseGameplayTags::Player_Status_SAS_Clone),
+		true);
+		AActor* TargetActor = TargetTracking->GetCurrentTarget();
+		ThrowableProp->SetTarget(TargetActor);
+		if(ABaseEnemyCharacter* EnemyCharacter = Cast<ABaseEnemyCharacter>(TargetActor))
+		{
+			ThrowableProp->SetTarget(EnemyCharacter->GetTargetVector());
+		}
+	}
+}
+
+

@@ -10,7 +10,10 @@ void UGA_GroundChargeAttackBase::PreActivate(const FGameplayAbilitySpecHandle Ha
                                              FOnGameplayAbilityEnded::FDelegate* OnGameplayAbilityEndedDelegate, const FGameplayEventData* TriggerEventData)
 {
 	Super::PreActivate(Handle, ActorInfo, ActivationInfo, OnGameplayAbilityEndedDelegate, TriggerEventData);
-	ComboSystem->SetupChargeProperty(ChargeTime, false);
-	ComboSystem->StartCharging();
-	ComboSystem->ResetWeaponCombo();
+	if (ComboSystem)
+	{
+		ComboSystem->SetupChargeProperty(ChargeTime, false);
+		ComboSystem->StartCharging();
+		ComboSystem->ResetWeaponCombo();
+	}
 }

@@ -13,7 +13,10 @@ void UGA_AerialAttackAbilityBase::OnGiveAbility(const FGameplayAbilityActorInfo*
 {
 	Super::OnGiveAbility(ActorInfo, Spec);
 	MovementComponent = Kasane->GetCharacterMovement();
-	OriginGravityScale = MovementComponent->GravityScale;
+	if (MovementComponent)
+	{
+		OriginGravityScale = MovementComponent->GravityScale;
+	}
 }
 
 void UGA_AerialAttackAbilityBase::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
@@ -21,6 +24,11 @@ void UGA_AerialAttackAbilityBase::ActivateAbility(const FGameplayAbilitySpecHand
 	const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
+	if (MovementComponent == nullptr)
+	{
+		EndAbility(Handle, ActorInfo, ActivationInfo, false, true);
+		return;
+	}
 	MovementComponent->Velocity = FVector::ZeroVector;
 	MovementComponent->GravityScale = 0.f;
 	ComboSystem->ResetGroundCombo();
@@ -29,6 +37,9 @@ void UGA_AerialAttackAbilityBase::ActivateAbility(const FGameplayAbilitySpecHand
 void UGA_AerialAttackAbilityBase::OnEndAbility(UGameplayAbility* Ability)
 {
 	Super::OnEndAbility(Ability);
-	MovementComponent->Velocity = FVector::ZeroVector;
-	MovementComponent->GravityScale = OriginGravityScale;
+	if (MovementComponent)
+	{
+		MovementComponent->Velocity = FVector::ZeroVector;
+		MovementComponent->GravityScale = OriginGravityScale;
+	}
 }

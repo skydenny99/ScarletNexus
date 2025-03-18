@@ -11,7 +11,7 @@ bool UGA_AerialWeaponAttack::CanActivateAbility(const FGameplayAbilitySpecHandle
 {
 	if (Super::CanActivateAbility(Handle, ActorInfo, SourceTags, TargetTags, OptionalRelevantTags))
 	{
-		return ComboSystem->WeaponAerialCombo.CurrentComboCount < ComboSystem->WeaponAerialCombo.MaxComboCount;
+		return ComboSystem && ComboSystem->WeaponAerialCombo.CurrentComboCount < ComboSystem->WeaponAerialCombo.MaxComboCount;
 	}
 	return false;
 }

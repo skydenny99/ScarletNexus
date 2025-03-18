@@ -38,7 +38,7 @@ void AWeaponBase::OnCollisionBoxBeginOverlap(UPrimitiveComponent* OverlappedComp
 {
 	
 	BP_OnSpawnHitFX(this);
-	Debug::Print(FString::Printf(TEXT("GetInstigator %s"),*this->GetName() ));
+	//Debug::Print(FString::Printf(TEXT("GetInstigator %s"),*this->GetName() ));
 	// const AActor* HitActor = SweepResult.HitObjectHandle.FetchActor();
 	// if (HitActor)
 	// {

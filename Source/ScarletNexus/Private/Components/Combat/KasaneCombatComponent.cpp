@@ -6,6 +6,7 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "BaseDebugHelper.h"
 #include "BaseGameplayTags.h"
+#include "PsychAbilityHelperLibrary.h"
 #include "Abilities/GameplayAbilityTypes.h"
 #include "Character/Character_Kasane.h"
 #include "Components/TargetTrackingSpringArmComponent.h"
@@ -15,13 +16,14 @@
 void UKasaneCombatComponent::OnHitTargetActor(AActor* HitActor)
 {
     // 카사네 히트 로직
-    Debug::Print(GetOwningPawn()->GetActorLabel() + " Hit!!!!! " + HitActor->GetActorLabel(), FColor::Black);
+    //Debug::Print(GetOwningPawn()->GetActorLabel() + " Hit!!!!! " + HitActor->GetActorLabel(), FColor::Black);
 
 	
 	// HitActor가 이미 처리된 적이 있는지 확인
 	if (!KasaneHitActorCounts.Contains(HitActor))
 	{
 		KasaneHitActorCounts.Add(HitActor, 0);
+		UPsychAbilityHelperLibrary::ApplyPsychRecoverGameplayEffect(Cast<ACharacter_Kasane>(GetOwningPawn()));
 	}
 
 	// 처리 횟수 증가
@@ -48,7 +50,7 @@ void UKasaneCombatComponent::OnHitTargetActor(AActor* HitActor)
 	// 처리 횟수가 KasaneHitnumber를 초과하면 리턴
 	if (KasaneHitActorCounts[HitActor] > KasaneHitnumber)
 	{
-		Debug::Print("Kasane Hit Return!");
+		//Debug::Print("Kasane Hit Return!");
 		return;
 	}
 }

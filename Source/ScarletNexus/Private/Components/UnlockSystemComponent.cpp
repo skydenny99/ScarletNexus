@@ -19,11 +19,11 @@ UUnlockSystemComponent::UUnlockSystemComponent()
 	static ConstructorHelpers::FObjectFinder<UDataAsset_UnlockAbility> UnlockAbilityObject(TEXT("/Game/_BP/DataAssets/DA_Kasane_UnlockData.DA_Kasane_UnlockData"));
 	if (UnlockAbilityObject.Succeeded())
 	{
-		DataAsset_UnlockAbility = UnlockAbilityObject.Object;
+		DataAsset_UnlockAbility = UnlockAbilityObject.Object.Get();
 	}
 }
 
-void UUnlockSystemComponent::InitUnlockData(UAbilitySystemComponent* ASC, FGameplayTagContainer Tags)
+void UUnlockSystemComponent::InitUnlockData(UAbilitySystemComponent* ASC, const FGameplayTagContainer& Tags)
 {
 	AbilitySystemComponent = ASC;
 	UnlockedTags = Tags;
@@ -35,14 +35,13 @@ void UUnlockSystemComponent::ApplyUnlockData()
 	if (UnlockedTags.IsEmpty()) return;
 	TArray<FGameplayAbilitySpecHandle> OutAbilityHandles;
 	FUnlockData Data;
-	for (auto UnlockedTag : UnlockedTags)
+	for (auto& UnlockedTag : UnlockedTags)
 	{
 		if (DataAsset_UnlockAbility->FindUnlockDataByTag(UnlockedTag,Data))
 		{
 			AbilitySystemComponent->FindAllAbilitiesWithTags(OutAbilityHandles, Data.OverrideInputTag.GetSingleTagContainer());
-			if (OutAbilityHandles.IsEmpty()) continue;
-		
-			if (OutAbilityHandles[0].IsValid())
+			
+			if (OutAbilityHandles.IsEmpty() == false && OutAbilityHandles[0].IsValid())
 			{
 				AbilitySystemComponent->ClearAbility(OutAbilityHandles[0]);
 			}

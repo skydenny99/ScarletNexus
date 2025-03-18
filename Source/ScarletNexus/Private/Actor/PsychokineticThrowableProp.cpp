@@ -30,7 +30,7 @@ APsychokineticThrowableProp::APsychokineticThrowableProp()
 	ProjectileMovementComponent->bShouldBounce = true;
 	ProjectileMovementComponent->Bounciness = 0.3f;
 
-	InterectComponent->SetupAttachment(RootComponent);
+	InterectComponent->SetupAttachment(BoxComponent);
 	InterectComponent->SetRelativeLocation(FVector::ZeroVector);
 	BoxComponent->SetCollisionProfileName("BlockAllDynamic");
 	
@@ -82,6 +82,7 @@ void APsychokineticThrowableProp::OnStartGrab(bool NeedToClone, bool DoubleClone
 
 void APsychokineticThrowableProp::OnHit()
 {
+	if (bIsDestroyable == false) return;
 	ProjectileMovementComponent->ProjectileGravityScale = 1.f;
 	BoxComponent->SetCollisionProfileName("EndProjectile");
 	SetLifeSpan(1.f);
@@ -103,8 +104,8 @@ void APsychokineticThrowableProp::OnMeshHit(UPrimitiveComponent* HitComponent, A
 			//Debug::Print(TEXT("Hit!!!!!!!!!!!"));
 
 			HandleApplyProp(HitPawn, Data);
-			Debug::Print(FString::Printf(TEXT("HitPawn: %s"), *HitPawn->GetName()));
-			Debug::Print(FString::Printf(TEXT("Instigator: %s"), *Data.Instigator.GetName()));
+			//Debug::Print(FString::Printf(TEXT("HitPawn: %s"), *HitPawn->GetName()));
+			//Debug::Print(FString::Printf(TEXT("Instigator: %s"), *Data.Instigator.GetName()));
 		
 			BP_OnSpawnHitFX(Hit.Location);
 			OnHit();
@@ -116,6 +117,7 @@ void APsychokineticThrowableProp::OnMeshHit(UPrimitiveComponent* HitComponent, A
 
 void APsychokineticThrowableProp::OnChargingCancel()
 {
+	bIsUsed = false;
 	CurrentTargetLocation.Reset();
 	ProjectileMovementComponent->SetUpdatedComponent(RootComponent);
 	CurrentControlNum++;
@@ -167,15 +169,12 @@ void APsychokineticThrowableProp::Launch()
 	}
 	const FRotator LookAtRot = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), TargetLocation);
 	SetActorRotation(LookAtRot);
-	// Debug::Print(FString::Printf(TEXT("TargetLocation, %f, %f ,%f"), TargetLocation.X, TargetLocation.Y, TargetLocation.Z ));
 
-	
-
-	
 	ProjectileMovementComponent->SetUpdatedComponent(RootComponent);
 	ProjectileMovementComponent->Velocity = (GetActorForwardVector() * ProjectileMovementComponent->MaxSpeed);
 	SetLifeSpan(5.f);
 	OnUsePsychProp.ExecuteIfBound(this);
+	bIsDestroyable = true;
 }
 
 void APsychokineticThrowableProp::CloneLaunch()

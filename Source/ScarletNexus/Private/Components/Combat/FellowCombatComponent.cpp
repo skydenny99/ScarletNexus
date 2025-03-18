@@ -10,7 +10,7 @@
 
 void UFellowCombatComponent::OnHitTargetActor(AActor* HitActor)
 {
-	Debug::Print(GetOwningPawn()->GetActorLabel() + " Hit " + HitActor->GetActorLabel(), FColor::Black);
+	//Debug::Print(GetOwningPawn()->GetActorLabel() + " Hit " + HitActor->GetActorLabel(), FColor::Black);
 	if (OverlappedActors.Contains(HitActor))
 	{
 		return;

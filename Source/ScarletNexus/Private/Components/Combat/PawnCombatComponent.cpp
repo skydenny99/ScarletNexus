@@ -30,7 +30,7 @@ void UPawnCombatComponent::RegisterSpawnedWeapon(FGameplayTag WeaponTag, AWeapon
 	}
 	
 	const FString WeaponString = FString::Printf(TEXT("%s has been registerd using the tag: %s"),*Weapon->GetName(), *WeaponTag.ToString());
-	Debug::Print(WeaponString);
+	//Debug::Print(WeaponString);
 	
 }
 
@@ -67,7 +67,7 @@ void UPawnCombatComponent::RegisterKasaneSpawnedWeapon(FGameplayTag WeaponTag, A
 		else
 		{
 			const FString WeaponString = FString::Printf(TEXT("%s has been registered using the tag: %s"), *Weapon->GetName(), *WeaponTag.ToString());
-			Debug::Print(WeaponString);
+			//Debug::Print(WeaponString);
 			CurrentEquippedWeaponTags.AddUnique(WeaponTag);
 		}
 	}
@@ -77,7 +77,7 @@ void UPawnCombatComponent::RegisterKasaneSpawnedWeapon(FGameplayTag WeaponTag, A
 		// CurrentEquippedWeaponTags.
 		
 		const FString WeaponString = FString::Printf(TEXT("%s has been Unregistered using the tag: %s"), *Weapon->GetName(), *WeaponTag.ToString());
-		Debug::Print(WeaponString);
+		//Debug::Print(WeaponString);
 		Weapon->Destroy();
 	}
 

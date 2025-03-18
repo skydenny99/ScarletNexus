@@ -80,6 +80,7 @@ public:
 	
 	UFUNCTION(BlueprintCallable)
 	void OnHit();
+	bool bIsDestroyable = false;
 
 
 	UFUNCTION()

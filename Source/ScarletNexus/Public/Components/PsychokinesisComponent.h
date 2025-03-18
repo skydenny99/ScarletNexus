@@ -70,7 +70,7 @@ protected:
 
 	void UpdateNearestPsychThrowableTarget();
 	void UpdateNearestPsychSpecialTarget();
-	APsychokineticPropBase* UpdateNearestPsychTarget(TArray<APsychokineticPropBase*> PropList) const;
+	APsychokineticPropBase* UpdateNearestPsychTarget(const TArray<APsychokineticPropBase*>& PropList) const;
 	void OnUsePsychProp(APsychokineticPropBase* UsedPsychProp);
 	
 	// Called when the game starts
@@ -100,7 +100,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	FORCEINLINE void SetBlockUpdate(bool InBlockUpdate)
 	{
-		Debug::Print(FString::Printf(TEXT("PsychokinesisComponent::SetBlockUpdate - %s"), *FString(InBlockUpdate ? "Block" : "Release")));
+		//Debug::Print(FString::Printf(TEXT("PsychokinesisComponent::SetBlockUpdate - %s"), *FString(InBlockUpdate ? "Block" : "Release")));
 		bBlockUpdate = InBlockUpdate;
 	}
 

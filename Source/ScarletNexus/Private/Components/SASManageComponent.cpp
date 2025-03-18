@@ -20,7 +20,7 @@ USASManageComponent::USASManageComponent()
 	// ...
 }
 
-void USASManageComponent::ToggleSASAbility(FGameplayTag InInputTag)
+void USASManageComponent::ToggleSASAbility(const FGameplayTag& InInputTag)
 {
 	int32 AbilityIndex = 0;
 	if (InInputTag.MatchesTagExact(BaseGameplayTags::InputTag_SAS_Second))
@@ -39,27 +39,23 @@ void USASManageComponent::ToggleSASAbility(FGameplayTag InInputTag)
 	if (CurrentSASAbilityTags.IsValidIndex(AbilityIndex) == false) return; 
 	FGameplayTag AbilityTag = CurrentSASAbilityTags[AbilityIndex];
 	
-	if (AbilityTag.IsValid() == false || AbilitySpecs.Contains(AbilityTag) == false)
-	{
-		Debug::Print("SAS Ability not found", FColor::Red);
-		return;
-	}
+	if (AbilitySpecs.Contains(AbilityTag) == false) return;
 	
 	if (BaseAbilitySystemComponent->IsAbilityActive(AbilitySpecs[AbilityTag].Handle))
 	{
-		Debug::Print("SAS Ability is activated", FColor::Red);
+		//Debug::Print("SAS Ability is activated", FColor::Red);
 		BaseAbilitySystemComponent->CancelAbilityHandle(AbilitySpecs[AbilityTag].Handle);
 	}
 	else
 	{
-		Debug::Print("SAS Ability not is activated", FColor::Red);
+		//Debug::Print("SAS Ability not is activated", FColor::Red);
 		if (BaseAbilitySystemComponent->TryActivateAbility(AbilitySpecs[AbilityTag].Handle))
 		{
 			OnSASTrigger.Broadcast(InInputTag);
 		}
 		else
 		{
-			Debug::Print("SAS Ability try failed", FColor::Red);
+			//Debug::Print("SAS Ability try failed", FColor::Red);
 		}
 	}
 }
@@ -78,7 +74,7 @@ void USASManageComponent::CancelAllSASAbilities()
 void USASManageComponent::InitReferences(ACharacter_Kasane* InKasane)
 {
 	Kasane = InKasane;
-	if (Kasane)
+	if (IsValid(Kasane))
 	{
 		BaseAbilitySystemComponent = Kasane->GetBaseAbilitySystemComponent();
 	}
@@ -88,7 +84,8 @@ void USASManageComponent::InitReferences(ACharacter_Kasane* InKasane)
 void USASManageComponent::GrantSASAbilites(int32 Level)
 {
 	check(AbilityAsset);
-	for (auto AbilityClass : AbilityAsset->SASAbilityList)
+	if (BaseAbilitySystemComponent == nullptr) return;
+	for (auto& AbilityClass : AbilityAsset->SASAbilityList)
 	{
 		if (AbilityClass == nullptr) continue;
 		FGameplayAbilitySpec Spec(AbilityClass);
@@ -99,7 +96,7 @@ void USASManageComponent::GrantSASAbilites(int32 Level)
 	}
 }
 
-void USASManageComponent::OnSASInputTriggered(FGameplayTag InInputTag)
+void USASManageComponent::OnSASInputTriggered(const FGameplayTag& InInputTag)
 {
 	if (InInputTag.IsValid() == false || UBaseFunctionLibrary::NativeActorHasTag(Kasane, BaseGameplayTags::Shared_Status_Direct)) return;
 	if (InInputTag.MatchesTagExact(BaseGameplayTags::InputTag_SAS_Cancel))

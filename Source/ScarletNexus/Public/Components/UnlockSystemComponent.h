@@ -19,7 +19,9 @@ class SCARLETNEXUS_API UUnlockSystemComponent : public UActorComponent
 	GENERATED_BODY()
 
 	FGameplayTagContainer UnlockedTags;
+	UPROPERTY()
 	UDataAsset_UnlockAbility* DataAsset_UnlockAbility;
+	UPROPERTY()
 	UAbilitySystemComponent* AbilitySystemComponent;
 	
 public:
@@ -27,6 +29,6 @@ public:
 	// Sets default values for this component's properties
 	UUnlockSystemComponent();
 
-	void InitUnlockData(UAbilitySystemComponent* ASC, FGameplayTagContainer Tags);
+	void InitUnlockData(UAbilitySystemComponent* ASC, const FGameplayTagContainer& Tags);
 	void ApplyUnlockData();
 };
